@@ -1,0 +1,161 @@
+/* custom styling for big-calendar */
+
+.rbc-calendar {
+  /* font-family: "Circular"; */
+  /* padding-bottom: 10px; */
+}
+
+.rbc-today {
+  background: #e9257910 !important;
+}
+
+.rbc-time-view,
+.rbc-month-view {
+  background: white;
+  border-radius: 0.5em;
+  box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.02);
+  overflow: scroll;
+  height: 0;
+}
+
+.rbc-off-range-bg {
+  background: #f6f7f9;
+}
+
+.rbc-row.rbc-time-header-cell {
+  /* make the header of the calendar (the one with week days in it) display fully */
+  height: 100%;
+}
+
+.rbc-event-label {
+  /* hide the label with time from the top of the event */
+  display: none;
+}
+
+.rbc-header {
+  /* height: 100px; */
+}
+
+.rbc-header span {
+  /* Weekdays in month view */
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  align-items: center;
+  text-align: center;
+  /* grey */
+  color: #93989f;
+  display: block;
+  margin: 14px 0;
+}
+
+.rbc-allday-cell {
+  display: none;
+}
+
+.rbc-time-slot > span {
+  /* H5 */
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  /* grey */
+  color: #93989f;
+  margin: 0;
+}
+
+/* Date Pickers */
+
+.react-datepicker__input-container {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  border: 1px solid #e6e8e9;
+  border-radius: 0.25em;
+  height: 34px;
+  padding: 0 0.6em;
+  font-size: 0.95em;
+  color: #3f4548;
+}
+
+.rbc-month-row .rbc-event {
+  position: relative;
+}
+.rbc-day-slot .rbc-event {
+  position: absolute;
+}
+
+/* React Dropown */
+
+.Dropdown-control {
+  cursor: pointer !important;
+  background: #ffffff !important;
+  border: 1px solid #e6e8e9 !important;
+  padding: 0 0.7em !important;
+  border-radius: 0.25em !important;
+  box-shadow: 0px 1.5px 1px rgba(0, 0, 0, 0.05) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.9em !important;
+  text-align: center !important;
+  height: 34px !important;
+  width: auto !important;
+  flex: 0 0 auto !important;
+  padding-right: 1.8em !important;
+  line-height: 1.5 !important;
+  font-weight: 400 !important;
+}
+
+.Dropdown-menu {
+  min-width: 10em;
+  background: #ffffff !important;
+  border: 1px solid #e6e8e9 !important;
+  border-radius: 0.25em !important;
+  box-shadow: 0px 1.5px 1px rgba(0, 0, 0, 0.05) !important;
+  font-weight: 400 !important;
+  font-size: 0.9em !important;
+}
+
+.Dropdown-option {
+  box-sizing: border-box;
+  color: #93989f !important;
+  cursor: pointer;
+  display: block;
+  padding: 8px 10px;
+}
+
+.Dropdown-option:hover {
+  background-color: #f2f5f7 !important;
+  color: #3f4548 !important;
+}
+
+.Dropdown-option.is-selected {
+  background-color: #f2f5f7 !important;
+  color: #3f4548 !important;
+}
+
+.Dropdown-placeholder {
+  color: #c2c4c7 !important;
+}
+
+.Dropdown-placeholder.is-selected {
+  color: #3f4548 !important;
+}
+
+.rbc-month-row .event-subtitle {
+  display: none;
+}
+.rbc-month-row .event-time {
+  margin-bottom: 0.2em;
+}
