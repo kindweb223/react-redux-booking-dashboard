@@ -1,0 +1,11 @@
+input.error {
+  border-color: #E92579;  
+}
+
+.input-feedback {
+  color: #E92579;
+  font-size: 0.82em;
+  font-weight: 500;
+  line-height: 1.55;
+}
+

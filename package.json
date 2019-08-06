@@ -4,7 +4,10 @@
   "private": true,
   "dependencies": {
     "@emotion/styled": "^10.0.14",
+    "axios": "^0.19.0",
+    "email-validator": "^2.0.4",
     "emotion": "^10.0.14",
+    "formik": "^1.5.8",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
@@ -16,7 +19,8 @@
     "react-modal": "^3.8.1",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1",
-    "styled-components": "^5.0.0-beta.3"
+    "styled-components": "^5.0.0-beta.3",
+    "yup": "^0.27.0"
   },
   "scripts": {
     "start": "react-scripts start",

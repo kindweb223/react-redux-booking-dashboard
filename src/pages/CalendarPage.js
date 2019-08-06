@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { Redirect } from 'react-router-dom';
 import Grid from "../components/layout/Grid";
 import constants from "../components/layout/constants";
 import Calendar from "../components/features/calendar";
@@ -31,6 +32,10 @@ const CalendarPage = props => {
     setSelectedBookingID(event.bookingID);
   };
 
+  if(!state.auth.isAuthenticated) {
+    return <Redirect to='/login' />;
+  }
+  
   return (
     <>
       <Grid

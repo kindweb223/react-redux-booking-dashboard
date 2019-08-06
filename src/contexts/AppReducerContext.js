@@ -4,6 +4,7 @@ import { bookings } from "../models/bookings";
 import bookingsReducer from "../reducers/bookingsReducer";
 import settingsReducer from "../reducers/settingsReducer";
 import customersReducer from "../reducers/customersReducer";
+import authReducer from "../reducers/authReducer";
 import { customers } from "../models/customers";
 import venues from "../models/venues";
 
@@ -24,13 +25,23 @@ const initialState = {
     bookingStatuses: bookingStates,
     venues: venues
   },
-  customers: customers
+  customers: customers,
+  auth: {
+    isAuthenticated: false,
+    isValide: true,
+    loading: false,
+    user: {
+      email: "",
+      password: ""
+    }
+  },
 };
 
 const reducer = combineReducers({
   settings: settingsReducer,
   bookings: bookingsReducer,
-  customers: customersReducer
+  customers: customersReducer,
+  auth: authReducer,
 });
 
 function combineReducers(reducers) {

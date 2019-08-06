@@ -1,12 +1,15 @@
 import React from "react";
+import "../../css/validate.css";
 import colors from "../style/colors";
-import { css } from "emotion";
+import { css, cx } from "emotion";
 
 const InputField = props => {
   return (
     <input
       {...props}
-      className={css`
+      className={
+        cx(props.className,
+        css`
         font-size: 0.95em;
         display: inline-flex;
         align-items: center;
@@ -18,7 +21,7 @@ const InputField = props => {
         height: 34px;
         padding: 0 0.6em;
         flex: 0 0 auto;
-      `}
+      `)}
     />
   );
 };

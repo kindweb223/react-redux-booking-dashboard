@@ -81,7 +81,7 @@ const Button = props => {
 
   return (
     <>
-      <ButtonWrapper onClick={onClick} {...props}>
+      <ButtonWrapper onClick={onClick} {...props} type={props.type}>
         {iconComponent && iconComponent()} {icon && <img src={icon} alt="" />}{" "}
         <P2 color="grey">{props.children}</P2>
       </ButtonWrapper>

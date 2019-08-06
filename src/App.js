@@ -8,6 +8,7 @@ import BookingsPage from "./pages/BookingsPage";
 import CustomersPage from "./pages/CustomersPage";
 import SettingsPage from "./pages/SettingsPage";
 import InvoicesPage from "./pages/InvoicesPage";
+import LoginPage from "./pages/LoginPage";
 import CalendarContext from "./contexts/CalendarContext";
 import {
   AppReducerContext,
@@ -26,11 +27,12 @@ const App = props => {
           value={{ calendarExpanded, setCalendarExpanded }}
         >
           <Router>
-            <Sidebar />
+            {state.auth.isAuthenticated && <Sidebar />}
             <LayoutWrapper>
               <LayoutSection bgColor="lightest" fullWidth>
-                <Switch>
+                <Switch>                  
                   <Route path="/" exact component={CalendarPage} />
+                  <Route path="/login" exact component={LoginPage} />
                   <Route path="/bookings" exact component={BookingsPage} />
                   <Route path="/customers" exact component={CustomersPage} />
                   <Route path="/invoices" exact component={InvoicesPage} />
