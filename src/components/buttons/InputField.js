@@ -21,7 +21,7 @@ const InputField = props => {
         height: 34px;
         padding: 0 0.6em;
         flex: 0 0 auto;
-      `)}
+      `)}      
     />
   );
 };

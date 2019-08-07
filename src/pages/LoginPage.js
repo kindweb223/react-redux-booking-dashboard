@@ -4,6 +4,7 @@ import * as EmailValidator from "email-validator";
 import * as Yup from "yup";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import { cx } from "emotion";
 
 import Button from "../components/buttons/Button";
 import InputField from "../components/buttons/InputField";
@@ -20,7 +21,6 @@ import "../css/validate.css";
 import {
   AppReducerContext,
 } from "../contexts/AppReducerContext";
-import { cx } from "emotion";
 
 const LoginPage = props => {
 
@@ -52,7 +52,6 @@ const LoginPage = props => {
 
   `;
 
-  const [isValid, setIsValid] = useState(true);
   const { state, dispatch } = useContext(AppReducerContext);
 
   if(state.auth.isAuthenticated) {
@@ -62,7 +61,7 @@ const LoginPage = props => {
   return (
     <Container>
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ email: state.auth.user.email, password: state.auth.user.password }}
         onSubmit={async (values, { setSubmitting }) => {
 
           const config = {
@@ -73,21 +72,24 @@ const LoginPage = props => {
 
           try {
             const res = await axios.post(
-              'http://justvenue.herokuapp.com/v1/auth/login',
+              '/auth/login',
               JSON.stringify(values), 
               config
             );
             
-            debugger;
             setSubmitting(false);
             if(res.data.success) {
-  
               dispatch({
-                type: 'get_login_result'              
+                type: 'get_login_success',
+                payload: {...values},
+                token: res.data.token,
               })            
             }  
           } catch (err) {
-            setIsValid(false);
+            dispatch({
+              type: 'get_login_error',
+              payload: {...values},
+            })  
           }
         }}
 
@@ -112,7 +114,7 @@ const LoginPage = props => {
           return (
               <form className="login-form" onSubmit={handleSubmit}>
                 <H3 className="login-title">Login</H3>
-                { !isValid && <P2 className="invalite_user_pwd" color="accent_pink" center={true} >Invalid Username and Password</P2>}                
+                { state.auth.showInvalidMsg && <P2 className="invalite_user_pwd" color="accent_pink" center={true} >Invalid Username and Password</P2>}
                 <Grid>
                   <div className="form-group">
                     <InputLabel>Email</InputLabel>
@@ -123,6 +125,7 @@ const LoginPage = props => {
                       value={values.email}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      autoComplete="new-password"
                       className={errors.email && touched.email && cx("error")}
                     />
                     {errors.email && touched.email && (
@@ -139,6 +142,7 @@ const LoginPage = props => {
                       value={values.password}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      autoComplete="new-password"
                       className={errors.password && touched.password && cx("error")}
                     />
                     {errors.password && touched.password && (

@@ -1,5 +1,7 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import axios from 'axios';
+
 import CalendarPage from "./pages/CalendarPage";
 import Sidebar from "./components/layout/Sidebar";
 import LayoutWrapper from "./components/layout/LayoutWrapper";
@@ -16,9 +18,35 @@ import {
   initialState
 } from "./contexts/AppReducerContext";
 
+import setAuthToken from './utils/setAuthToken';
+
+axios.defaults.baseURL = 'https://justvenue.herokuapp.com/v1'
+debugger;
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
+}
+
 const App = props => {
   const [calendarExpanded, setCalendarExpanded] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(async () => {
+    if(localStorage.token) {
+      setAuthToken(localStorage.token)
+    }
+
+    try {
+      const res = await axios.get('/auth');
+      dispatch({
+        type: 'user_load_success',
+        payload: res.data
+      })
+    } catch (err) {
+      dispatch({
+        type: 'auth_error'
+      })
+    }
+  }, [])
 
   return (
     <>

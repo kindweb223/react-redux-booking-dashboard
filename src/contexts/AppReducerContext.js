@@ -28,12 +28,13 @@ const initialState = {
   customers: customers,
   auth: {
     isAuthenticated: false,
-    isValide: true,
+    showInvalidMsg: false,
     loading: false,
     user: {
       email: "",
       password: ""
-    }
+    },
+    token: localStorage.getItem('token'),
   },
 };
 
