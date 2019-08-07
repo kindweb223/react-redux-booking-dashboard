@@ -68,11 +68,11 @@ const LoginPage = props => {
           };
 
           const res = await axios.post(
-            'http://justvenue.herokuapp.com/v1/api/auth/login',
+            'https://justvenue.herokuapp.com/v1/auth/login',
             JSON.stringify(values), 
             config
           );
-          debugger;
+
           if(res.data.status === 'success') {
             dispatch({
               type: 'get_login_result'              
@@ -87,7 +87,7 @@ const LoginPage = props => {
           email: Yup.string().email().required("Email Required"),            
           password: Yup.string()
             .required("Password Required.")
-            .min(8, "Password is too short - should be 8 chars minimum.")
+            .min(4, "Password is too short - should be 4 chars minimum.")
             .matches(/(?=.*[0-9])/, "Password must contain a number.")
         })}
       >
