@@ -32,6 +32,7 @@ const App = props => {
               <LayoutSection bgColor="lightest" fullWidth>
                 <Switch>                  
                   <Route path="/" exact component={CalendarPage} />
+                  <Route path="/calendar" exact component={CalendarPage} />
                   <Route path="/login" exact component={LoginPage} />
                   <Route path="/bookings" exact component={BookingsPage} />
                   <Route path="/customers" exact component={CustomersPage} />

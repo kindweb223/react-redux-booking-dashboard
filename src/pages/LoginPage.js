@@ -55,6 +55,10 @@ const LoginPage = props => {
   const [isValid, setIsValid] = useState(true);
   const { state, dispatch } = useContext(AppReducerContext);
 
+  if(state.auth.isAuthenticated) {
+    return <Redirect to='/calendar' />;
+  }
+
   return (
     <Container>
       <Formik
@@ -72,15 +76,18 @@ const LoginPage = props => {
             JSON.stringify(values), 
             config
           );
+          
+          debugger;
+          setSubmitting(false);
+          if(res.data.success) {
 
-          if(res.data.status === 'success') {
             dispatch({
               type: 'get_login_result'              
-            })
+            })            
+            
           }else {
             
           } 
-          setSubmitting(false);         
         }}
 
         validationSchema={Yup.object().shape({

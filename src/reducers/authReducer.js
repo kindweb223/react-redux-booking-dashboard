@@ -1,7 +1,6 @@
 function authReducer(state, action) {
   switch(action.type) {
     case "request_login_action":            
-      debugger;
       return {
         ...state,
         loading: true,
@@ -9,7 +8,7 @@ function authReducer(state, action) {
       };    
     case "get_login_result":
       return {
-        // ...state,
+        ...state,
         loading: false,
         isAuthenticated: true,
       };
