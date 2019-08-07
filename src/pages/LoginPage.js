@@ -71,23 +71,24 @@ const LoginPage = props => {
             }
           };
 
-          const res = await axios.post(
-            'http://justvenue.herokuapp.com/v1/auth/login',
-            JSON.stringify(values), 
-            config
-          );
-          
-          debugger;
-          setSubmitting(false);
-          if(res.data.success) {
-
-            dispatch({
-              type: 'get_login_result'              
-            })            
+          try {
+            const res = await axios.post(
+              'http://justvenue.herokuapp.com/v1/auth/login',
+              JSON.stringify(values), 
+              config
+            );
             
-          }else {
-            
-          } 
+            debugger;
+            setSubmitting(false);
+            if(res.data.success) {
+  
+              dispatch({
+                type: 'get_login_result'              
+              })            
+            }  
+          } catch (err) {
+            setIsValid(false);
+          }
         }}
 
         validationSchema={Yup.object().shape({
