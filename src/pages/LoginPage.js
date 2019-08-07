@@ -68,7 +68,7 @@ const LoginPage = props => {
           };
 
           const res = await axios.post(
-            'https://justvenue.herokuapp.com/v1/auth/login',
+            'http://justvenue.herokuapp.com/v1/auth/login',
             JSON.stringify(values), 
             config
           );
