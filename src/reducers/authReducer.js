@@ -7,13 +7,13 @@ function authReducer(state, action) {
         user: {...action.user},
         showInvalidMsg: false,
       };    
-    case "get_login_success":
+    case "get_login_success":      
       localStorage.setItem('token', action.payload.token);
       return {
         ...state,
         loading: false,
         isAuthenticated: true,
-        user: {...action.payload},
+        user: {...action.payload.user},
         showInvalidMsg: false,
       };
     case "get_login_error":
@@ -30,8 +30,7 @@ function authReducer(state, action) {
         loading: false,
         isAuthenticated: true,
         user: {
-          email: action.payload.email,
-          password: action.payload.password
+          ...action.payload.user
         }
       }
     case "auth_error":

@@ -81,8 +81,7 @@ const LoginPage = props => {
             if(res.data.success) {
               dispatch({
                 type: 'get_login_success',
-                payload: {...values},
-                token: res.data.token,
+                payload: {...res.data},
               })            
             }  
           } catch (err) {

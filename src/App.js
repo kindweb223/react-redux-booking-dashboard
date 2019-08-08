@@ -21,7 +21,6 @@ import {
 import setAuthToken from './utils/setAuthToken';
 
 axios.defaults.baseURL = 'https://justvenue.herokuapp.com/v1'
-debugger;
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
@@ -30,22 +29,27 @@ const App = props => {
   const [calendarExpanded, setCalendarExpanded] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  useEffect(async () => {
+  useEffect(() => {
     if(localStorage.token) {
       setAuthToken(localStorage.token)
-    }
 
-    try {
-      const res = await axios.get('/auth');
-      dispatch({
-        type: 'user_load_success',
-        payload: res.data
-      })
-    } catch (err) {
-      dispatch({
-        type: 'auth_error'
-      })
-    }
+      const getUser = async () => {
+        try {
+          const res = await axios.get('/auth/me');
+          dispatch({
+            type: 'user_load_success',
+            payload: res.data
+          })
+        } catch (err) {
+          dispatch({
+            type: 'auth_error'
+          })
+        }      
+      }    
+  
+      getUser();
+      
+    }    
   }, [])
 
   return (
