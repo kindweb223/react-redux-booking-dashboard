@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
 import colors from "../style/colors";
@@ -11,6 +11,9 @@ import CustomersSvg from "../../images/sidebar/customers.svg";
 import SettingsSvg from "../../images/sidebar/settings.svg";
 import LogOutSvg from "../../images/sidebar/logout.svg";
 import constants from "./constants";
+
+import setAuthToken from "../../utils/setAuthToken";
+import { AppReducerContext } from "../../contexts/AppReducerContext";
 
 const Container = styled.div`
   ${LayoutBlock};
@@ -83,12 +86,18 @@ const TopLinks = [
   { title: "Invoices", svg: InvoicesSvg, href: "/invoices" }
 ];
 const BottomLinks = [
-  { title: "Settings", svg: SettingsSvg, href: "/settings" },
-  { title: "Log Out", svg: LogOutSvg }
+  { title: "Settings", svg: SettingsSvg, href: "/settings" },  
 ];
 
 const Sidebar = props => {
   const { history } = props;
+  const { state, dispatch } = useContext(AppReducerContext);
+
+  const logout = () => {
+    setAuthToken("");
+    dispatch({type: 'set_logout'});
+  }
+
   return (
     <Container>
       <SidebarWrapper>
@@ -109,12 +118,21 @@ const Sidebar = props => {
             <SidebarButton
               key={link.title}
               selected={window.location.pathname === link.href}
-              onClick={() => link.href && history.push(link.href)}
+              onClick={
+                () => link.href && history.push(link.href)
+              }
             >
               <img alt={link.title} src={link.svg} />
               <P1>{link.title}</P1>
             </SidebarButton>
           ))}
+          <SidebarButton
+            key={"logout"}
+            onClick={logout}            
+          >
+            <img alt="Log Out" src={LogOutSvg} />
+            <P1>Log Out</P1>
+          </SidebarButton>
         </div>
       </SidebarWrapper>
     </Container>

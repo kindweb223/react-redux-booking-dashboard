@@ -41,6 +41,20 @@ function authReducer(state, action) {
         showInvalidMsg: false,
         user: { email: "", password: ""}
       }
+    case "set_logout":
+      localStorage.removeItem('token');
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: false,
+        showInvalidMsg: false,
+        user: { email: "", password: ""}
+      }    
+    case "set_authenticated":
+      return {
+        ...state,
+        isAuthenticated: action.payload,
+      }
     default:
       return state;
   }

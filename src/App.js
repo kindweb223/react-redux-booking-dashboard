@@ -20,7 +20,8 @@ import {
 
 import setAuthToken from './utils/setAuthToken';
 
-axios.defaults.baseURL = 'https://justvenue.herokuapp.com/v1'
+axios.defaults.baseURL = 'https://justvenue.herokuapp.com/v1';
+
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
@@ -31,8 +32,9 @@ const App = props => {
 
   useEffect(() => {
     if(localStorage.token) {
-      setAuthToken(localStorage.token)
-
+      dispatch({
+        type:'set_authenticated', payload: true,
+      })
       const getUser = async () => {
         try {
           const res = await axios.get('/auth/me');
@@ -44,11 +46,9 @@ const App = props => {
           dispatch({
             type: 'auth_error'
           })
-        }      
-      }    
-  
-      getUser();
-      
+        }
+      }
+      getUser();      
     }    
   }, [])
 
@@ -65,7 +65,7 @@ const App = props => {
                 <Switch>                  
                   <Route path="/" exact component={CalendarPage} />
                   <Route path="/calendar" exact component={CalendarPage} />
-                  <Route path="/login" exact component={LoginPage} />
+                  <Route path="/login" exact component={LoginPage} />                  
                   <Route path="/bookings" exact component={BookingsPage} />
                   <Route path="/customers" exact component={CustomersPage} />
                   <Route path="/invoices" exact component={InvoicesPage} />
