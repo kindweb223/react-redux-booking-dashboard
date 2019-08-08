@@ -15,6 +15,7 @@ import {
 } from "./contexts/AppReducerContext";
 
 import setAuthToken from './utils/setAuthToken';
+import LoginPage from "./pages/LoginPage";
 
 axios.defaults.baseURL = 'https://justvenue.herokuapp.com/v1';
 
@@ -61,7 +62,7 @@ const App = props => {
             <LayoutWrapper>
               <LayoutSection bgColor="lightest" fullWidth>
                 <Switch>
-                  <Route path="/" exact component={CalendarPage} />      
+                  <Route path="/" exact component={LoginPage} />      
                   <Route component={RoutesTree} />
                 </Switch>
               </LayoutSection>
