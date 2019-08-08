@@ -1,16 +1,12 @@
 import React, { useState, useReducer, useEffect } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, withRouter } from "react-router-dom";
 import axios from 'axios';
 
+import RoutesTree from "./routing/RoutesTree";
 import CalendarPage from "./pages/CalendarPage";
 import Sidebar from "./components/layout/Sidebar";
 import LayoutWrapper from "./components/layout/LayoutWrapper";
 import LayoutSection from "./components/layout/LayoutSection";
-import BookingsPage from "./pages/BookingsPage";
-import CustomersPage from "./pages/CustomersPage";
-import SettingsPage from "./pages/SettingsPage";
-import InvoicesPage from "./pages/InvoicesPage";
-import LoginPage from "./pages/LoginPage";
 import CalendarContext from "./contexts/CalendarContext";
 import {
   AppReducerContext,
@@ -31,25 +27,27 @@ const App = props => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    if(localStorage.token) {
-      dispatch({
-        type:'set_authenticated', payload: true,
-      })
-      const getUser = async () => {
-        try {
-          const res = await axios.get('/auth/me');
-          dispatch({
-            type: 'user_load_success',
-            payload: res.data
-          })
-        } catch (err) {
-          dispatch({
-            type: 'auth_error'
-          })
-        }
+
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+
+    const getUser = async () => {
+      try {
+        const res = await axios.get('/auth/me');
+        dispatch({
+          type: 'user_load_success',
+          payload: res.data
+        })
+      } catch (err) {
+        dispatch({
+          type: 'auth_error'
+        })
       }
-      getUser();      
-    }    
+    }
+    
+    getUser();          
+
   }, [])
 
   return (
@@ -62,14 +60,9 @@ const App = props => {
             {state.auth.isAuthenticated && <Sidebar />}
             <LayoutWrapper>
               <LayoutSection bgColor="lightest" fullWidth>
-                <Switch>                  
-                  <Route path="/" exact component={CalendarPage} />
-                  <Route path="/calendar" exact component={CalendarPage} />
-                  <Route path="/login" exact component={LoginPage} />                  
-                  <Route path="/bookings" exact component={BookingsPage} />
-                  <Route path="/customers" exact component={CustomersPage} />
-                  <Route path="/invoices" exact component={InvoicesPage} />
-                  <Route path="/settings" exact component={SettingsPage} />
+                <Switch>
+                  <Route path="/" exact component={CalendarPage} />      
+                  <Route component={RoutesTree} />
                 </Switch>
               </LayoutSection>
             </LayoutWrapper>

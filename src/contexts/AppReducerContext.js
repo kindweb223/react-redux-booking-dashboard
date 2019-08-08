@@ -29,7 +29,7 @@ const initialState = {
   auth: {
     isAuthenticated: false,
     showInvalidMsg: false,
-    loading: false,
+    loading: true,
     user: {
       email: "",
       password: ""

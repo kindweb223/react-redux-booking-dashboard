@@ -31,10 +31,6 @@ const CalendarPage = props => {
   const onSelectEvent = event => {
     setSelectedBookingID(event.bookingID);
   };
-
-  if(!state.auth.isAuthenticated) {
-    return <Redirect to='/login' />;
-  }
   
   return (
     <>
