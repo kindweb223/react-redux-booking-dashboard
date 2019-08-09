@@ -9,6 +9,9 @@ import {
   REQUEST_ADD_VENUE,
   GET_ADD_VENUE_SUCCESS,
   GET_ADD_VENUE_ERROR,
+  REQUEST_DELETE_VENUE,
+  GET_DELETE_VENUE_SUCCESS,
+  GET_DELETE_VENUE_ERROR,
 } from "./actionType";
 
 function settingsReducer(state = {}, action) {
@@ -122,6 +125,25 @@ function settingsReducer(state = {}, action) {
       }
     }
     case GET_ADD_VENUE_ERROR: {
+      return {
+        ...state,
+        loading: false,
+      }
+    }
+    case REQUEST_DELETE_VENUE: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case GET_DELETE_VENUE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        venues: [...state.venues.filter(item => item.id !== action.payload)]
+      }
+    }
+    case GET_DELETE_VENUE_ERROR: {
       return {
         ...state,
         loading: false,

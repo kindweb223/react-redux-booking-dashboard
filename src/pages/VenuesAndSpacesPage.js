@@ -15,6 +15,9 @@ import {
   REQUEST_ADD_VENUE,
   GET_ADD_VENUE_SUCCESS,
   GET_ADD_VENUE_ERROR,
+  REQUEST_DELETE_VENUE,
+  GET_DELETE_VENUE_SUCCESS,
+  GET_DELETE_VENUE_ERROR,
 } from "../reducers/actionType";
 
 const VenuesAndSpacesPage = props => {
@@ -52,7 +55,6 @@ const VenuesAndSpacesPage = props => {
   }, []);
 
   const addVenues = async (name) => {
-    debugger;
     dispatch({type: REQUEST_ADD_VENUE});
 
     try {                
@@ -72,6 +74,20 @@ const VenuesAndSpacesPage = props => {
 
     } catch (err) {
       dispatch({ type: GET_ADD_VENUE_ERROR })
+    }
+  }
+
+  const deleteVenue = async (id) => {
+    setSelectedVenueIndex(null);
+    dispatch({type: REQUEST_DELETE_VENUE});
+    try {
+      const res = await axios.delete(`/venues/${id}`);
+      dispatch({
+        type: GET_DELETE_VENUE_SUCCESS,
+        payload: id
+      });
+    } catch (err) {
+      dispatch({type: GET_DELETE_VENUE_ERROR});
     }
   }
 
@@ -111,8 +127,7 @@ const VenuesAndSpacesPage = props => {
               dispatch({ type: "edit_venue", index, name });
             }}
             onDelete={() => {
-              setSelectedVenueIndex(null);
-              dispatch({ type: "delete_venue", index });
+              deleteVenue(venue.id)
             }}
             onClick={() => {
               setSelectedVenueIndex(index);
