@@ -6,24 +6,35 @@ import settingsReducer from "../reducers/settingsReducer";
 import customersReducer from "../reducers/customersReducer";
 import authReducer from "../reducers/authReducer";
 import { customers } from "../models/customers";
-import venues from "../models/venues";
 
 const AppReducerContext = React.createContext(null);
 
 const initialState = {
   bookings: bookings,
   settings: {
-    company_name: "JustVenue LTD",
-    vat_id: "123457678",
-    street: "Regent Street",
-    city: "London",
-    post_code: "123",
-    phone: "+00 11111111",
-    currency: "GBP",
-    defaultVatRateText: "22",
-    defaultVatRate: 22,
+    // company_name: "JustVenue LTD",
+    // vat_id: "123457678",
+    // street: "Regent Street",
+    // city: "London",
+    // post_code: "123",
+    // phone: "+00 11111111",
+    // currency: "GBP",
+    // defaultVatRateText: "22",
+    // defaultVatRate: 22,
+    // bookingStatuses: bookingStates,
+    // venues: venues
+    company_name: "",
+    vat_id: "",
+    street: "",
+    city: "",
+    post_code: "",
+    phone: "",
+    currency: "",
+    defaultVatRateText: "",
+    defaultVatRate: "",
     bookingStatuses: bookingStates,
-    venues: venues
+    venues: [],
+    loading: false,
   },
   customers: customers,
   auth: {

@@ -1,6 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { Formik } from "formik";
-import * as EmailValidator from "email-validator";
 import * as Yup from "yup";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
@@ -14,7 +13,6 @@ import P2 from "../components/typography/P2";
 import Grid from "../components/layout/Grid";
 
 import styled from "styled-components";
-import colors from "../components/style/colors";
 
 import "../css/validate.css";
 
@@ -45,7 +43,6 @@ const LoginPage = props => {
     .login-title {
       text-align: center;
     }
-
     .invalite_user_pwd {
       margin-bottom: 1em;
     }

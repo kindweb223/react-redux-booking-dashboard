@@ -2,6 +2,15 @@ import uuidV4 from "../utils/uuidV4";
 import reorder from "../utils/reorder";
 import spacesColors from "../models/spacesColors";
 
+import {
+  REQUEST_GET_VENUE,
+  GET_VENUE_SUCCESS,
+  GET_VENUE_ERROR,
+  REQUEST_ADD_VENUE,
+  GET_ADD_VENUE_SUCCESS,
+  GET_ADD_VENUE_ERROR,
+} from "./actionType";
+
 function settingsReducer(state = {}, action) {
   switch (action.type) {
     case "update_settings_value": {
@@ -74,7 +83,50 @@ function settingsReducer(state = {}, action) {
     }
 
     // VENUES AND SPACES
-
+    case REQUEST_GET_VENUE: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case GET_VENUE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        venues: [
+          ...action.payload
+        ]
+      }
+    }
+    case GET_VENUE_ERROR: {
+      return {
+        ...state,
+        loading: false,
+        venues: [],
+      }
+    }
+    case REQUEST_ADD_VENUE: {
+      return {
+        ...state,
+        loading: true,        
+      }
+    }
+    case GET_ADD_VENUE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        venues: [
+          ...state.venues,
+          action.payload
+        ]
+      }
+    }
+    case GET_ADD_VENUE_ERROR: {
+      return {
+        ...state,
+        loading: false,
+      }
+    }
     case "add_venue": {
       return {
         ...state,

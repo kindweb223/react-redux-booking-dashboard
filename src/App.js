@@ -1,9 +1,8 @@
 import React, { useState, useReducer, useEffect } from "react";
-import { BrowserRouter as Router, Route, Switch, withRouter } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios from 'axios';
 
 import RoutesTree from "./routing/RoutesTree";
-import CalendarPage from "./pages/CalendarPage";
 import Sidebar from "./components/layout/Sidebar";
 import LayoutWrapper from "./components/layout/LayoutWrapper";
 import LayoutSection from "./components/layout/LayoutSection";

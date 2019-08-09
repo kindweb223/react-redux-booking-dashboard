@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { Redirect } from 'react-router-dom';
 import Grid from "../components/layout/Grid";
 import constants from "../components/layout/constants";
 import Calendar from "../components/features/calendar";

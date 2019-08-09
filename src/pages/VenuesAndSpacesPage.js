@@ -1,11 +1,21 @@
 import { css } from "emotion";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import Button from "../components/buttons/Button";
 import colors from "../components/style/colors";
 import { TableEditableValue } from "../components/tables/tables";
 import H3 from "../components/typography/H3";
 import P1 from "../components/typography/P1";
 import ColoredDot from "../components/buttons/ColoredDot";
+
+import {
+  REQUEST_GET_VENUE,
+  GET_VENUE_SUCCESS,
+  GET_VENUE_ERROR,
+  REQUEST_ADD_VENUE,
+  GET_ADD_VENUE_SUCCESS,
+  GET_ADD_VENUE_ERROR,
+} from "../reducers/actionType";
 
 const VenuesAndSpacesPage = props => {
   const { state, dispatch } = props;
@@ -17,6 +27,53 @@ const VenuesAndSpacesPage = props => {
     selectedVenueIndex !== null && state.venues[selectedVenueIndex];
   const spaces =
     selectedVenueIndex !== null ? state.venues[selectedVenueIndex].spaces : [];
+
+  useEffect(() => {    
+
+    const getVenue = async () => {
+      try {
+        dispatch({type: REQUEST_GET_VENUE});
+  
+        const res = await axios.get('/venues');  
+        
+        dispatch({
+          type: GET_VENUE_SUCCESS,
+          payload: res.data.venues
+        })
+
+      } catch (err) {
+        console.log("Get Venus Setting failed.")
+        dispatch({type: GET_VENUE_ERROR});
+      }
+    }    
+
+    getVenue();
+
+  }, []);
+
+  const addVenues = async (name) => {
+    debugger;
+    dispatch({type: REQUEST_ADD_VENUE});
+
+    try {                
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      const res = await axios.post('/venues', JSON.stringify({name}), config);
+
+      dispatch({
+        type: GET_ADD_VENUE_SUCCESS,
+        payload: res.data.venue
+      })
+      setAddingVenue(false);
+
+    } catch (err) {
+      dispatch({ type: GET_ADD_VENUE_ERROR })
+    }
+  }
 
   return (
     <ColumnContainer>
@@ -38,10 +95,7 @@ const VenuesAndSpacesPage = props => {
           <Cell
             newMode
             insertPlaceholder={"Venue Name"}
-            onAddValue={name => {
-              dispatch({ type: "add_venue", name });
-              setAddingVenue(false);
-            }}
+            onAddValue={name => {addVenues(name)}}
             onCancel={() => {
               setAddingVenue(false);
             }}
@@ -51,7 +105,7 @@ const VenuesAndSpacesPage = props => {
           <Cell
             selected={selectedVenueIndex === index}
             clickable
-            key={venue.name}
+            key={venue.id}
             title={venue.name}
             onEditValue={name => {
               dispatch({ type: "edit_venue", index, name });
