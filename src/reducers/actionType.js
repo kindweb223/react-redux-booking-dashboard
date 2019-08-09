@@ -25,3 +25,11 @@ export const GET_EDIT_VENUE_SPACE_ERROR = "Get edit space of venue error";
 export const REQUEST_DELETE_VENUE_SPACE = "Request delete space of venue";
 export const GET_DELETE_VENUE_SPACE_SUCCESS = "Get delete space of venue success";
 export const GET_DELETE_VENUE_SPACE_ERROR = "Get delete space of venue error";
+
+// Company Info Action Types
+export const REQUEST_GET_COMPANYINFO = "Request get company info";
+export const GET_COMPANYINFO_SUCCESS = "Get company info success";
+export const GET_COMPANYINFO_ERROR = "Get company info error";
+export const REQUEDST_UPDATE_COMPANYINFO = "Request update company info";
+export const GET_UPDATE_COMPANYINFO_SUCCESS = "Request update company info success";
+export const GET_UPDATE_COMPANYINFO_ERROR = "Request update company info error";

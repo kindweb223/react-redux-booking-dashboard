@@ -7,9 +7,23 @@ import {
 } from "../../tables/tables";
 import currencies from "../../../models/currencies";
 import Grid from "../../layout/Grid";
+import Button from "../../buttons/Button";
+
+import {
+  REQUEST_GET_COMPANYINFO,
+  GET_COMPANYINFO_SUCCESS,
+  GET_COMPANYINFO_ERROR,
+  REQUEDST_UPDATE_COMPANYINFO,
+  GET_UPDATE_COMPANYINFO_SUCCESS,
+  GET_UPDATE_COMPANYINFO_ERROR,
+} from "../../../reducers/actionType";
 
 const CompanyInfoSettingsSection = props => {
   const { state, dispatch } = props;
+  
+  const onSaveCompanyInfo = () => {
+
+  }
 
   return (
     <div>
@@ -120,6 +134,10 @@ const CompanyInfoSettingsSection = props => {
           style={{ width: "100%" }}
         />
       </Grid>
+      <TableDivider />
+      <Button primary onClick={onSaveCompanyInfo} style={{ minWidth: "100px"}}>
+        Save
+      </Button>       
     </div>
   );
 };
