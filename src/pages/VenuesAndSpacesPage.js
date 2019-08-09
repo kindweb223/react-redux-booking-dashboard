@@ -18,6 +18,9 @@ import {
   REQUEST_DELETE_VENUE,
   GET_DELETE_VENUE_SUCCESS,
   GET_DELETE_VENUE_ERROR,
+  REQUEST_EDIT_VENUE,
+  GET_EDIT_VENUE_SUCCESS,
+  GET_EDIT_VENUE_ERROR,
 } from "../reducers/actionType";
 
 const VenuesAndSpacesPage = props => {
@@ -91,6 +94,24 @@ const VenuesAndSpacesPage = props => {
     }
   }
 
+  const editVenue = async (id, name) => {
+    dispatch({type: REQUEST_EDIT_VENUE});
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      const res = await axios.put(`/venues/${id}`, JSON.stringify({id, name}), config);
+      dispatch({
+        type: GET_EDIT_VENUE_SUCCESS,
+        payload: {id, name}
+      });
+    } catch (err) {
+      dispatch({type: GET_EDIT_VENUE_ERROR});
+    }
+  }
+
   return (
     <ColumnContainer>
       {/* VENUES */}
@@ -123,8 +144,8 @@ const VenuesAndSpacesPage = props => {
             clickable
             key={venue.id}
             title={venue.name}
-            onEditValue={name => {
-              dispatch({ type: "edit_venue", index, name });
+            onEditValue={name => {              
+              editVenue(venue.id, name)
             }}
             onDelete={() => {
               deleteVenue(venue.id)
