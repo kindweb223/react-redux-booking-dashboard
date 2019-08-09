@@ -11,3 +11,17 @@ export const GET_DELETE_VENUE_ERROR = "Get delete venue error";
 export const REQUEST_EDIT_VENUE = "Request edit venue";
 export const GET_EDIT_VENUE_SUCCESS = "Get edit venue success";
 export const GET_EDIT_VENUE_ERROR = "Get edit venue error";
+
+// Venus Spaces Action Types
+export const REQUEST_GET_VENUE_SPACES = "Request get spaces of venue";
+export const GET_VENUE_SPACES_SUCCESS = "Get spaces of venue success";
+export const GET_VENUE_SPACES_ERROR = "Get spaces of venue error";
+export const REQUEST_ADD_VENUE_SPACE = "Request add space of venue";
+export const GET_ADD_VENUE_SPACE_SUCCESS = "Get add space of venue success";
+export const GET_ADD_VENUE_SPACE_ERROR = "Get add space of venue error";
+export const REQUEST_EDIT_VENUE_SPACE = "Request edit space of venue";
+export const GET_EDIT_VENUE_SPACE_SUCCESS = "Get edit space of venue success";
+export const GET_EDIT_VENUE_SPACE_ERROR = "Get edit space of venue error";
+export const REQUEST_DELETE_VENUE_SPACE = "Request delete space of venue";
+export const GET_DELETE_VENUE_SPACE_SUCCESS = "Get delete space of venue success";
+export const GET_DELETE_VENUE_SPACE_ERROR = "Get delete space of venue error";

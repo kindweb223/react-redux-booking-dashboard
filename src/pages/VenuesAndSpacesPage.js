@@ -21,6 +21,18 @@ import {
   REQUEST_EDIT_VENUE,
   GET_EDIT_VENUE_SUCCESS,
   GET_EDIT_VENUE_ERROR,
+  REQUEST_GET_VENUE_SPACES,
+  GET_VENUE_SPACES_SUCCESS,
+  GET_VENUE_SPACES_ERROR,
+  REQUEST_ADD_VENUE_SPACE,
+  GET_ADD_VENUE_SPACE_SUCCESS,
+  GET_ADD_VENUE_SPACE_ERROR,
+  REQUEST_EDIT_VENUE_SPACE,
+  GET_EDIT_VENUE_SPACE_SUCCESS,
+  GET_EDIT_VENUE_SPACE_ERROR,
+  REQUEST_DELETE_VENUE_SPACE,
+  GET_DELETE_VENUE_SPACE_SUCCESS,
+  GET_DELETE_VENUE_SPACE_ERROR,
 } from "../reducers/actionType";
 
 const VenuesAndSpacesPage = props => {
@@ -29,45 +41,57 @@ const VenuesAndSpacesPage = props => {
   const [addingSpace, setAddingSpace] = useState(false);
   const [selectedVenueIndex, setSelectedVenueIndex] = useState(null);
 
-  const selectedVenue =
-    selectedVenueIndex !== null && state.venues[selectedVenueIndex];
-  const spaces =
-    selectedVenueIndex !== null ? state.venues[selectedVenueIndex].spaces : [];
+  const getSelectedVenue = (selectedId) => {
+    const filteredVenue = state.venues.filter(item => item.id === selectedId)
+    if (filteredVenue.length > 0)
+      return filteredVenue[0];
+    else return [];
+  }
 
-  useEffect(() => {    
+  const selectedVenue = selectedVenueIndex !== null && getSelectedVenue(selectedVenueIndex);
+
+  useEffect(() => {
 
     const getVenue = async () => {
       try {
-        dispatch({type: REQUEST_GET_VENUE});
-  
-        const res = await axios.get('/venues');  
-        
+        dispatch({ type: REQUEST_GET_VENUE });
+
+        const res = await axios.get('/venues');
+
+        const venues = res.data.venues;
+        venues.map(item => {
+          if (!item.spaces) {
+            item.spaces = [];
+          }
+          return item;
+        })
+
         dispatch({
           type: GET_VENUE_SUCCESS,
-          payload: res.data.venues
+          payload: venues
         })
 
       } catch (err) {
         console.log("Get Venus Setting failed.")
-        dispatch({type: GET_VENUE_ERROR});
+        dispatch({ type: GET_VENUE_ERROR });
       }
-    }    
+    }
 
     getVenue();
 
   }, []);
 
   const addVenues = async (name) => {
-    dispatch({type: REQUEST_ADD_VENUE});
+    dispatch({ type: REQUEST_ADD_VENUE });
 
-    try {                
+    try {
       const config = {
         headers: {
           'Content-Type': 'application/json'
         }
       };
 
-      const res = await axios.post('/venues', JSON.stringify({name}), config);
+      const res = await axios.post('/venues', JSON.stringify({ name }), config);
 
       dispatch({
         type: GET_ADD_VENUE_SUCCESS,
@@ -82,7 +106,7 @@ const VenuesAndSpacesPage = props => {
 
   const deleteVenue = async (id) => {
     setSelectedVenueIndex(null);
-    dispatch({type: REQUEST_DELETE_VENUE});
+    dispatch({ type: REQUEST_DELETE_VENUE });
     try {
       const res = await axios.delete(`/venues/${id}`);
       dispatch({
@@ -90,25 +114,90 @@ const VenuesAndSpacesPage = props => {
         payload: id
       });
     } catch (err) {
-      dispatch({type: GET_DELETE_VENUE_ERROR});
+      dispatch({ type: GET_DELETE_VENUE_ERROR });
     }
   }
 
   const editVenue = async (id, name) => {
-    dispatch({type: REQUEST_EDIT_VENUE});
+    dispatch({ type: REQUEST_EDIT_VENUE });
     try {
       const config = {
         headers: {
           'Content-Type': 'application/json'
         }
       };
-      const res = await axios.put(`/venues/${id}`, JSON.stringify({id, name}), config);
+      const res = await axios.put(`/venues/${id}`, JSON.stringify({ id, name }), config);
       dispatch({
         type: GET_EDIT_VENUE_SUCCESS,
-        payload: {id, name}
+        payload: { id, name }
       });
     } catch (err) {
-      dispatch({type: GET_EDIT_VENUE_ERROR});
+      dispatch({ type: GET_EDIT_VENUE_ERROR });
+    }
+  }
+
+  const getSpacesOfVenue = async (venueId) => {
+    dispatch({ type: REQUEST_GET_VENUE_SPACES });
+    try {
+      const res = await axios.get(`/spaces/venue/${venueId}`);
+      dispatch({
+        type: GET_VENUE_SPACES_SUCCESS,
+        payload: res.data.spaces
+      })
+    } catch (err) {
+      dispatch({ type: GET_VENUE_SPACES_ERROR })
+    }
+  }
+
+  const addSpaceOfVenue = async (VenueId, name) => {
+    dispatch({ type: REQUEST_ADD_VENUE_SPACE });
+
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      const res = await axios.post('/spaces', JSON.stringify({ VenueId, name }), config);
+      dispatch({
+        type: GET_ADD_VENUE_SPACE_SUCCESS,
+        payload: res.data.space
+      });
+      setAddingSpace(false);
+    } catch (err) {
+      dispatch({ type: GET_ADD_VENUE_SPACE_ERROR });
+      setAddingSpace(false);
+    }
+  }
+
+  const editSpaceOfVenue = async (id, name) => {
+    dispatch({ type: REQUEST_EDIT_VENUE_SPACE });
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      const res = await axios.put(`/spaces/${id}`, JSON.stringify({ id, name }), config);
+      dispatch({
+        type: GET_EDIT_VENUE_SPACE_SUCCESS,
+        payload: { id, name }
+      });
+    } catch (err) {
+      dispatch({ type: GET_EDIT_VENUE_SPACE_ERROR });
+    }
+  }
+
+  const deleteSpaceOfVenue = async (id) => {
+    dispatch({ type: REQUEST_DELETE_VENUE_SPACE });
+    try {
+      const res = await axios.delete(`/spaces/${id}`);
+      dispatch({
+        type: GET_DELETE_VENUE_SPACE_SUCCESS,
+        payload: id
+      });
+    } catch (err) {
+      dispatch({ type: GET_DELETE_VENUE_SPACE_ERROR });
     }
   }
 
@@ -132,26 +221,27 @@ const VenuesAndSpacesPage = props => {
           <Cell
             newMode
             insertPlaceholder={"Venue Name"}
-            onAddValue={name => {addVenues(name)}}
+            onAddValue={name => { addVenues(name) }}
             onCancel={() => {
               setAddingVenue(false);
             }}
           />
         )}
-        {state.venues.map((venue, index) => (
+        {state.venues.map((venue) => (
           <Cell
-            selected={selectedVenueIndex === index}
+            selected={selectedVenueIndex === venue.id}
             clickable
             key={venue.id}
             title={venue.name}
-            onEditValue={name => {              
+            onEditValue={name => {
               editVenue(venue.id, name)
             }}
             onDelete={() => {
               deleteVenue(venue.id)
             }}
             onClick={() => {
-              setSelectedVenueIndex(index);
+              setSelectedVenueIndex(venue.id);
+              getSpacesOfVenue(venue.id);
             }}
           />
         ))}
@@ -164,7 +254,7 @@ const VenuesAndSpacesPage = props => {
         message={(() => {
           if (selectedVenueIndex === null) {
             return "Select a venue to view its spaces";
-          } else if (spaces.length === 0 && !addingSpace) {
+          } else if (state.selectedVenueSpaces.length === 0 && !addingSpace) {
             return `Add a Space to get started`;
           }
         })()}
@@ -175,8 +265,7 @@ const VenuesAndSpacesPage = props => {
             newMode
             insertPlaceholder={"Space Name"}
             onAddValue={name => {
-              dispatch({ type: "add_space", venue: selectedVenueIndex, name });
-              setAddingSpace(false);
+              addSpaceOfVenue(selectedVenueIndex, name);
             }}
             onCancel={() => {
               setAddingSpace(false);
@@ -184,25 +273,16 @@ const VenuesAndSpacesPage = props => {
           />
         )}
 
-        {spaces.map((space, index) => (
+        {state.selectedVenueSpaces.map((space, index) => (
           <Cell
             key={space.id}
             title={space.name}
             accentColor={space.accentColor}
             onEditValue={name => {
-              dispatch({
-                type: "edit_space",
-                venue: selectedVenueIndex,
-                space: index,
-                name
-              });
+              editSpaceOfVenue(space.id, name)
             }}
             onDelete={() => {
-              dispatch({
-                type: "delete_space",
-                venue: selectedVenueIndex,
-                space: index
-              });
+              deleteSpaceOfVenue(space.id)
             }}
           />
         ))}
@@ -229,32 +309,32 @@ const Column = ({
   onButtonClick,
   children = null
 }) => (
-  <div
-    className={css`
+    <div
+      className={css`
       width: 40%;
       min-width: 350px;
       margin-right: 2em;
     `}
-  >
-    <div
-      className={css`
+    >
+      <div
+        className={css`
         display: flex;
         justify-content: space-between;
         margin-top: 0.8 em;
       `}
-    >
-      {title && <H3>{title}</H3>}
-      {buttonTitle && (
-        <Button primary onClick={onButtonClick}>
-          {buttonTitle}
-        </Button>
-      )}
-    </div>
-    {message && <P1>{message}</P1>}
+      >
+        {title && <H3>{title}</H3>}
+        {buttonTitle && (
+          <Button primary onClick={onButtonClick}>
+            {buttonTitle}
+          </Button>
+        )}
+      </div>
+      {message && <P1>{message}</P1>}
 
-    {children}
-  </div>
-);
+      {children}
+    </div>
+  );
 
 const Cell = ({
   title = "",
@@ -288,8 +368,8 @@ const Cell = ({
           height: 28px;
         }
         ${!newMode &&
-          !editing &&
-          css`
+        !editing &&
+        css`
             button {
               display: none;
             }
@@ -366,7 +446,7 @@ const Cell = ({
                 className={css`
                   width: 70%;
                   ${clickable &&
-                    css`
+                  css`
                       :hover {
                         opacity: 0.7;
                       }

@@ -15,6 +15,18 @@ import {
   REQUEST_EDIT_VENUE,
   GET_EDIT_VENUE_SUCCESS,
   GET_EDIT_VENUE_ERROR,
+  REQUEST_GET_VENUE_SPACES,
+  GET_VENUE_SPACES_SUCCESS,
+  GET_VENUE_SPACES_ERROR,
+  REQUEST_ADD_VENUE_SPACE,
+  GET_ADD_VENUE_SPACE_SUCCESS,
+  GET_ADD_VENUE_SPACE_ERROR,
+  REQUEST_EDIT_VENUE_SPACE,
+  GET_EDIT_VENUE_SPACE_SUCCESS,
+  GET_EDIT_VENUE_SPACE_ERROR,
+  REQUEST_DELETE_VENUE_SPACE,
+  GET_DELETE_VENUE_SPACE_SUCCESS,
+  GET_DELETE_VENUE_SPACE_ERROR,
 } from "./actionType";
 
 function settingsReducer(state = {}, action) {
@@ -114,7 +126,7 @@ function settingsReducer(state = {}, action) {
     case REQUEST_ADD_VENUE: {
       return {
         ...state,
-        loading: true,        
+        loading: true,
       }
     }
     case GET_ADD_VENUE_SUCCESS: {
@@ -164,7 +176,7 @@ function settingsReducer(state = {}, action) {
         loading: false,
         venues: [
           ...state.venues.map(item => {
-            if(item.id === action.payload.id)
+            if (item.id === action.payload.id)
               item.name = action.payload.name;
             return item;
           })
@@ -172,6 +184,89 @@ function settingsReducer(state = {}, action) {
       }
     }
     case GET_EDIT_VENUE_ERROR: {
+      return {
+        ...state,
+        loading: false,
+      }
+    }
+    case REQUEST_GET_VENUE_SPACES: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case GET_VENUE_SPACES_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        selectedVenueSpaces: [...action.payload]
+      }
+    }
+    case GET_VENUE_SPACES_ERROR: {
+      return {
+        ...state,
+        loading: false,
+        selectedVenueSpaces: [],
+      }
+    }
+    case REQUEST_ADD_VENUE_SPACE: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case GET_ADD_VENUE_SPACE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        selectedVenueSpaces: [...state.selectedVenueSpaces, action.payload]
+      }
+    }
+    case GET_ADD_VENUE_SPACE_ERROR: {
+      return {
+        ...state,
+        loading: false,
+      }
+    }
+    case REQUEST_EDIT_VENUE_SPACE: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case GET_EDIT_VENUE_SPACE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        selectedVenueSpaces: [
+          ...state.selectedVenueSpaces.map(item => {
+            if (item.id === action.payload.id)
+              item.name = action.payload.name;
+            return item;
+          })
+        ]
+      }
+    }
+    case GET_EDIT_VENUE_SPACE_ERROR: {
+      return {
+        ...state,
+        loading: false,
+      }
+    }
+    case REQUEST_DELETE_VENUE_SPACE: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case GET_DELETE_VENUE_SPACE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        selectedVenueSpaces: state.selectedVenueSpaces.filter(item => item.id !== action.payload)
+      }
+    }
+    case GET_DELETE_VENUE_SPACE_ERROR: {
       return {
         ...state,
         loading: false,

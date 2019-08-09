@@ -35,6 +35,7 @@ const initialState = {
     bookingStatuses: bookingStates,
     venues: [],
     loading: false,
+    selectedVenueSpaces: [],
   },
   customers: customers,
   auth: {
