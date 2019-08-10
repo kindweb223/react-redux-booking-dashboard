@@ -8,6 +8,7 @@ import {
 import currencies from "../../../models/currencies";
 import Grid from "../../layout/Grid";
 import Button from "../../buttons/Button";
+import SpinnerContainer from "../../layout/Spinner";
 
 import {
   REQUEST_GET_COMPANYINFO,
@@ -27,6 +28,7 @@ const CompanyInfoSettingsSection = props => {
 
   return (
     <div>
+      <SpinnerContainer loading={state.loading} />
       <P2 color="grey">These info will be used to generate invoices.</P2>
       <TableEditableValue
         label="Company Name"

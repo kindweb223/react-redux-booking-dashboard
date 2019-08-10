@@ -1,13 +1,14 @@
 import { css } from "emotion";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from 'axios';
+import { AppReducerContext } from "../contexts/AppReducerContext";
 import Button from "../components/buttons/Button";
 import colors from "../components/style/colors";
 import { TableEditableValue } from "../components/tables/tables";
 import H3 from "../components/typography/H3";
 import P1 from "../components/typography/P1";
 import ColoredDot from "../components/buttons/ColoredDot";
-
+import SpinnerContainer from "../components/layout/Spinner"
 import {
   REQUEST_GET_VENUE,
   GET_VENUE_SUCCESS,
@@ -291,16 +292,22 @@ const VenuesAndSpacesPage = props => {
   );
 };
 
-const ColumnContainer = ({ children = null }) => (
-  <div
-    className={css`
-      display: flex;
-      /* background-color: green; */
-    `}
-  >
-    {children}
-  </div>
-);
+const ColumnContainer = ({ children = null }) => {
+  
+  const { state, dispatch } = useContext(AppReducerContext);
+  return (
+    <div
+      className={css`
+        display: flex;
+        position: relative;
+        /* background-color: green; */
+      `}
+    >
+      <SpinnerContainer loading={state.settings.loading} />
+      {children}
+    </div>
+  )
+};
 
 const Column = ({
   title = "",
