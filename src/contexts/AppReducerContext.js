@@ -10,7 +10,7 @@ import { customers } from "../models/customers";
 const AppReducerContext = React.createContext(null);
 
 const initialState = {
-  bookings: bookings,
+  bookings: [],
   settings: {
     // company_name: "JustVenue LTD",
     // vat_id: "123457678",
@@ -37,7 +37,7 @@ const initialState = {
     loading: false,
     selectedVenueSpaces: [],
   },
-  customers: customers,
+  customers: [],
   auth: {
     isAuthenticated: false,
     showInvalidMsg: false,
