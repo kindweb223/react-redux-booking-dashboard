@@ -83,6 +83,7 @@ const TableEditableValue = props => {
           tabIndex={tabIndex}
           onChange={event => onChange && onChange(event.target.value)}
           autoFocus={autoFocus}
+          className={props.className}
         />
       )}
     </div>

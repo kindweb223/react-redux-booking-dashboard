@@ -358,7 +358,30 @@ const Cell = ({
 }) => {
   const [value, setValue] = useState(title);
   const [editing, setEditing] = useState(newMode);
+  const [isValidate, setIsValidate] = useState(true);
+  
+  const handleChange = (value) => {
+    debugger;
+    setValue(value);
+    if (value.length == 0)
+      setIsValidate(false);
+    else setIsValidate(true);
+  }
 
+  const handleSave = () => {
+    if (value.length == 0){
+      setIsValidate(false);
+    } else onAddValue(value);
+  }
+
+  const handleCancel = () => {    
+    onCancel();
+  }
+
+  const handleEditCancel = () => {    
+    setEditing(false);    
+    setValue(title);
+  }
   return (
     <div
       className={css`
@@ -404,19 +427,36 @@ const Cell = ({
                 justify-content: space-between;
               `}
             >
-              <TableEditableValue
-                autoFocus
-                placeholder={placeholder}
-                value={value}
-                onChange={value => setValue(value)}
-              />
+              <div className={css`
+                display: flex;                
+                `}
+              >
+                <TableEditableValue
+                  autoFocus
+                  placeholder={placeholder}
+                  value={value}
+                  onChange={value => {handleChange(value)}}
+                  className={isValidate? "" : "error" }
+                />
+                {!isValidate && 
+                  <p
+                    className={css`
+                      color: red;
+                      font-size: 0.8em;
+                      line-height: 28px;
+                      margin: 0 0 0 10px !important;
+                    `}>
+                      Requiried
+                  </p>
+                }                
+              </div>              
               <div>
                 <button
                   onClick={() => {
                     if (newMode) {
-                      onCancel();
+                      handleCancel();
                     } else {
-                      setEditing(false);
+                      handleEditCancel();
                     }
                   }}
                   style={{ color: "gray" }}
@@ -426,7 +466,7 @@ const Cell = ({
                 <button
                   onClick={() => {
                     if (newMode) {
-                      value.length > 0 ? onAddValue(value) : onCancel();
+                      handleSave();
                     } else {
                       onEditValue(value);
                       setEditing(false);
