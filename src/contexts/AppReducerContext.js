@@ -36,9 +36,10 @@ const initialState = {
     venues: [],
     loading: false,
     selectedVenueSpaces: [],
-    venuesLoading: false,   
-    spacesLoading: false, 
+    venuesLoading: false,       
     venueActionLoading: false,
+    spacesLoading: false, 
+    spaceActionLoading: false,
   },
   customers: [],
   auth: {

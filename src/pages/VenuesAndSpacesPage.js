@@ -263,11 +263,13 @@ const VenuesAndSpacesPage = props => {
           }
         })()}
         onButtonClick={() => setAddingSpace(true)}
+        loading={state.spaceActionLoading}
       >
         {state.spacesLoading ? (
           <SpinnerContainer loading={state.spacesLoading.toString()} />
         ) : (
             <React.Fragment>
+              <SpinnerContainer loading={state.spaceActionLoading.toString()} />
               {addingSpace && (
                 <Cell
                   newMode
@@ -278,6 +280,7 @@ const VenuesAndSpacesPage = props => {
                   onCancel={() => {
                     setAddingSpace(false);
                   }}
+                  loading={state.spaceActionLoading}
                 />
               )}
 
@@ -292,6 +295,7 @@ const VenuesAndSpacesPage = props => {
                   onDelete={() => {
                     deleteSpaceOfVenue(space.id)
                   }}
+                  loading={state.spaceActionLoading}
                 />
               ))}
             </React.Fragment>

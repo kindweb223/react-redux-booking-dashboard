@@ -212,32 +212,32 @@ function settingsReducer(state = {}, action) {
     case REQUEST_ADD_VENUE_SPACE: {
       return {
         ...state,
-        spacesLoading: true,
+        spaceActionLoading: true,
       }
     }
     case GET_ADD_VENUE_SPACE_SUCCESS: {
       return {
         ...state,
-        spacesLoading: false,
+        spaceActionLoading: false,
         selectedVenueSpaces: [...state.selectedVenueSpaces, action.payload]
       }
     }
     case GET_ADD_VENUE_SPACE_ERROR: {
       return {
         ...state,
-        spacesLoading: false,
+        spaceActionLoading: false,
       }
     }
     case REQUEST_EDIT_VENUE_SPACE: {
       return {
         ...state,
-        loading: true,
+        spaceActionLoading: true,
       }
     }
     case GET_EDIT_VENUE_SPACE_SUCCESS: {
       return {
         ...state,
-        loading: false,
+        spaceActionLoading: false,
         selectedVenueSpaces: [
           ...state.selectedVenueSpaces.map(item => {
             if (item.id === action.payload.id)
@@ -250,26 +250,26 @@ function settingsReducer(state = {}, action) {
     case GET_EDIT_VENUE_SPACE_ERROR: {
       return {
         ...state,
-        loading: false,
+        spaceActionLoading: false,
       }
     }
     case REQUEST_DELETE_VENUE_SPACE: {
       return {
         ...state,
-        loading: true,
+        spaceActionLoading: true,
       }
     }
     case GET_DELETE_VENUE_SPACE_SUCCESS: {
       return {
         ...state,
-        loading: false,
+        spaceActionLoading: false,
         selectedVenueSpaces: state.selectedVenueSpaces.filter(item => item.id !== action.payload)
       }
     }
     case GET_DELETE_VENUE_SPACE_ERROR: {
       return {
         ...state,
-        loading: false,
+        spaceActionLoading: false,
       }
     }
     case "add_venue": {
