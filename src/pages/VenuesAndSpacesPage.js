@@ -260,39 +260,46 @@ const VenuesAndSpacesPage = props => {
         })()}
         onButtonClick={() => setAddingSpace(true)}
       >
-        {addingSpace && (
-          <Cell
-            newMode
-            insertPlaceholder={"Space Name"}
-            onAddValue={name => {
-              addSpaceOfVenue(selectedVenueIndex, name);
-            }}
-            onCancel={() => {
-              setAddingSpace(false);
-            }}
-          />
-        )}
+        {state.spacesLoading ? (
+          <SpinnerContainer loading={state.spacesLoading.toString()} />
+        ) : (
+            <React.Fragment>
+              {addingSpace && (
+                <Cell
+                  newMode
+                  insertPlaceholder={"Space Name"}
+                  onAddValue={name => {
+                    addSpaceOfVenue(selectedVenueIndex, name);
+                  }}
+                  onCancel={() => {
+                    setAddingSpace(false);
+                  }}
+                />
+              )}
 
-        {state.selectedVenueSpaces.map((space, index) => (
-          <Cell
-            key={space.id}
-            title={space.name}
-            accentColor={space.accentColor}
-            onEditValue={name => {
-              editSpaceOfVenue(space.id, name)
-            }}
-            onDelete={() => {
-              deleteSpaceOfVenue(space.id)
-            }}
-          />
-        ))}
+              {state.selectedVenueSpaces.map((space, index) => (
+                <Cell
+                  key={space.id}
+                  title={space.name}
+                  accentColor={space.accentColor}
+                  onEditValue={name => {
+                    editSpaceOfVenue(space.id, name)
+                  }}
+                  onDelete={() => {
+                    deleteSpaceOfVenue(space.id)
+                  }}
+                />
+              ))}
+            </React.Fragment>
+          )
+        }
       </Column>
     </ColumnContainer>
   );
 };
 
 const ColumnContainer = ({ children = null }) => {
-  
+
   const { state, dispatch } = useContext(AppReducerContext);
   return (
     <div
@@ -303,7 +310,7 @@ const ColumnContainer = ({ children = null }) => {
       `}
     >
       <SpinnerContainer loading={state.settings.loading.toString()} />
-      {children}
+      {!state.settings.loading && children}
     </div>
   )
 };
@@ -320,6 +327,7 @@ const Column = ({
       width: 40%;
       min-width: 350px;
       margin-right: 2em;
+      position: relative;
     `}
     >
       <div
@@ -337,10 +345,9 @@ const Column = ({
         )}
       </div>
       {message && <P1>{message}</P1>}
-
       {children}
     </div>
-  );
+  )
 
 const Cell = ({
   title = "",
@@ -358,7 +365,7 @@ const Cell = ({
   const [value, setValue] = useState(title);
   const [editing, setEditing] = useState(newMode);
   const [isValidate, setIsValidate] = useState(true);
-  
+
   const handleChange = (value) => {
     setValue(value);
     if (value.length == 0)
@@ -367,17 +374,17 @@ const Cell = ({
   }
 
   const handleSave = () => {
-    if (value.length == 0){
+    if (value.length == 0) {
       setIsValidate(false);
     } else onAddValue(value);
   }
 
-  const handleCancel = () => {    
+  const handleCancel = () => {
     onCancel();
   }
 
-  const handleEditCancel = () => {    
-    setEditing(false);    
+  const handleEditCancel = () => {
+    setEditing(false);
     setValue(title);
   }
   return (
@@ -433,10 +440,10 @@ const Cell = ({
                   autoFocus
                   placeholder={placeholder}
                   value={value}
-                  onChange={value => {handleChange(value)}}
-                  className={isValidate? "" : "error" }
+                  onChange={value => { handleChange(value) }}
+                  className={isValidate ? "" : "error"}
                 />
-                {!isValidate && 
+                {!isValidate &&
                   <p
                     className={css`
                       color: red;
@@ -444,10 +451,10 @@ const Cell = ({
                       line-height: 28px;
                       margin: 0 0 0 10px !important;
                     `}>
-                      Requiried
+                    Requiried
                   </p>
-                }                
-              </div>              
+                }
+              </div>
               <div>
                 <button
                   onClick={() => {

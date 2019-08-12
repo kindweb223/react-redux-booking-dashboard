@@ -126,13 +126,13 @@ function settingsReducer(state = {}, action) {
     case REQUEST_ADD_VENUE: {
       return {
         ...state,
-        loading: true,
+        venuesLoading: true,
       }
     }
     case GET_ADD_VENUE_SUCCESS: {
       return {
         ...state,
-        loading: false,
+        venuesLoading: false,
         venues: [
           ...state.venues,
           action.payload
@@ -142,7 +142,7 @@ function settingsReducer(state = {}, action) {
     case GET_ADD_VENUE_ERROR: {
       return {
         ...state,
-        loading: false,
+        venuesLoading: false,
       }
     }
     case REQUEST_DELETE_VENUE: {
@@ -192,40 +192,40 @@ function settingsReducer(state = {}, action) {
     case REQUEST_GET_VENUE_SPACES: {
       return {
         ...state,
-        loading: true,
+        spacesLoading: true,
       }
     }
     case GET_VENUE_SPACES_SUCCESS: {
       return {
         ...state,
-        loading: false,
+        spacesLoading: false,
         selectedVenueSpaces: [...action.payload]
       }
     }
     case GET_VENUE_SPACES_ERROR: {
       return {
         ...state,
-        loading: false,
+        spacesLoading: false,
         selectedVenueSpaces: [],
       }
     }
     case REQUEST_ADD_VENUE_SPACE: {
       return {
         ...state,
-        loading: true,
+        spacesLoading: true,
       }
     }
     case GET_ADD_VENUE_SPACE_SUCCESS: {
       return {
         ...state,
-        loading: false,
+        spacesLoading: false,
         selectedVenueSpaces: [...state.selectedVenueSpaces, action.payload]
       }
     }
     case GET_ADD_VENUE_SPACE_ERROR: {
       return {
         ...state,
-        loading: false,
+        spacesLoading: false,
       }
     }
     case REQUEST_EDIT_VENUE_SPACE: {
