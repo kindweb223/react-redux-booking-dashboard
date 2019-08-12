@@ -2,7 +2,7 @@ import React from 'react';
 import styled from "styled-components";
 
 const Container = styled.div`
-  display: ${props => (props.loading ? "flex" : "none" )};
+  display: ${props => (props.loading === "true" ? "flex" : "none" )};
   position: absolute;
   width: 100%;
   height: 100%;

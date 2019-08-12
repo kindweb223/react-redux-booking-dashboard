@@ -303,7 +303,7 @@ const ColumnContainer = ({ children = null }) => {
         /* background-color: green; */
       `}
     >
-      <SpinnerContainer loading={state.settings.loading} />
+      <SpinnerContainer loading={state.settings.loading.toString()} />
       {children}
     </div>
   )

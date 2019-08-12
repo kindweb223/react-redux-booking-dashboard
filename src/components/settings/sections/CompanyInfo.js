@@ -28,7 +28,7 @@ const CompanyInfoSettingsSection = props => {
 
   return (
     <div>
-      <SpinnerContainer loading={state.loading} />
+      <SpinnerContainer loading={state.loading.toString()} />
       <P2 color="grey">These info will be used to generate invoices.</P2>
       <TableEditableValue
         label="Company Name"
