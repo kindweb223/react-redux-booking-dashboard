@@ -1,4 +1,5 @@
 import React from "react";
+import { css } from "emotion";
 import P2 from "../../typography/P2";
 import {
   TableEditableValue,
@@ -137,9 +138,16 @@ const CompanyInfoSettingsSection = props => {
         />
       </Grid>
       <TableDivider />
-      <Button primary onClick={onSaveCompanyInfo} style={{ minWidth: "100px"}}>
-        Save
-      </Button>       
+      <div 
+        className={css`
+          display: flex;
+          justify-content: flex-end;
+        `}
+      >
+        <Button primary onClick={onSaveCompanyInfo} style={{ minWidth: "100px"}}>
+          Save
+        </Button>       
+      </div>
     </div>
   );
 };
