@@ -58,7 +58,6 @@ const VenuesAndSpacesPage = props => {
         dispatch({ type: REQUEST_GET_VENUE });
 
         const res = await axios.get('/venues');
-
         const venues = res.data.venues;
         venues.map(item => {
           if (!item.spaces) {

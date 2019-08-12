@@ -8,11 +8,10 @@ const Container = styled.div`
   height: 100%;
   left: 0;
   top: 0;
-  background: rgba(127,127,127, 0.1);
   flex-direction: row;
   justify-content: center;
-  align-items: center;
-
+  pointer-events: none;
+  
   div,
   div:before,
   div:after {
@@ -33,6 +32,7 @@ const Container = styled.div`
     transform: translateZ(0);
     -webkit-animation-delay: -0.16s;
     animation-delay: -0.16s;
+    margin-top: 200px;
   }
   div:before,
   div:after {

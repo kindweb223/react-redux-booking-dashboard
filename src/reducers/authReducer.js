@@ -1,3 +1,5 @@
+import setAuthToken from "../utils/setAuthToken";
+
 function authReducer(state, action) {
   switch(action.type) {
     case "request_login_action":            
@@ -7,8 +9,9 @@ function authReducer(state, action) {
         user: {...action.user},
         showInvalidMsg: false,
       };    
-    case "get_login_success":      
+    case "get_login_success":            
       localStorage.setItem('token', action.payload.token);
+      setAuthToken(localStorage.token);
       return {
         ...state,
         loading: false,
@@ -43,6 +46,7 @@ function authReducer(state, action) {
       }
     case "set_logout":
       localStorage.removeItem('token');
+      setAuthToken(localStorage.token);
       return {
         ...state,
         loading: false,
