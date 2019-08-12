@@ -361,7 +361,6 @@ const Cell = ({
   const [isValidate, setIsValidate] = useState(true);
   
   const handleChange = (value) => {
-    debugger;
     setValue(value);
     if (value.length == 0)
       setIsValidate(false);
