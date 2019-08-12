@@ -126,13 +126,13 @@ function settingsReducer(state = {}, action) {
     case REQUEST_ADD_VENUE: {
       return {
         ...state,
-        venuesLoading: true,
+        venueActionLoading: true,
       }
     }
     case GET_ADD_VENUE_SUCCESS: {
       return {
         ...state,
-        venuesLoading: false,
+        venueActionLoading: false,
         venues: [
           ...state.venues,
           action.payload
@@ -142,38 +142,38 @@ function settingsReducer(state = {}, action) {
     case GET_ADD_VENUE_ERROR: {
       return {
         ...state,
-        venuesLoading: false,
+        venueActionLoading: false,
       }
     }
     case REQUEST_DELETE_VENUE: {
       return {
         ...state,
-        loading: true,
+        venueActionLoading: true,
       }
     }
     case GET_DELETE_VENUE_SUCCESS: {
       return {
         ...state,
-        loading: false,
+        venueActionLoading: false,
         venues: [...state.venues.filter(item => item.id !== action.payload)]
       }
     }
     case GET_DELETE_VENUE_ERROR: {
       return {
         ...state,
-        loading: false,
+        venueActionLoading: false,
       }
     }
     case REQUEST_EDIT_VENUE: {
       return {
         ...state,
-        loading: true,
+        venueActionLoading: true,
       }
     }
     case GET_EDIT_VENUE_SUCCESS: {
       return {
         ...state,
-        loading: false,
+        venueActionLoading: false,
         venues: [
           ...state.venues.map(item => {
             if (item.id === action.payload.id)
@@ -186,7 +186,7 @@ function settingsReducer(state = {}, action) {
     case GET_EDIT_VENUE_ERROR: {
       return {
         ...state,
-        loading: false,
+        venueActionLoading: false,
       }
     }
     case REQUEST_GET_VENUE_SPACES: {

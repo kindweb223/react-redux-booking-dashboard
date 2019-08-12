@@ -216,7 +216,9 @@ const VenuesAndSpacesPage = props => {
           setSelectedVenueIndex(null);
           setAddingVenue(true);
         }}
+        loading={state.venueActionLoading}
       >
+        <SpinnerContainer loading={state.venueActionLoading.toString()} />
         {addingVenue && (
           <Cell
             newMode
@@ -225,12 +227,14 @@ const VenuesAndSpacesPage = props => {
             onCancel={() => {
               setAddingVenue(false);
             }}
+            loading={state.venueActionLoading}
           />
         )}
         {state.venues.map((venue) => (
           <Cell
             selected={selectedVenueIndex === venue.id}
             clickable
+            loading={state.venueActionLoading}
             key={venue.id}
             title={venue.name}
             onEditValue={name => {
@@ -320,14 +324,15 @@ const Column = ({
   buttonTitle = "",
   message = null,
   onButtonClick,
-  children = null
+  children = null,
+  loading = false,
 }) => (
     <div
       className={css`
       width: 40%;
       min-width: 350px;
       margin-right: 2em;
-      position: relative;
+      position: relative;      
     `}
     >
       <div
@@ -339,7 +344,7 @@ const Column = ({
       >
         {title && <H3>{title}</H3>}
         {buttonTitle && (
-          <Button primary onClick={onButtonClick}>
+          <Button primary onClick={onButtonClick} disabled={loading}>
             {buttonTitle}
           </Button>
         )}
@@ -360,7 +365,8 @@ const Cell = ({
   onClick = null,
   selected = false,
   clickable = false,
-  accentColor = null
+  accentColor = null,
+  loading = false,
 }) => {
   const [value, setValue] = useState(title);
   const [editing, setEditing] = useState(newMode);
@@ -402,6 +408,8 @@ const Cell = ({
         input {
           height: 28px;
         }
+        pointer-events: ${loading ? "none" : "initial"};
+        opacity: ${loading ? "0.7" : "1"};
         ${!newMode &&
         !editing &&
         css`
