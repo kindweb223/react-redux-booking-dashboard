@@ -51,49 +51,6 @@ import {
 
 function settingsReducer(state = {}, action) {
   switch (action.type) {
-    case "update_settings_value": {
-      const key = action.key;
-      const value = action.value;
-      return {
-        ...state,
-        [key]: value
-      };
-    }
-    case "update_settings_default_vat_rate": {
-      return {
-        ...state,
-        defaultVatRateText: action.value,
-        defaultVatRate: parseFloat(action.value)
-      };
-    }
-    case "toggle_custom_status": {
-      const bookingStatuses = Array.from(state.bookingStatuses);
-      bookingStatuses[action.index].enabled = !bookingStatuses[action.index]
-        .enabled;
-
-      return {
-        ...state,
-        bookingStatuses
-      };
-    }
-    case "update_custom_status_name": {
-      const bookingStatuses = Array.from(state.bookingStatuses);
-      bookingStatuses[action.index].name = action.name;
-
-      return {
-        ...state,
-        bookingStatuses
-      };
-    }
-    case "remove_custom_status": {
-      const bookingStatuses = Array.from(state.bookingStatuses);
-      bookingStatuses.splice(action.index, 1);
-
-      return {
-        ...state,
-        bookingStatuses
-      };
-    }
     case APPEND_CUSTOM_STATUS: {
       const bookingStatuses = Array.from(state.bookingStatuses);
       bookingStatuses.push({

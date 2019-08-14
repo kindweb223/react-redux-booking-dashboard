@@ -405,7 +405,6 @@ const BookingStatusesSettingsSection = props => {
                             index={index}
                             status={status}
                             onToggle={() =>
-                              // dispatch({ type: "toggle_custom_status", index })
                               changeToggle(index)
                             }
                             onDelete={() => {

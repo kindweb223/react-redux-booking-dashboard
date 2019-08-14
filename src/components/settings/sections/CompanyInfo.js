@@ -45,17 +45,17 @@ const CompanyInfoSettingsSection = props => {
   }, []);
 
   const onSaveCompanyInfo = async () => {
-    dispatch({
-      type: REQUEDST_UPDATE_COMPANYINFO
-    })
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
+    try {      
+      dispatch({
+        type: REQUEDST_UPDATE_COMPANYINFO
+      })
+  
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+    
       const res = await axios.put(
         `/companies/${state.companyInfo.id}`, 
         JSON.stringify(state.companyInfo),

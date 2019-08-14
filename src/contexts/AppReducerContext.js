@@ -1,11 +1,9 @@
 import React from "react";
-import { bookingStates } from "../models/bookingStates";
 import { bookings } from "../models/bookings";
 import bookingsReducer from "../reducers/bookingsReducer";
 import settingsReducer from "../reducers/settingsReducer";
 import customersReducer from "../reducers/customersReducer";
 import authReducer from "../reducers/authReducer";
-import { customers } from "../models/customers";
 
 const AppReducerContext = React.createContext(null);
 
