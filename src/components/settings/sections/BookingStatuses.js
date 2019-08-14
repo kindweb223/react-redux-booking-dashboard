@@ -354,11 +354,11 @@ const BookingStatusesSettingsSection = props => {
         dispatch({ type: REQUEST_DELETE_BOOKING_STATUS })
         
         const id = state.bookingStatuses[index].id;
-        const res = await axios.delete(`/statues/${id}`);
+        const res = await axios.delete(`/statuses/${id}`);
 
         dispatch({ 
           type: GET_DELETE_BOOKING_STATUS_SUCCESS,
-          payload: state.bookingStatuses[index].id
+          payload: id
         })
       } catch (err) {
         dispatch({ type: GET_DELETE_BOOKING_STATUS_ERROR });
