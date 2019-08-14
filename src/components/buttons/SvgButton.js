@@ -1,5 +1,5 @@
 import React from "react";
-import { css } from "emotion";
+import { css, cx } from "emotion";
 
 const SvgButton = props => {
   const { width, height, size, svg, onClick, style } = props;
@@ -11,17 +11,21 @@ const SvgButton = props => {
       onClick={onClick}
       style={style}
       {...props}
-      className={css`
-        width: ${actualWidth}px;
-        height: ${actualHeight}px;
-        background: url(${svg});
-        background-size: 100% 100%;
-        cursor: pointer;
+      className={
+        cx( props.className, 
+          css`
+            width: ${actualWidth}px;
+            height: ${actualHeight}px;
+            background: url(${svg});
+            background-size: 100% 100%;
+            cursor: pointer;
 
-        :active {
-          opacity: 0.5;
-        }
-      `}
+            :active {
+              opacity: 0.5;
+            }
+          `
+        )
+      }
     />
   );
 };

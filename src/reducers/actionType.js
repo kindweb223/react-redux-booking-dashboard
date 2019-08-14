@@ -33,3 +33,20 @@ export const GET_COMPANYINFO_ERROR = "Get company info error";
 export const REQUEDST_UPDATE_COMPANYINFO = "Request update company info";
 export const GET_UPDATE_COMPANYINFO_SUCCESS = "Request update company info success";
 export const GET_UPDATE_COMPANYINFO_ERROR = "Request update company info error";
+
+// Booking Status Section Action Types
+export const REQUEST_GET_BOOKINGSTATUS = "Request get booking status";
+export const GET_BOOKING_STATUS_SUCCESS = "Get booking status success";
+export const GET_BOOKING_STATUS_ERROR = "Get booking status error";
+export const REQUEST_ADD_BOOKING_STATUS = "Request add booking status";
+export const GET_ADD_BOOKING_STATUS_SUCCESS = "Get add booking status success";
+export const GET_ADD_BOOKING_STATUS_ERROR = "Get add booking status error";
+export const REQUEST_UPDATE_BOOKING_STATUS = "Request update booking status";
+export const GET_UPDATE_BOOKING_STATUS_SUCCESS = "Get update booking status success";
+export const GET_UPDATE_BOOKING_STATUS_ERROR = "Get update booking status error";
+export const REQUEST_DELETE_BOOKING_STATUS = "Request delete booking status";
+export const GET_DELETE_BOOKING_STATUS_SUCCESS = "Get delete booking status success";
+export const GET_DELETE_BOOKING_STATUS_ERROR = "Get delete booking status error";
+export const APPEND_CUSTOM_STATUS = "Append new booking status";
+export const REMOVE_NEW_BOOKING_STATUS = "Remove appended new booking status";
+export const SET_BOOKING_STATUS_PAGE_STATUS = "Set booking status page status";

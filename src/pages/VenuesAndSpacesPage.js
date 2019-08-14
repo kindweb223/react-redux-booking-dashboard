@@ -378,13 +378,13 @@ const Cell = ({
 
   const handleChange = (value) => {
     setValue(value);
-    if (value.length == 0)
+    if (value.length === 0)
       setIsValidate(false);
     else setIsValidate(true);
   }
 
   const handleSave = () => {
-    if (value.length == 0) {
+    if (value.length === 0) {
       setIsValidate(false);
     } else onAddValue(value);
   }
@@ -458,7 +458,7 @@ const Cell = ({
                 {!isValidate &&
                   <p
                     className={css`
-                      color: red;
+                      color: #E92579;
                       font-size: 0.8em;
                       line-height: 28px;
                       margin: 0 0 0 10px !important;

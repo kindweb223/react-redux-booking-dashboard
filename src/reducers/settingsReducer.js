@@ -1,6 +1,4 @@
-import uuidV4 from "../utils/uuidV4";
 import reorder from "../utils/reorder";
-import spacesColors from "../models/spacesColors";
 
 import {
   REQUEST_GET_VENUE,
@@ -27,6 +25,21 @@ import {
   REQUEST_DELETE_VENUE_SPACE,
   GET_DELETE_VENUE_SPACE_SUCCESS,
   GET_DELETE_VENUE_SPACE_ERROR,
+  REQUEST_GET_BOOKINGSTATUS,
+  GET_BOOKING_STATUS_SUCCESS,
+  GET_BOOKING_STATUS_ERROR,
+  REQUEST_ADD_BOOKING_STATUS,
+  GET_ADD_BOOKING_STATUS_SUCCESS,
+  GET_ADD_BOOKING_STATUS_ERROR,
+  REQUEST_UPDATE_BOOKING_STATUS,
+  GET_UPDATE_BOOKING_STATUS_SUCCESS,
+  GET_UPDATE_BOOKING_STATUS_ERROR,
+  REQUEST_DELETE_BOOKING_STATUS,
+  GET_DELETE_BOOKING_STATUS_SUCCESS,
+  GET_DELETE_BOOKING_STATUS_ERROR,  
+  APPEND_CUSTOM_STATUS,
+  REMOVE_NEW_BOOKING_STATUS,
+  SET_BOOKING_STATUS_PAGE_STATUS,
 } from "./actionType";
 
 function settingsReducer(state = {}, action) {
@@ -74,13 +87,13 @@ function settingsReducer(state = {}, action) {
         bookingStatuses
       };
     }
-    case "append_custom_status": {
+    case APPEND_CUSTOM_STATUS: {
       const bookingStatuses = Array.from(state.bookingStatuses);
       bookingStatuses.push({
-        id: uuidV4(),
+        id: -1,
         name: "",
         type: "custom",
-        enabled: true
+        active: true
       });
 
       return {
@@ -272,48 +285,102 @@ function settingsReducer(state = {}, action) {
         spaceActionLoading: false,
       }
     }
-    case "add_venue": {
+    // BOOKING STATUS SECTION
+    case REQUEST_GET_BOOKINGSTATUS: {
       return {
         ...state,
-        venues: [
-          { id: uuidV4(), name: action.name, spaces: [] },
-          ...state.venues
+        bookingStatusesLoading: true,
+      }
+    }
+    case GET_BOOKING_STATUS_SUCCESS: {
+      return {
+        ...state,
+        bookingStatusesLoading: false,
+        bookingStatuses: [ ...action.payload ],
+      }
+    }
+    case GET_BOOKING_STATUS_ERROR: {
+      return {
+        ...state,
+        bookingStatusesLoading: false,
+        bookingStatuses: [],
+      }
+    }
+    case SET_BOOKING_STATUS_PAGE_STATUS: {
+      return {
+        ...state,
+        enableBookingSection: action.payload,
+      }
+    }
+    case REQUEST_ADD_BOOKING_STATUS: {
+      return {
+        ...state,
+        bookingStatusActionLoading: true,
+      }
+    }
+    case GET_ADD_BOOKING_STATUS_SUCCESS: {
+      return {
+        ...state,
+        bookingStatusActionLoading: false,
+        bookingStatuses:[
+          ...state.bookingStatuses.map(item => {
+            if (item.id === -1)
+              return action.payload;
+            else return item;
+          })
         ]
-      };
+      }
     }
-    case "edit_venue": {
-      const newState = { ...state };
-      newState.venues[action.index].name = action.name;
-      return newState;
+    case GET_ADD_BOOKING_STATUS_ERROR: {
+      return {
+        ...state,
+        bookingStatusActionLoading: false,
+      }
     }
-    case "delete_venue": {
-      const newState = { ...state };
-      newState.venues.splice(action.index, 1);
-      return newState;
+    case REQUEST_UPDATE_BOOKING_STATUS: {
+      return {
+        ...state,
+        bookingStatusActionLoading: true,
+      }
     }
-    case "add_space": {
-      const randomColor =
-        spacesColors[Math.floor(Math.random() * spacesColors.length)];
-
-      const newState = { ...state };
-      const spaces = newState.venues[action.venue].spaces;
-      newState.venues[action.venue].spaces = [
-        { name: action.name, id: uuidV4(), accentColor: randomColor },
-        ...spaces
-      ];
-      return newState;
+    case GET_UPDATE_BOOKING_STATUS_SUCCESS: {
+      return {
+        ...state,
+        bookingStatusActionLoading: false,
+      }
     }
-    case "edit_space": {
-      const newState = { ...state };
-      newState.venues[action.venue].spaces[action.space].name = action.name;
-      return newState;
+    case GET_UPDATE_BOOKING_STATUS_ERROR: {
+      return {
+        ...state,
+        bookingStatusActionLoading: false,
+      }
     }
-    case "delete_space": {
-      const newState = { ...state };
-      newState.venues[action.venue].spaces.splice(action.space, 1);
-      return newState;
+    case REQUEST_DELETE_BOOKING_STATUS: {
+      return {
+        ...state,
+        bookingStatusActionLoading: true,
+      }
     }
-
+    case GET_DELETE_BOOKING_STATUS_SUCCESS: {
+      return {
+        ...state,
+        bookingStatusActionLoading: false,
+        bookingStatuses: [...state.bookingStatuses.filter(item => item.id !== action.payload)]
+      }
+    }
+    case GET_DELETE_BOOKING_STATUS_ERROR: {
+      return {
+        ...state,
+        bookingStatusActionLoading: false,
+      }    
+    }
+    case REMOVE_NEW_BOOKING_STATUS: {
+      return {
+        ...state,
+        bookingStatuses: [ ...state.bookingStatuses.filter(item => item.id !== -1)],
+        enableBookingSection: true,
+      }
+    }
     default:
       return state;
   }
