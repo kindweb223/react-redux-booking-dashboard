@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import { css } from "emotion";
 import P2 from "../../typography/P2";
 import {
@@ -18,90 +19,134 @@ import {
   REQUEDST_UPDATE_COMPANYINFO,
   GET_UPDATE_COMPANYINFO_SUCCESS,
   GET_UPDATE_COMPANYINFO_ERROR,
+  CHANGE_COMPANY_INFO,
 } from "../../../reducers/actionType";
 
 const CompanyInfoSettingsSection = props => {
   const { state, dispatch } = props;
-  
-  const onSaveCompanyInfo = () => {
+  const [ isNameValidate, setIsNameValidate ] = useState(true);
 
+  useEffect(() => {
+    const getCompanyInfo = async () => {
+
+      try {
+        dispatch({ type: REQUEST_GET_COMPANYINFO });
+        const res = await axios.get('/company');
+
+        dispatch({ 
+          type: GET_COMPANYINFO_SUCCESS,
+          payload: res.data.company,
+        })
+      } catch (err) {
+        dispatch({ type: GET_COMPANYINFO_ERROR })
+      }      
+    }
+    getCompanyInfo();
+  }, []);
+
+  const onSaveCompanyInfo = async () => {
+    dispatch({
+      type: REQUEDST_UPDATE_COMPANYINFO
+    })
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const res = await axios.put(
+        `/companies/${state.companyInfo.id}`, 
+        JSON.stringify(state.companyInfo),
+        config
+      );
+
+      dispatch({
+        type: GET_UPDATE_COMPANYINFO_SUCCESS,
+        payload: res.data.company,
+      })
+    } catch (err) {
+      dispatch({
+        type: GET_UPDATE_COMPANYINFO_ERROR,
+        payload: state.companyInfo,
+      })
+    }    
+  }
+
+  const changeCompanyInfo = (key, value) => {
+    dispatch({
+      type: CHANGE_COMPANY_INFO,
+      payload: {key, value}
+    })
+  }
+
+  const changeCompanyName = (value) => {
+    if (value.length === 0) {
+      setIsNameValidate(false);
+    } else {
+      setIsNameValidate(true);
+    }
+    dispatch({
+      type: CHANGE_COMPANY_INFO,
+      payload: {key: "name", value}
+    })
   }
 
   return (
     <div>
-      <SpinnerContainer loading={state.loading.toString()} />
+      <SpinnerContainer loading={state.companyLoading.toString()} />
       <P2 color="grey">These info will be used to generate invoices.</P2>
       <TableEditableValue
         label="Company Name"
-        value={state.company_name}
-        onChange={value =>
-          dispatch({
-            type: "update_settings_value",
-            key: "company_name",
-            value: value
-          })
-        }
+        value={state.companyInfo.name}
+        onChange={value => {changeCompanyName(value)}}          
         style={{ width: "100%", marginTop: 24 }}
       />
+      {
+        !isNameValidate && 
+        <p 
+          className={
+            css`
+              color: #E92579;            
+              margin: 0.2em 0 0 0;
+              padding: 0 0.6em;
+              font-size: 0.8em;
+            `
+          }
+        >
+          Company Name is required.
+        </p>
+      }     
       <TableEditableValue
         label="VAT ID"
-        value={state.vat_id}
-        onChange={value =>
-          dispatch({
-            type: "update_settings_value",
-            key: "vat_id",
-            value: value
-          })
-        }
+        value={state.companyInfo.vatId}
+        onChange={value => {changeCompanyInfo("vatId", value)}}          
         style={{ width: "100%", marginTop: 14 }}
       />
       <Grid columns="1fr 1fr" style={{ width: "100%", marginTop: 14 }}>
         <TableEditableValue
           label="Street"
-          value={state.street}
-          onChange={value =>
-            dispatch({
-              type: "update_settings_value",
-              key: "street",
-              value: value
-            })
-          }
+          value={state.companyInfo.street}
+          onChange={value => {changeCompanyInfo("street", value)}}
           style={{ width: "100%" }}
         />
         <TableEditableValue
           label="City"
-          value={state.city}
-          onChange={value =>
-            dispatch({
-              type: "update_settings_value",
-              key: "city",
-              value: value
-            })
-          }
+          value={state.companyInfo.city}
+          onChange={value => {changeCompanyInfo("city", value)}}
           style={{ width: "100%" }}
         />
         <TableEditableValue
           label="Post Code"
-          value={state.post_code}
-          onChange={value =>
-            dispatch({
-              type: "update_settings_value",
-              key: "post_code",
-              value: value
-            })
-          }
+          value={state.companyInfo.postCode}
+          onChange={value => {changeCompanyInfo("postCode", value)}}            
           style={{ width: "100%" }}
         />
         <TableEditableValue
           label="Phone Number"
-          value={state.phone}
-          onChange={value =>
-            dispatch({
-              type: "update_settings_value",
-              key: "phone",
-              value: value
-            })
-          }
+          value={state.companyInfo.phone}
+          onChange={value => {changeCompanyInfo("phone", value)}}
           style={{ width: "100%" }}
         />
       </Grid>
@@ -111,29 +156,18 @@ const CompanyInfoSettingsSection = props => {
           label="Currency"
           searchEnabled
           options={Object.keys(currencies)}
-          selectedOption={state.currency}
+          selectedOption={state.companyInfo.currency.toUpperCase()}
           displayTransformer={option =>
             `${currencies[option].code} (${currencies[option].symbol})`
           }
-          onOptionSelected={currency =>
-            dispatch({
-              type: "update_settings_value",
-              key: "currency",
-              value: currency
-            })
-          }
+          onOptionSelected={currency => {changeCompanyInfo("currency", currency)}}
           style={{ width: "100%" }}
         />
 
         <TableEditableValue
           label="Default VAT Rate (%)"
-          value={state.defaultVatRateText}
-          onChange={value =>
-            dispatch({
-              type: "update_settings_default_vat_rate",
-              value: value
-            })
-          }
+          value={state.companyInfo.vatRate}
+          onChange={value => {changeCompanyInfo("vatRate", value)}}            
           style={{ width: "100%" }}
         />
       </Grid>
@@ -144,7 +178,12 @@ const CompanyInfoSettingsSection = props => {
           justify-content: flex-end;
         `}
       >
-        <Button primary onClick={onSaveCompanyInfo} style={{ minWidth: "100px"}}>
+        <Button 
+          primary 
+          onClick={onSaveCompanyInfo} 
+          style={{ minWidth: "100px"}}
+          disabled={!isNameValidate}
+        >
           Save
         </Button>       
       </div>
