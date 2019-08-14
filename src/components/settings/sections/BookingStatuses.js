@@ -78,7 +78,7 @@ const CustomStatusRow = props => {
     changeSelectedIndex, 
     selectedStatusIndex 
   } = props;
-  const { id, name, enabled } = status;  
+  const { id, name, active } = status;  
   const [ nameValue, setNameValue ] = useState("");
   const [ isValidate, setIsValidate ] = useState(true);
 
@@ -170,7 +170,7 @@ const CustomStatusRow = props => {
               onFocus={event => {handleOnFocus(event)}}              
             />
             <Toggle
-              enabled={enabled}
+              enabled={active}
               onChange={onToggle}
               style={{ marginRight: "0.5em" }}
             />
@@ -309,20 +309,41 @@ const BookingStatusesSettingsSection = props => {
 
         dispatch({
           type: GET_UPDATE_BOOKING_STATUS_SUCCESS,
-          payload: res.data.statues
+          payload: res.data.status
         })
       } catch (err) {
         dispatch({ type: GET_UPDATE_BOOKING_STATUS_ERROR })
       }
-    }
-    
-    // dispatch({
-    //   type: "update_custom_status_name",
-    //   index,
-    //   name
-    // })
-
+    }    
   }  
+
+  const changeToggle = async (index) => {    
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      dispatch({ type: REQUEST_UPDATE_BOOKING_STATUS });
+
+      const { id, name, active, order, parentId } = state.bookingStatuses[index];
+      const res = await axios.put(
+        `./statuses/${id}`, 
+        JSON.stringify({
+          id, name, active: !active, parentId, order
+        }), 
+        config
+      );
+
+      dispatch({
+        type: GET_UPDATE_BOOKING_STATUS_SUCCESS,
+        payload: res.data.status
+      })
+    } catch (err) {
+      dispatch({ type: GET_UPDATE_BOOKING_STATUS_ERROR })
+    } 
+  }
 
   const deleteBookingStatus = async (index) => {
     if (state.bookingStatuses[index].id === -1) {
@@ -384,7 +405,8 @@ const BookingStatusesSettingsSection = props => {
                             index={index}
                             status={status}
                             onToggle={() =>
-                              dispatch({ type: "toggle_custom_status", index })
+                              // dispatch({ type: "toggle_custom_status", index })
+                              changeToggle(index)
                             }
                             onDelete={() => {
                               deleteBookingStatus(index);

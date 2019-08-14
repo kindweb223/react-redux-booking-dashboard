@@ -347,6 +347,13 @@ function settingsReducer(state = {}, action) {
       return {
         ...state,
         bookingStatusActionLoading: false,
+        bookingStatuses:[
+          ...state.bookingStatuses.map(item => {
+            if (item.id === action.payload.id)
+              return action.payload;
+            else return item;
+          })
+        ]
       }
     }
     case GET_UPDATE_BOOKING_STATUS_ERROR: {
