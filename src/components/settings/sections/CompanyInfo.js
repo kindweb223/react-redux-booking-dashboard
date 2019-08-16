@@ -102,6 +102,7 @@ const CompanyInfoSettingsSection = props => {
         value={state.companyInfo.name}
         onChange={value => {changeCompanyName(value)}}          
         style={{ width: "100%", marginTop: 24 }}
+        className={!isNameValidate? "error" : ""}
       />
       {
         !isNameValidate && 

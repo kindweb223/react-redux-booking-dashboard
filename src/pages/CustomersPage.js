@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import axios from 'axios';
 import Modal from "../components/modals/modal";
 import { Table, TableValue } from "../components/tables/tables";
 import AddGlyph from "../images/Glyphs/AddGlyph";
@@ -13,19 +14,107 @@ import { AppReducerContext } from "../contexts/AppReducerContext";
 import { css } from "emotion";
 import SearchField from "../components/inputs/searchField";
 import P1 from "../components/typography/P1";
+import SpinnerContainer from "../components/layout/Spinner";
+
+import {
+  REQUEST_GET_CUSTOMERS,
+  GET_CUSTOMERS_SUCCESS,
+  GET_CUSTOMERS_ERROR,
+  REQUEST_ADD_CUSTOMER,
+  GET_ADD_CUSTOMER_SUCCESS,
+  GET_ADD_CUSTOMER_ERROR,
+  REQUEST_UPDATE_CUSTOMER,
+  GET_UPDATE_CUSTOMER_SUCCESS,
+  GET_UPDATE_CUSTOMER_ERROR,
+  REQUEST_DELETE_CUSTOMER,
+  GET_DELETE_CUSTOMER_SUCCESS,
+  GET_DELETE_CUSTOMER_ERROR,
+} from "../reducers/actionType";
 
 const CustomersPage = () => {
   const [showCreateClientModal, setShowCreateClientModal] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const { state, dispatch } = useContext(AppReducerContext);
 
+  const { state, dispatch } = useContext(AppReducerContext);
   const searchResults =
     searchQuery.length > 0
-      ? state.customers.filter(customer =>
+      ? state.customers.customers.filter(customer =>
           customer.name.toLowerCase().includes(searchQuery.toLowerCase())
         )
-      : state.customers;
+      : state.customers.customers;
+
+  useEffect(() => {
+    const getCustomers = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_CUSTOMERS });
+
+        const res = await axios.get('/customers');
+        
+        dispatch({
+          type: GET_CUSTOMERS_SUCCESS,
+          payload: res.data.customers
+        })
+      } catch (err) {
+        dispatch({ type: GET_CUSTOMERS_ERROR });
+      }
+    }
+    getCustomers();
+  }, []);
+
+  const onEditCustomer = async (customer) => {    
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    if (customer.id === -1) {
+      setShowCreateClientModal(false);
+      try {
+        dispatch({ type: REQUEST_ADD_CUSTOMER })
+       
+        delete customer.id;
+        const res = await axios.post('/customers', JSON.stringify(customer), config);
+
+        dispatch({ 
+          type: GET_ADD_CUSTOMER_SUCCESS,
+          payload: res.data.customer,
+        })
+      } catch (err) {
+        dispatch({ type: GET_ADD_CUSTOMER_ERROR });
+      }
+    } else {
+      try {
+        dispatch({ type: REQUEST_UPDATE_CUSTOMER });
+
+        const res = await axios.put(`/customers/${customer.id}`, JSON.stringify(customer), config);
+        
+        dispatch({
+          type: GET_UPDATE_CUSTOMER_SUCCESS,
+          payload: res.data.customer,
+        })
+      } catch (err) {
+        dispatch({ type: GET_UPDATE_CUSTOMER_ERROR });
+      }      
+    }            
+  }
+
+  const handleClickDelete = async (id) => {
+    dispatch({ type: REQUEST_DELETE_CUSTOMER })
+
+    try {
+
+      const res = await axios.delete(`/customers/${id}`);
+
+      dispatch({
+        type: GET_DELETE_CUSTOMER_SUCCESS,
+        payload: id
+      })
+    } catch (err) {
+      dispatch({ type: GET_DELETE_CUSTOMER_ERROR })
+    }
+  }
 
   return (
     <>
@@ -39,6 +128,7 @@ const CustomersPage = () => {
           margin-bottom: 40px;
         `}
       >
+        <SpinnerContainer loading={state.customers.loadingCustomers.toString()} />
         <SearchField
           query={searchQuery}
           placeholder={"Search Customers"}
@@ -68,7 +158,7 @@ const CustomersPage = () => {
               <React.Fragment key={index}>
                 <TableValue>{customer.name}</TableValue>
                 <TableValue>{customer.email || "N/A"}</TableValue>
-                <TableValue>{customer.phoneNumber || "N/A"}</TableValue>
+                <TableValue>{customer.phone || "N/A"}</TableValue>
                 <SvgButton
                   width={24}
                   height={24}
@@ -79,7 +169,7 @@ const CustomersPage = () => {
                   items={["Delete"]}
                   colors={["#D13636"]}
                   onItemSelected={item => {
-                    dispatch({ type: "delete_customer", id: customer.id });
+                    handleClickDelete(customer.id)                    
                   }}
                 />
               </React.Fragment>
@@ -105,8 +195,8 @@ const CustomersPage = () => {
         onClose={() => setSelectedClientId(null)}
       >
         <CustomerDetail
-          customer={state.customers.find(c => c.id === selectedClientId)}
-          onEndEditing={() => setSelectedClientId(null)}
+          customer={state.customers.customers.find(c => c.id === selectedClientId)}
+          onEndEditing={(customer) => {onEditCustomer(customer)}}
         />
       </Modal>
 
@@ -116,8 +206,7 @@ const CustomersPage = () => {
       >
         <CustomerDetailEdit
           onEndEditing={customer => {
-            dispatch({ type: "append_customer", customer });
-            setShowCreateClientModal(false);
+            onEditCustomer(customer);
           }}
         />
       </Modal>

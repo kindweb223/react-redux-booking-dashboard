@@ -2,12 +2,13 @@ import uuidV4 from "../utils/uuidV4";
 // id, name, address, phone, email, notes, vat number
 function createEmptyCustomer() {
   return {
-    id: uuidV4(),
+    // id: uuidV4(),
+    id: -1,
     name: "",
     address: "",
-    phoneNumber: "",
+    phone: "",
     email: "",
-    notes: "",
+    note: "",
     vatNumber: ""
   };
 }

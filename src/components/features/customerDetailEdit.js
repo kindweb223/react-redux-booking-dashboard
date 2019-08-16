@@ -1,5 +1,6 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import styled from "styled-components";
+import { css } from "emotion";
 import H3 from "../typography/H3";
 import Button from "../buttons/Button";
 import Grid from "../layout/Grid";
@@ -16,7 +17,8 @@ const Spacer = styled.div`
   flex: 1 0 1.5em;
 `;
 
-const CustomerDetailEdit = props => {
+const CustomerDetailEdit = props => {  
+
   const { customer: customerToEdit, onEndEditing } = props;
   const isEditing = customerToEdit !== null;
 
@@ -24,6 +26,23 @@ const CustomerDetailEdit = props => {
     reducer,
     customerToEdit || createEmptyCustomer()
   );
+
+  const [ isNameValidate, setIsNameValidate ] = useState(true);
+  
+  const handleChangeName = value => {
+    if (value.length === 0)
+      setIsNameValidate(false);
+    else setIsNameValidate(true);
+    dispatch({ type: "set_value", key: "name", value: value })
+  }
+
+  const handleClickSave = () => {
+    if (customer.name.length === 0) {
+      setIsNameValidate(false);
+      return;
+    }
+    onEndEditing(customer);
+  }
 
   return (
     <ModalContainer>
@@ -39,7 +58,8 @@ const CustomerDetailEdit = props => {
             <Button
               primary
               style={{ marginRight: 10 }}
-              onClick={() => onEndEditing(customer)}
+              onClick={handleClickSave}
+              disabled={!isNameValidate}
             >
               {isEditing ? "Save" : "Create Customer"}
             </Button>
@@ -53,18 +73,34 @@ const CustomerDetailEdit = props => {
             label="Name"
             value={customer.name}
             onChange={value =>
-              dispatch({ type: "set_value", key: "name", value: value })
+              handleChangeName(value)
             }
             style={{ width: "100%" }}
+            className={(!isNameValidate? "error" : "")}
           />
+          {
+            !isNameValidate && 
+            <p 
+              className={
+                css`
+                  color: #E92579;            
+                  margin: 0.2em 0 0 0;
+                  padding: 0 0.6em;
+                  font-size: 0.8em;
+                `
+              }
+            >
+              Company Name is required.
+            </p>
+          }   
           <Grid columns="1fr 1fr" style={{ width: "100%", marginTop: 10 }}>
             <TableEditableValue
               label="Phone Number"
-              value={customer.phoneNumber}
+              value={customer.phone}
               onChange={value =>
                 dispatch({
                   type: "set_value",
-                  key: "phoneNumber",
+                  key: "phone",
                   value: value
                 })
               }
@@ -102,7 +138,7 @@ const CustomerDetailEdit = props => {
 
           <TableEditableValue
             label="Private Notes"
-            value={customer.notes}
+            value={customer.note}
             longText
             style={{
               width: "100%",
@@ -110,7 +146,7 @@ const CustomerDetailEdit = props => {
               height: 80
             }}
             onChange={value =>
-              dispatch({ type: "set_value", key: "notes", value: value })
+              dispatch({ type: "set_value", key: "note", value: value })
             }
           />
         </>

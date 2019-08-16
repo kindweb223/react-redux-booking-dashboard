@@ -26,15 +26,21 @@ const CustomerDetail = props => {
   if (!customer) {
     return null;
   }
+  
+  const onSaveButton = (saveOne) => {
+    setEditing(false);
+    props.onEndEditing(saveOne)  
+  }
 
   if (editing) {
     return (
       <CustomerDetailEdit
         customer={customer}
-        onEndEditing={() => setEditing(false)}
+        onEndEditing={(customer) => onSaveButton(customer)}
       />
     );
   }
+
 
   return (
     <ModalContainer>
@@ -58,7 +64,7 @@ const CustomerDetail = props => {
           <Grid columns="1fr 1fr">
             <TableItem
               label={"Phone Number"}
-              value={customer.phoneNumber || "N/A"}
+              value={customer.phone || "N/A"}
             />
             <TableItem label={"Email"} value={customer.email || "N/A"} />
             <TableItem label={"Address"} value={customer.address || "N/A"} />
@@ -67,11 +73,11 @@ const CustomerDetail = props => {
               value={customer.vatNumber || "N/A"}
             />
           </Grid>
-          {customer.notes && (
+          {customer.note && (
             <Grid columns="1fr" style={{ marginTop: "1em" }}>
               <TableItem
                 label={"Private Notes"}
-                value={customer.notes || "N/A"}
+                value={customer.note || "N/A"}
               />
             </Grid>
           )}
