@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Modal from "../components/modals/modal";
 import BookingDetail from "../components/features/bookingDetail/bookingDetail";
 import { createEmptyBooking } from "../models/bookings";
@@ -32,14 +32,14 @@ const BookingsPage = props => {
     // "99af5d47-3837-4623-be55-f85c0b511c0f"
   );
 
-  const filteredBookings = state.bookings.filter(
+  const filteredBookings = state.bookings.bookings.filter(
     booking =>
       selectedBookingStateFilter === "All" ||
       booking.status === selectedBookingStateFilter
   );
 
   function bookingWithID(id) {
-    return state.bookings.find(b => b.id === id);
+    return state.bookings.bookings.find(b => b.id === id);
   }
 
   const [bookingStatesNames, bookingStatesColors] = statusesNameAndColors(

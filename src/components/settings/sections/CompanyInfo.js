@@ -157,6 +157,9 @@ const CompanyInfoSettingsSection = props => {
           label="Currency"
           searchEnabled
           options={Object.keys(currencies)}
+          optionsForSearch={
+            Object.keys(currencies).map(item => ({value: item, label: item}))
+          }
           selectedOption={state.companyInfo.currency.toUpperCase()}
           displayTransformer={option =>
             `${currencies[option].code} (${currencies[option].symbol})`

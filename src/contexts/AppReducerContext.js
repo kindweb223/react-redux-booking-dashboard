@@ -9,7 +9,10 @@ import authReducer from "../reducers/authReducer";
 const AppReducerContext = React.createContext(null);
 
 const initialState = {
-  bookings: [],
+  bookings: {
+    bookings:[],
+    loadBooking: false,
+  },
   settings: {
     companyLoading: false,
     companyInfo: {

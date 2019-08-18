@@ -4,7 +4,7 @@ import { addDays } from "../utils/dates";
 
 function createEmptyBooking() {
   return {
-    id: uuidV4(),
+    id: -1,
     received: new Date(),
     source: "Email",
     title: "",
