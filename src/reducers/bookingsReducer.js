@@ -16,6 +16,12 @@ import {
   REQUEST_GET_BOOKINGS,
   GET_BOOKINGS_SUCCESS,
   GET_BOOKINGS_ERROR,
+  REQUEST_DELETE_BOOKING,
+  GET_DELETE_BOOKING_SUCCESS,
+  GET_DELETE_BOOKING_ERROR,
+  REQUEST_GET_BOOKING_BOOKINGSTATUS,
+  GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+  GET_BOOKING_BOOKINGSATTUS_ERROR,
 } from "../reducers/actionType";
 
 let quoteBackup = null;
@@ -30,13 +36,13 @@ function bookingsReducer(state, action) {
     case GET_BOOKINGS_SUCCESS:
       return {
         ...state,
-        // loadBooking: false,
+        loadBooking: false,
         bookings: [ ...action.payload ]
       }
     case GET_BOOKINGS_ERROR:
       return {
         ...state,
-        // loadBooking: false,
+        loadBooking: false,
       }
     case REQUSET_ADD_BOOKING:
       return {
@@ -77,6 +83,37 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadBookingAction: false,
+      }
+    case REQUEST_DELETE_BOOKING:
+      return {
+        ...state,
+        loadBookingAction: true,        
+      }
+    case GET_DELETE_BOOKING_SUCCESS:
+      return {
+        ...state,
+        loadBookingAction: false,
+        bookings: state.bookings.fiilter(item => item.id === action.payload)
+      }
+    case GET_DELETE_BOOKING_ERROR:
+      return {
+        ...state,
+        loadBookingAction: false,
+      }
+    case REQUEST_GET_BOOKING_BOOKINGSTATUS:
+      return {
+        ...state,
+        loadBooking: true,
+      }
+    case GET_BOOKING_BOOKINGSTATUS_SUCCESS:
+      return {
+        ...state,
+        loadBooking: false,
+        bookingStatus: [ ...action.payload ]
+      }
+    case GET_BOOKING_BOOKINGSATTUS_ERROR:
+      return {
+        loadBooking: false,
       }
     case "upsert_booking": {
       const newState = Array.from(state);

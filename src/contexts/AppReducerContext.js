@@ -11,6 +11,7 @@ const AppReducerContext = React.createContext(null);
 const initialState = {
   bookings: {
     bookings:[],
+    bookingStatus: [],
     loadBooking: false,
     loadBookingAction: false,
   },

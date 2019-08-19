@@ -31,7 +31,13 @@ import {
   GET_UPDATE_BOOKIG_ERROR, 
   REQUEST_GET_BOOKINGS,
   GET_BOOKINGS_SUCCESS, 
-  GET_BOOKINGS_ERROR 
+  GET_BOOKINGS_ERROR,
+  REQUEST_DELETE_BOOKING,
+  GET_DELETE_BOOKING_SUCCESS,
+  GET_DELETE_BOOKING_ERROR,
+  REQUEST_GET_BOOKING_BOOKINGSTATUS,
+  GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+  GET_BOOKING_BOOKINGSATTUS_ERROR,
 } from "../reducers/actionType";
 
 const BookingsPage = props => {
@@ -49,18 +55,36 @@ const BookingsPage = props => {
   const filteredBookings = state.bookings.bookings.filter(
     booking =>
       selectedBookingStateFilter === "All" ||
-      booking.status === selectedBookingStateFilter
+      booking.name === selectedBookingStateFilter
   );
 
   function bookingWithID(id) {
     return state.bookings.bookings.find(b => b.id === id);
   }
 
-  const [bookingStatesNames, bookingStatesColors] = statusesNameAndColors(
-    state
-  );
+  // const [bookingStatesNames, bookingStatesColors] = statusesNameAndColors(
+  //   state
+  // );
 
   useEffect(() => {
+    const getBookingStatus = async () => {
+
+      try {
+        dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
+
+        const res = await axios.get('/statuses');
+
+        dispatch({ 
+          type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+          payload: res.data.statuses
+        });
+      } catch(err) {
+        dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
+      }
+
+    }
+    getBookingStatus();
+
     const getBookings = async () => {
       try {
         dispatch({ type: REQUEST_GET_BOOKINGS });
@@ -79,7 +103,7 @@ const BookingsPage = props => {
   }, [])
 
   const handleClickSave = async (booking) => {
-    debugger;
+
     booking.owner = 1;    //test code
 
     const config = {
@@ -147,6 +171,40 @@ const BookingsPage = props => {
     setShowCreateBookingModal(false);
   }
 
+
+  
+  const handleClickDelete = async (id) => {
+
+    dispatch({ type: REQUEST_DELETE_BOOKING })
+
+    try {
+
+      const res = await axios.delete(`/bookings/${id}`);
+
+      dispatch({
+        type: GET_DELETE_BOOKING_SUCCESS,
+        payload: id
+      })
+    } catch (err) {
+      dispatch({ type: GET_DELETE_BOOKING_ERROR })
+    }
+
+  }
+
+  const getStatuColor = (statusName) => {
+    if (statusName === "Enquiry") {
+      return "#EECB2D";
+    } else if (statusName === "Proposal") {
+      return "#F68F56";
+    } else if (statusName === "Accepted") {
+      return "#E92579";
+    } else if (statusName === "Paid") {
+      return  "#52DDC2";
+    } else {
+      return "grey";
+    }
+  }
+
   return (
     <>
       <SpinnerContainer loading={(state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
@@ -157,15 +215,18 @@ const BookingsPage = props => {
           marginBottom: 40
         }}
       > 
-        <BigTabbedFilter
-          items={bookingStatesNames}
-          colors={bookingStatesColors}
-          selectedItem={selectedBookingStateFilter}
-          onSelect={item => {
-            setSelectedBookingStateFilter(item);
-          }}
-          style={{ marginBottom: 0, marginTop: 0, height: 60 }}
+        {state.bookings.bookingStatus.length > 0 &&
+          <BigTabbedFilter
+            items={state.bookings.bookingStatus.map(item => item.name)}
+            colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
+            selectedItem={selectedBookingStateFilter}
+            onSelect={item => {
+              setSelectedBookingStateFilter(item);
+            }}
+            style={{ marginBottom: 0, marginTop: 0, height: 60 }}
         />        
+        }
+        
         <Button
           primary
           onClick={() => setShowCreateBookingModal(!showCreateBookingModal)}
@@ -177,11 +238,11 @@ const BookingsPage = props => {
         </Button>
       </div>
 
-      {/* {filteredBookings && filteredBookings.length > 0 && (
+      {filteredBookings && filteredBookings.length > 0 && (
         <Table
-          columns="auto auto auto auto auto auto auto auto"
+          columns="auto auto auto auto auto auto auto"
           columnTitles={[
-            "Received",
+            // "Received",
             "Title",
             "Venue (Space)",
             "Customer",
@@ -192,31 +253,26 @@ const BookingsPage = props => {
           ]}
         >
           {filteredBookings.map(booking => {
-            const venue = state.settings.venues.find(
-              v => v.id === booking.venue
-            );
-            const space = venue.spaces.find(
-              space => space.id === booking.space
-            );
-
             return (
               <React.Fragment key={booking.id}>
-                <TableValue>{formatEventDate(booking.received)}</TableValue>
-                <TableValue>{booking.title}</TableValue>
+                {/* <TableValue>{formatEventDate(booking.received)}</TableValue> */}
+                <TableValue>{booking.eventName}</TableValue>
                 <TableValue
                   style={{
-                    color: `${space.accentColor} !important`,
+                    color: `${getStatuColor(booking.status.name)} !important`,
                     margin: 0
                   }}
-                >{`${venue.name} (${space.name})`}</TableValue>
-                <TableValue>
-                  {state.customers.find(c => c.id === booking.customer).name}
+                >
+                  {`${booking.venue.name} (${booking.space.name})`}
                 </TableValue>
-                <TableValue>{booking.owner}</TableValue>
+                <TableValue>
+                  {booking.customer.name}
+                </TableValue>
+                <TableValue>{booking.owner.firstName + " " + booking.owner.lastName}</TableValue>
                 <PickerButton
-                  options={bookingStatesNames}
-                  colors={bookingStatesColors}
-                  selectedOption={booking.status}
+                  options={state.bookings.bookingStatus.map(item => item.name)}
+                  colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
+                  selectedOption={booking.status.name}
                   onOptionSelected={status =>
                     dispatch({
                       type: "update_booking_status",
@@ -235,7 +291,8 @@ const BookingsPage = props => {
                   items={["Archive", "Delete"]}
                   colors={[colors.grey, "#D13636"]}
                   onItemSelected={item => {
-                    dispatch({ type: "delete_booking", id: booking.id });
+                    // dispatch({ type: "delete_booking", id: booking.id });
+                    handleClickDelete(booking.id)
                   }}
                 />
               </React.Fragment>
@@ -257,7 +314,7 @@ const BookingsPage = props => {
             Show All
           </P2>
         </>
-      )} */}
+      )}
 
       <div style={{ display: "flex", alignItems: "center" }}>
         <OutlinedButton style={{ margin: "20px auto" }}>

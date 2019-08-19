@@ -91,4 +91,7 @@ export const GET_BOOKING_VENUES_ERROR = "Error get venue for booking";
 export const REQUEST_GET_BOOKING_SPACES = "Request get booking spaces";
 export const GET_BOOKING_SPACES_SUCCESS = "Success get booking spaces";
 export const GET_BOOKING_SPACES_ERROR = "Error get booking spaces";
+export const REQUEST_GET_BOOKING_BOOKINGSTATUS = "Request get booking booking status";
+export const GET_BOOKING_BOOKINGSTATUS_SUCCESS = "Get booking booking status success";
+export const GET_BOOKING_BOOKINGSATTUS_ERROR = "Get booking booking status error";
 export const UPDATE_ADD_BOOKINGFORM_VALIDATE = "Change add booking form validate";
