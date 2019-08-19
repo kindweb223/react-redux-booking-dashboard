@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import axios from 'axios';
 import Modal from "../components/modals/modal";
 import BookingDetail from "../components/features/bookingDetail/bookingDetail";
 import { createEmptyBooking } from "../models/bookings";
@@ -19,6 +20,19 @@ import {
   statusesNameAndColors
 } from "../contexts/AppReducerContext";
 import DropdownMenu from "../components/buttons/DropdownMenu";
+import SpinnerContainer from "../components/layout/Spinner";
+
+import { 
+  REQUSET_ADD_BOOKING, 
+  GET_ADD_BOOKING_SUCCESS, 
+  GET_ADD_BOOKING_ERROR, 
+  REQUEST_UPDATE_BOOKING, 
+  GET_UPDATE_BOOKING_SUCCESS, 
+  GET_UPDATE_BOOKIG_ERROR, 
+  REQUEST_GET_BOOKINGS,
+  GET_BOOKINGS_SUCCESS, 
+  GET_BOOKINGS_ERROR 
+} from "../reducers/actionType";
 
 const BookingsPage = props => {
   const { state, dispatch } = useContext(AppReducerContext);
@@ -46,15 +60,103 @@ const BookingsPage = props => {
     state
   );
 
+  useEffect(() => {
+    const getBookings = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_BOOKINGS });
+
+        const res = await axios.get('/bookings');
+        
+        dispatch({
+          type: GET_BOOKINGS_SUCCESS,
+          payload: res.data.bookings
+        })
+      } catch (err) {
+        dispatch({ type: GET_BOOKINGS_ERROR });
+      }
+    }
+    getBookings();
+  }, [])
+
+  const handleClickSave = async (booking) => {
+    debugger;
+    booking.owner = 1;    //test code
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    if (booking.id === -1) {
+      try {
+  
+        dispatch({ type: REQUSET_ADD_BOOKING })
+        
+        const res = await axios.post(
+          '/bookings', 
+          { 
+            eventName: booking.eventName,
+            venueId: booking.venue,
+            spaceId: booking.space,
+            customerId: booking.customer,
+            ownerId: booking.owner,
+            slots: booking.slots,
+          },
+          config
+        );
+
+        dispatch({ 
+          type: GET_ADD_BOOKING_SUCCESS,
+          payload: res.data.booking
+        })
+  
+      } catch (err) {
+        dispatch({ type: GET_ADD_BOOKING_ERROR })
+      }    
+    } else {
+
+      try {
+        dispatch({ type: REQUEST_UPDATE_BOOKING })
+        
+        const res = await axios.put(
+          `/bookings/${booking.id}`, 
+          { 
+            eventName: booking.eventName,
+            venueId: booking.venue,
+            spaceId: booking.space,
+            customerId: booking.customer,
+            ownerId: booking.owner,
+            slots: booking.slots,
+          },
+          config
+        );
+  
+        dispatch({ 
+          type: GET_UPDATE_BOOKING_SUCCESS,
+          payload: res.data.booking
+        })
+      } catch (err) {
+        dispatch({ type: GET_UPDATE_BOOKIG_ERROR});
+      }
+    }    
+
+    // if (booking) {
+    //   dispatch({ type: "upsert_booking", booking: booking });
+    // }
+    setShowCreateBookingModal(false);
+  }
+
   return (
     <>
+      <SpinnerContainer loading={(state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
       <div
         style={{
           display: "flex",
           alignItems: "center",
           marginBottom: 40
         }}
-      >
+      > 
         <BigTabbedFilter
           items={bookingStatesNames}
           colors={bookingStatesColors}
@@ -63,18 +165,19 @@ const BookingsPage = props => {
             setSelectedBookingStateFilter(item);
           }}
           style={{ marginBottom: 0, marginTop: 0, height: 60 }}
-        />
+        />        
         <Button
           primary
           onClick={() => setShowCreateBookingModal(!showCreateBookingModal)}
           iconComponent={() => <AddGlyph fill={colors.white} />}
-          style={{ marginLeft: "2em" }}
+          style={{ marginLeft: "2em" }}          
+          disabled={(state.bookings.loadBooking || state.bookings.loadBookingAction)}
         >
           Add Booking
         </Button>
       </div>
 
-      {filteredBookings && filteredBookings.length > 0 && (
+      {/* {filteredBookings && filteredBookings.length > 0 && (
         <Table
           columns="auto auto auto auto auto auto auto auto"
           columnTitles={[
@@ -154,7 +257,7 @@ const BookingsPage = props => {
             Show All
           </P2>
         </>
-      )}
+      )} */}
 
       <div style={{ display: "flex", alignItems: "center" }}>
         <OutlinedButton style={{ margin: "20px auto" }}>
@@ -175,12 +278,7 @@ const BookingsPage = props => {
       >
         <BookingDetailEdit
           booking={createEmptyBooking()}
-          onEndEditing={booking => {
-            if (booking) {
-              dispatch({ type: "upsert_booking", booking: booking });
-            }
-            setShowCreateBookingModal(false);
-          }}
+          onEndEditing={booking => {handleClickSave(booking)}}
         />
       </Modal>
     </>

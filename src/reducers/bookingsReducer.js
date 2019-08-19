@@ -6,10 +6,78 @@ import {
 import { addDays } from "date-fns/esm";
 import { computeCostItemsSummary } from "../utils/costItemsMath";
 
+import {
+  REQUSET_ADD_BOOKING,
+  GET_ADD_BOOKING_SUCCESS,
+  GET_ADD_BOOKING_ERROR,
+  REQUEST_UPDATE_BOOKING,
+  GET_UPDATE_BOOKING_SUCCESS,
+  GET_UPDATE_BOOKIG_ERROR,
+  REQUEST_GET_BOOKINGS,
+  GET_BOOKINGS_SUCCESS,
+  GET_BOOKINGS_ERROR,
+} from "../reducers/actionType";
+
 let quoteBackup = null;
 
 function bookingsReducer(state, action) {
   switch (action.type) {
+    case REQUEST_GET_BOOKINGS:
+      return {
+        ...state,
+        loadBooking: true,
+      }
+    case GET_BOOKINGS_SUCCESS:
+      return {
+        ...state,
+        // loadBooking: false,
+        bookings: [ ...action.payload ]
+      }
+    case GET_BOOKINGS_ERROR:
+      return {
+        ...state,
+        // loadBooking: false,
+      }
+    case REQUSET_ADD_BOOKING:
+      return {
+        ...state,
+        loadBookingAction: true,
+      }
+    case GET_ADD_BOOKING_SUCCESS:
+      return {
+        ...state,
+        loadBookingAction: false,
+        bookings: state.bookings.map(item => {
+          if (item.id === -1)
+            return action.payload;
+          else return item;
+        })
+      }
+    case GET_ADD_BOOKING_ERROR:
+      return {
+        ...state,
+        loadBookingAction: false,
+      }
+    case REQUEST_UPDATE_BOOKING:
+      return {
+        ...state,
+        loadBookingAction: true,        
+      }
+    case GET_UPDATE_BOOKING_SUCCESS:
+      return {
+        ...state,
+        loadBookingAction: false,
+        bookings: state.bookings.map(item => {
+          if (item.id === action.payload.id)
+            return action.payload;
+          else return item;
+        })
+      }
+    case GET_UPDATE_BOOKIG_ERROR:
+      return {
+        ...state,
+        loadBookingAction: false,
+      }
     case "upsert_booking": {
       const newState = Array.from(state);
 

@@ -68,7 +68,7 @@ export const GET_DELETE_CUSTOMER_ERROR = "Get delete customer error";
 
 // Booking Actions
 export const REQUEST_GET_BOOKINGS = "Request get bookings";
-export const GET_BOOKIGNS_SUCCESS = "Get bookings success";
+export const GET_BOOKINGS_SUCCESS = "Get bookings success";
 export const GET_BOOKINGS_ERROR = "Get bookings error";
 export const REQUSET_ADD_BOOKING = "Request add booking";
 export const GET_ADD_BOOKING_SUCCESS = "Get add booking success";

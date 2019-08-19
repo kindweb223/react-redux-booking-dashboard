@@ -11,6 +11,7 @@ const Container = styled.div`
   flex-direction: row;
   justify-content: center;
   pointer-events: none;
+  z-index: 999;
 
   .lds-ring {
     display: inline-block;

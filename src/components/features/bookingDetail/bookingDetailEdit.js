@@ -29,6 +29,7 @@ import {
 } from "../../modals/containers";
 import Spacer from "../../layout/Spacer";
 import { AppReducerContext } from "../../../contexts/AppReducerContext";
+import SpinnerContainer from "../../layout/Spinner";
 
 import {
   REQUSET_GET_BOOKING_CUSTOMER,
@@ -213,7 +214,7 @@ const BookingForm = props => {
           }
         </div>
 
-        <div>
+        {/* <div>
           <TablePicker
             label="Owner"
             options={owners}
@@ -242,7 +243,7 @@ const BookingForm = props => {
               Owner is required.
             </p>
           }
-        </div>
+        </div> */}
       </Grid>
 
       <TableSectionHeader title={"Booking Slots"} />
@@ -437,7 +438,7 @@ const BookingDetailEdit = props => {
     singleBookingReducer, 
     {
       ...bookingToEdit,
-      loading: false,
+      loadingBookingDetilas: false,
       customers: [],
       venues: [],
       spaces: [],
@@ -446,7 +447,7 @@ const BookingDetailEdit = props => {
         venue: true,
         space: true,
         customer: true,
-        owner: true,        
+        // owner: true,        
       }
     }
   );
@@ -533,6 +534,7 @@ const BookingDetailEdit = props => {
 
   return (
     <ModalContainer>
+      <SpinnerContainer loading={state.loadingBookingDetilas.toString()} />
       <ModalTopSection>
         <ModalTitleAndButtons>
           <H3>{state.title || "New Booking"}</H3>

@@ -12,6 +12,7 @@ const initialState = {
   bookings: {
     bookings:[],
     loadBooking: false,
+    loadBookingAction: false,
   },
   settings: {
     companyLoading: false,
