@@ -52,7 +52,7 @@ const LoginPage = props => {
   const { state, dispatch } = useContext(AppReducerContext);
 
   if(state.auth.isAuthenticated) {
-    return <Redirect to='/calendar' />;
+    return <Redirect to='/settings' />;
   }
 
   return (
