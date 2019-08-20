@@ -20,7 +20,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../../css/date-picker.css";
 import { updatedDate, addDays } from "../../../utils/dates";
-import owners from "../../../models/owners";
 import {
   ModalContainer,
   ModalTitleAndButtons,
@@ -53,15 +52,15 @@ const SvgButtonWrapper = styled.div`
 const BookingForm = props => {
   const { booking, dispatch } = props;
   const { state } = useContext(AppReducerContext);
-  // const venues = state.settings.venues;
-  // const selectedVenue =
-  //   booking.venue && booking.venues.find(v => v.id === booking.venue);
+
   useEffect(() => {
+    if(booking.venueId === null)
+      return;
     const getSpaces = async () => {
-      try {
+      try {        
         dispatch({ type: REQUEST_GET_BOOKING_SPACES });
 
-        const res = await axios.get(`/spaces/venue/${booking.venue}`);
+        const res = await axios.get(`/spaces/venue/${booking.venueId}`);
 
         dispatch({
           type: GET_BOOKING_SPACES_SUCCESS,
@@ -73,19 +72,19 @@ const BookingForm = props => {
       }
     }
     getSpaces();
-  }, [booking.venue])
+  }, [booking.venueId])
 
   return (
     <>
       <TableEditableValue
         label="Event Name"
-        value={booking.title}
+        value={booking.eventName}
         onChange={title => dispatch({ type: "set_title", value: title })}
         style={{ width: "100%" }}
-        className={(!booking.validateForm.title? "error" : "")}
+        className={(!booking.validateForm.eventName? "error" : "")}
       />
       {
-        !booking.validateForm.title && 
+        !booking.validateForm.eventName && 
         <p 
           className={
             css`
@@ -100,18 +99,23 @@ const BookingForm = props => {
         </p>
       }   
       <Grid columns="1fr 1fr" style={{ width: "100%", marginTop: 10 }}>
-        <div>
+        <div>          
           <TablePicker
             label="Venue"
-            selectedOption={booking.venue}
+            selectedOption={booking.venueId}
             options={booking.venues.map(venue => venue.id)}
             searchEnabled
             optionsForSearch={
               booking.venues.map(item => {
                 return {value: item.id, label: item.name}
               })
-            }
-            displayTransformer={opt => booking.venues.find(v => v.id === opt).name}
+            }            
+            displayTransformer={opt => {
+              const filteredVenue = booking.venues.filter(v => v.id === opt);
+              if (filteredVenue.length > 0)
+                return filteredVenue[0].name;
+              return null;
+            }}
             onOptionSelected={venueID =>
               dispatch({
                 type: "select_venue",
@@ -119,10 +123,10 @@ const BookingForm = props => {
               })
             }
             style={{ width: "100%" }}
-            isValidate={booking.validateForm.venue}
+            isValidate={booking.validateForm.venueId}
           />
           {
-            !booking.validateForm.venue && 
+            !booking.validateForm.venueId && 
             <p 
               className={
                 css`
@@ -140,11 +144,14 @@ const BookingForm = props => {
         <div>
           <TablePicker
             label="Space"
-            selectedOption={booking.space}
-            options={booking.venue && booking.spaces.map(s => s.id)}
-            displayTransformer={spaceId =>
-              booking.spaces.find(s => s.id === spaceId).name
-            }
+            selectedOption={booking.spaceId}
+            options={booking.venueId && booking.spaces.map(s => s.id)}
+            displayTransformer={spaceId => {
+              const filteredSpace = booking.spaces.filter(s => s.id === spaceId);
+              if (filteredSpace.length > 0)
+                return filteredSpace[0].name;
+              else return null;
+            }}
             onOptionSelected={spaceID => {
               dispatch({ type: "select_space", space: spaceID });
             }}
@@ -155,10 +162,10 @@ const BookingForm = props => {
               })
             }
             style={{ width: "100%" }}
-            isValidate={booking.validateForm.space}
+            isValidate={booking.validateForm.spaceId}
           />
           {
-            !booking.validateForm.space && 
+            !booking.validateForm.spaceId && 
             <p 
               className={
                 css`
@@ -183,10 +190,13 @@ const BookingForm = props => {
                 return { value: item.id, label: item.name }
               })            
             }
-            selectedOption={booking.customer}
-            displayTransformer={customerId =>
-              booking.customers.find(c => c.id === customerId).name
-            }
+            selectedOption={booking.customerId}
+            displayTransformer={customerId => {
+              const filteredCustomer = booking.customers.filter(c => c.id === customerId);
+              if (filteredCustomer.length > 0)
+                return filteredCustomer[0].name;
+              else return "";
+            }}
             searchEnabled
             onOptionSelected={customerId => {
               dispatch({
@@ -195,10 +205,10 @@ const BookingForm = props => {
               });
             }}
             style={{ width: "100%" }}
-            isValidate={booking.validateForm.customer}
+            isValidate={booking.validateForm.customerId}
           />
           {
-            !booking.validateForm.customer && 
+            !booking.validateForm.customerId && 
             <p 
               className={
                 css`
@@ -214,11 +224,11 @@ const BookingForm = props => {
           }
         </div>
 
-        {/* <div>
+        <div>
           <TablePicker
             label="Owner"
-            options={owners}
-            selectedOption={booking.owner}
+            options={booking.owners.map(owner => owner.id)}
+            selectedOption={booking.ownerId}
             onOptionSelected={owner =>
               dispatch({
                 type: "select_owner",
@@ -226,10 +236,16 @@ const BookingForm = props => {
               })
             }
             style={{ width: "100%" }}
-            isValidate={booking.validateForm.owner}
+            isValidate={booking.validateForm.ownerId}
+            displayTransformer={ownerId => {
+              const filteredOwner = booking.owners.filter(c => c.id === ownerId);
+              if (filteredOwner.length > 0)
+                return filteredOwner[0].firstName + " " + filteredOwner[0].lastName;
+              else return "";
+            }}
           />
           {
-            !booking.validateForm.owner && 
+            !booking.validateForm.ownerId && 
             <p 
               className={
                 css`
@@ -243,7 +259,7 @@ const BookingForm = props => {
               Owner is required.
             </p>
           }
-        </div> */}
+        </div>
       </Grid>
 
       <TableSectionHeader title={"Booking Slots"} />
@@ -442,17 +458,22 @@ const BookingDetailEdit = props => {
       customers: [],
       venues: [],
       spaces: [],
+      owners: [{
+        "id": 1,
+        "firstName": "Test",
+        "lastName": "123",
+      }],
       validateForm: {
-        title: true,
-        venue: true,
-        space: true,
-        customer: true,
-        // owner: true,        
+        eventName: true,
+        venueId: true,
+        spaceId: true,
+        customerId: true,
+        ownerId: true,        
       }
     }
   );
 
-  useEffect(() => {
+  useEffect(() => {    
     const getCustomers = async () => {
       try {
         dispatch({ type: REQUSET_GET_BOOKING_CUSTOMER });
@@ -537,7 +558,7 @@ const BookingDetailEdit = props => {
       <SpinnerContainer loading={state.loadingBookingDetilas.toString()} />
       <ModalTopSection>
         <ModalTitleAndButtons>
-          <H3>{state.title || "New Booking"}</H3>
+          <H3>{state.eventName || "New Booking"}</H3>
           <div>
             <Button
               style={{ marginRight: 10 }}
@@ -624,10 +645,10 @@ function singleBookingReducer(state, action) {
     }      
     case "set_title": {
       const newValidateForm = { ...state.validateForm };
-      newValidateForm.title = (action.value.length > 0);
+      newValidateForm.eventName = (action.value.length > 0);
       return { 
         ...state, 
-        title: action.value,         
+        eventName: action.value,         
         validateForm: { ...newValidateForm }
       };
     }
@@ -745,38 +766,38 @@ function singleBookingReducer(state, action) {
     }
     case "select_venue": {
       const newValidateForm = { ...state.validateForm };
-      newValidateForm.venue = (action.value !== null);
+      newValidateForm.venueId = (action.venue !== null);
       return {
         ...state,
-        venue: action.venue,
+        venueId: action.venue,
         space: null,
         validateForm: { ...newValidateForm },
       };
     }
     case "select_space": {
       const newValidateForm = { ...state.validateForm };
-      newValidateForm.space = (action.space !== null);
+      newValidateForm.spaceId = (action.space !== null);
       return {
         ...state,
-        space: action.space,
+        spaceId: action.space,
         validateForm: newValidateForm,
       };
     }
     case "select_customer": {
       const newValidateForm = { ...state.validateForm };
-      newValidateForm.customer = (action.customer !== null);
+      newValidateForm.customerId = (action.customer !== null);
       return {
         ...state,
-        customer: action.customer,
+        customerId: action.customer,
         validateForm: { ...newValidateForm },
       };
     }
     case "select_owner": {
       const newValidateForm = { ...state.validateForm };
-      newValidateForm.owner = (action.owner !== null);
+      newValidateForm.ownerId = (action.owner !== null);
       return {
         ...state,
-        owner: action.value,
+        ownerId: action.value,
         validateForm: { ...newValidateForm }
       };
     }

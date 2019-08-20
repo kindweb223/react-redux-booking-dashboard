@@ -34,10 +34,15 @@ function bookingsReducer(state, action) {
         loadBooking: true,
       }
     case GET_BOOKINGS_SUCCESS:
+      const newBookings = action.payload.map(item => {
+        if(item.slots)
+          item.slots = JSON.parse(item.slots);
+        return item;
+      })
       return {
         ...state,
         loadBooking: false,
-        bookings: [ ...action.payload ]
+        bookings: [ ...newBookings ]
       }
     case GET_BOOKINGS_ERROR:
       return {
@@ -53,11 +58,7 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadBookingAction: false,
-        bookings: state.bookings.map(item => {
-          if (item.id === -1)
-            return action.payload;
-          else return item;
-        })
+        bookings: [ ...state.bookings, action.payload.action ]        
       }
     case GET_ADD_BOOKING_ERROR:
       return {
@@ -74,8 +75,9 @@ function bookingsReducer(state, action) {
         ...state,
         loadBookingAction: false,
         bookings: state.bookings.map(item => {
-          if (item.id === action.payload.id)
-            return action.payload;
+          if (item.id === action.payload.id) {
+            return {...action.payload, slots: JSON.parse(action.payload.slots)};
+          }            
           else return item;
         })
       }
@@ -93,7 +95,7 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadBookingAction: false,
-        bookings: state.bookings.fiilter(item => item.id === action.payload)
+        bookings: state.bookings.filter(item => item.id === action.payload)
       }
     case GET_DELETE_BOOKING_ERROR:
       return {

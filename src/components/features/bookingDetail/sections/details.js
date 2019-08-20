@@ -10,25 +10,21 @@ import {
   formatEventDate,
   formatSlotStartEndTime
 } from "../../../../utils/dateFormatting";
-import { AppReducerContext } from "../../../../contexts/AppReducerContext";
+import { AppReducerContext, getStatuColor } from "../../../../contexts/AppReducerContext";
 
 const DetailsSection = props => {
   const { booking } = props;
   const { state } = useContext(AppReducerContext);
 
-  const customer = state.customers.find(c => c.id === booking.customer);
-  const venue = state.settings.venues.find(v => v.id === booking.venue);
-  const space = venue.spaces.find(space => space.id === booking.space);
-
   return (
     <>
       <Grid columns="1fr 1fr">
         <TableItem
-          style={{ color: `${space.accentColor} !important` }}
+          style={{ color: `${getStatuColor(booking.space.name)} !important` }}
           label={"Venue (Space)"}
-          value={`${venue.name} (${space.name})`}
+          value={`${booking.venue.name} (${booking.space.name})`}
         />
-        <TableItem label={"Customer"} value={customer.name} />
+        <TableItem label={"Customer"} value={booking.customer.name} />
       </Grid>
       <TableSectionHeader title={"Booking Slots"} />
       <Table columns="20% auto" columnTitles={["Date", "Time"]}>

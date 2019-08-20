@@ -86,4 +86,18 @@ function statusesNameAndColors(state) {
   return [bookingStatesNames, bookingStatesColors];
 }
 
-export { AppReducerContext, statusesNameAndColors, reducer, initialState };
+const getStatuColor = (statusName) => {
+  if (statusName === "Enquiry") {
+    return "#EECB2D";
+  } else if (statusName === "Proposal") {
+    return "#F68F56";
+  } else if (statusName === "Accepted") {
+    return "#E92579";
+  } else if (statusName === "Paid") {
+    return  "#52DDC2";
+  } else {
+    return "grey";
+  }
+}
+
+export { AppReducerContext, statusesNameAndColors, reducer, initialState, getStatuColor };

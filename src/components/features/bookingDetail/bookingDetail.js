@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import axios from 'axios';
 import styled from "styled-components";
 import H3 from "../../typography/H3";
 import TabBar from "../tabBar";
@@ -8,11 +9,17 @@ import PickerButton from "../../buttons/PickerButton";
 import BookingDetailEdit from "./bookingDetailEdit";
 import {
   AppReducerContext,
-  statusesNameAndColors
+  getStatuColor,
 } from "../../../contexts/AppReducerContext";
 import DetailsSection from "./sections/details";
 import QuotesSection from "./sections/quotes";
 import InvoicesSection from "./sections/invoices";
+
+import {
+  REQUEST_UPDATE_BOOKING,
+  GET_UPDATE_BOOKING_SUCCESS,
+  GET_UPDATE_BOOKIG_ERROR,
+} from "../../../reducers/actionType";
 
 const TABBAR_ITEM_DETAILS = "Details";
 const TABBAR_ITEM_QUOTES = "Quotes";
@@ -83,16 +90,83 @@ const BookingDetail = props => {
   const { booking } = props;
 
   const [selectedTab, setSelectedTab] = useState(
-    TABBAR_ITEM_DETAILS
-    // TABBAR_ITEM_QUOTES
-    // TABBAR_ITEM_INVOICES
+    TABBAR_ITEM_DETAILS,
+    TABBAR_ITEM_QUOTES,
+    TABBAR_ITEM_INVOICES
   );
   const [editing, setEditing] = useState(false);
   const { state, dispatch } = useContext(AppReducerContext);
 
-  const [bookingStatesNames, bookingStatesColors] = statusesNameAndColors(
-    state
-  );
+  const handleUpdateBooking = async (updateBooking) => {
+    if (updateBooking) {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+
+      try {
+        dispatch({ type: REQUEST_UPDATE_BOOKING })
+        
+        const res = await axios.put(
+          `/bookings/${booking.id}`, 
+          { 
+            eventName: updateBooking.eventName,
+            venueId: updateBooking.venueId,
+            spaceId: updateBooking.spaceId,
+            customerId: updateBooking.customerId,
+            ownerId: updateBooking.ownerId,
+            statusId: updateBooking.statusId,
+            slots: JSON.stringify(updateBooking.slots),            
+          },
+          config
+        );
+  
+        dispatch({ 
+          type: GET_UPDATE_BOOKING_SUCCESS,
+          payload: res.data.booking
+        })
+      } catch (err) {
+        dispatch({ type: GET_UPDATE_BOOKIG_ERROR});
+      }
+    }
+    setEditing(false);
+  }
+
+  const handleChangeStatus = async (status) => {
+    try { 
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      dispatch({ type: REQUEST_UPDATE_BOOKING })
+      const filteredStatus = state.bookings.bookingStatus.filter(item => item.name === status )
+
+      const res = await axios.put(
+        `/bookings/${booking.id}`, 
+          { 
+            eventName: booking.eventName,
+            venueId: booking.venueId,
+            spaceId: booking.spaceId,
+            customerId: booking.customerId,
+            ownerId: booking.ownerId,
+            statusId: filteredStatus[0].id,
+            slots: JSON.stringify(booking.slots),            
+          },
+          config
+        );
+
+      dispatch({ 
+        type: GET_UPDATE_BOOKING_SUCCESS,
+        payload: res.data.booking
+      })
+    } catch (err) {
+      dispatch({ type: GET_UPDATE_BOOKIG_ERROR});
+    }
+  }
 
   if (!booking) {
     return null;
@@ -103,32 +177,26 @@ const BookingDetail = props => {
       <BookingDetailEdit
         booking={booking}
         onEndEditing={booking => {
-          if (booking) {
-            dispatch({ type: "upsert_booking", booking: booking });
-          }
-          setEditing(false);
-        }}
+          handleUpdateBooking(booking);
+        }}d
       />
     );
   }
 
+  
   return (
     <Container>
       <TopSection>
         <TitleAndButtons>
-          <H3>{booking.title}</H3>
+          <H3>{booking.eventName}</H3>
           <div>
             <PickerButton
               style={{ minWidth: 120, marginRight: 10 }}
-              colors={bookingStatesColors}
-              options={bookingStatesNames}
-              selectedOption={booking.status}
+              options={state.bookings.bookingStatus.map(item => item.name)}
+              colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
+              selectedOption={booking.status.name}
               onOptionSelected={opt =>
-                dispatch({
-                  type: "update_booking_status",
-                  id: booking.id,
-                  status: opt
-                })
+                handleChangeStatus(opt)                
               }
             />
             <Button primary onClick={() => setEditing(true)}>

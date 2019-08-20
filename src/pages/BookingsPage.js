@@ -17,7 +17,7 @@ import BookingDetailEdit from "../components/features/bookingDetail/bookingDetai
 import P2 from "../components/typography/P2";
 import {
   AppReducerContext,
-  statusesNameAndColors
+  getStatuColor,
 } from "../contexts/AppReducerContext";
 import DropdownMenu from "../components/buttons/DropdownMenu";
 import SpinnerContainer from "../components/layout/Spinner";
@@ -52,19 +52,17 @@ const BookingsPage = props => {
     // "99af5d47-3837-4623-be55-f85c0b511c0f"
   );
 
-  const filteredBookings = state.bookings.bookings.filter(
-    booking =>
-      selectedBookingStateFilter === "All" ||
-      booking.name === selectedBookingStateFilter
-  );
+  console.log(selectedBookingStateFilter);
+  const filteredBookings = (state.bookings.bookings.length > 0 ) ? 
+    state.bookings.bookings.filter(
+      booking =>
+        selectedBookingStateFilter === "All" ||
+        booking.status.name === selectedBookingStateFilter
+    ) : [];
 
   function bookingWithID(id) {
     return state.bookings.bookings.find(b => b.id === id);
   }
-
-  // const [bookingStatesNames, bookingStatesColors] = statusesNameAndColors(
-  //   state
-  // );
 
   useEffect(() => {
     const getBookingStatus = async () => {
@@ -103,9 +101,10 @@ const BookingsPage = props => {
   }, [])
 
   const handleClickSave = async (booking) => {
+    
+    setShowCreateBookingModal(false);
 
-    booking.owner = 1;    //test code
-
+    if (booking === null) return;
     const config = {
       headers: {
         'Content-Type': 'application/json'
@@ -116,16 +115,18 @@ const BookingsPage = props => {
       try {
   
         dispatch({ type: REQUSET_ADD_BOOKING })
-        
+        const filteredStatus = state.bookings.bookingStatus.filter(item => item.name === "Enquiry");
+
         const res = await axios.post(
           '/bookings', 
           { 
             eventName: booking.eventName,
-            venueId: booking.venue,
-            spaceId: booking.space,
-            customerId: booking.customer,
-            ownerId: booking.owner,
-            slots: booking.slots,
+            venueId: booking.venueId,
+            spaceId: booking.spaceId,
+            customerId: booking.customerId,
+            ownerId: booking.ownerId,
+            slots: JSON.stringify(booking.slots),
+            statusId: filteredStatus[0].id,
           },
           config
         );
@@ -139,7 +140,7 @@ const BookingsPage = props => {
         dispatch({ type: GET_ADD_BOOKING_ERROR })
       }    
     } else {
-
+      debugger
       try {
         dispatch({ type: REQUEST_UPDATE_BOOKING })
         
@@ -147,11 +148,12 @@ const BookingsPage = props => {
           `/bookings/${booking.id}`, 
           { 
             eventName: booking.eventName,
-            venueId: booking.venue,
-            spaceId: booking.space,
-            customerId: booking.customer,
-            ownerId: booking.owner,
-            slots: booking.slots,
+            venueId: booking.venueId,
+            spaceId: booking.spaceId,
+            customerId: booking.customerId,
+            ownerId: booking.ownerId,
+            statusId: booking.statusId,
+            slots: JSON.stringify(booking.slots),            
           },
           config
         );
@@ -168,7 +170,6 @@ const BookingsPage = props => {
     // if (booking) {
     //   dispatch({ type: "upsert_booking", booking: booking });
     // }
-    setShowCreateBookingModal(false);
   }
 
 
@@ -191,20 +192,45 @@ const BookingsPage = props => {
 
   }
 
-  const getStatuColor = (statusName) => {
-    if (statusName === "Enquiry") {
-      return "#EECB2D";
-    } else if (statusName === "Proposal") {
-      return "#F68F56";
-    } else if (statusName === "Accepted") {
-      return "#E92579";
-    } else if (statusName === "Paid") {
-      return  "#52DDC2";
-    } else {
-      return "grey";
-    }
-  }
+  const handleChangeStatus = async (id, status) => {
+    
+    try {
+      dispatch({ type: REQUEST_UPDATE_BOOKING });
 
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      const filteredBooking = state.bookings.bookings.filter(item => item.id === id);
+      const filteredBookingsStatus = state.bookings.bookingStatus.filter(item => item.name === status);
+      const updateBookingData = {
+        eventName: filteredBooking[0].eventName,
+        venueId: filteredBooking[0].venueId,
+        spaceId: filteredBooking[0].spaceId,
+        statusId: filteredBookingsStatus[0].id,
+        customerId: filteredBooking[0].customerId,
+        ownerId: filteredBooking[0].ownerId,
+        slots: JSON.stringify(filteredBooking[0].slots),
+      }
+      
+      const res = await axios.put(`/bookings/${id}`, updateBookingData, config);
+
+      dispatch({ 
+        type: GET_UPDATE_BOOKING_SUCCESS,
+        payload: res.data.booking
+      })
+
+    } catch(err) {
+      dispatch({ type: GET_UPDATE_BOOKIG_ERROR })
+    }
+    // dispatch({
+    //   type: "update_booking_status",
+    //   id: booking.id,
+    //   status: status
+    // })
+  }
   return (
     <>
       <SpinnerContainer loading={(state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
@@ -273,12 +299,7 @@ const BookingsPage = props => {
                   options={state.bookings.bookingStatus.map(item => item.name)}
                   colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
                   selectedOption={booking.status.name}
-                  onOptionSelected={status =>
-                    dispatch({
-                      type: "update_booking_status",
-                      id: booking.id,
-                      status: status
-                    })
+                  onOptionSelected={status => {handleChangeStatus(booking.id, status)}
                   }
                 />
                 <SvgButton
