@@ -58,7 +58,7 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadBookingAction: false,
-        bookings: [ ...state.bookings, action.payload.action ]        
+        bookings: [ ...state.bookings, action.payload ]        
       }
     case GET_ADD_BOOKING_ERROR:
       return {

@@ -52,7 +52,6 @@ const BookingsPage = props => {
     // "99af5d47-3837-4623-be55-f85c0b511c0f"
   );
 
-  console.log(selectedBookingStateFilter);
   const filteredBookings = (state.bookings.bookings.length > 0 ) ? 
     state.bookings.bookings.filter(
       booking =>

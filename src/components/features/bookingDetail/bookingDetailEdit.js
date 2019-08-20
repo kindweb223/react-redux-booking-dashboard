@@ -273,12 +273,12 @@ const BookingForm = props => {
             .map((slot, index) => {
               switch (slot.kind) {
                 case "multi-day":
-                  const startDate = slot.dateRange[0];
-                  const endDate = slot.dateRange[slot.dateRange.length - 1];
+                  const startDate = new Date(slot.dateRange[0]);
+                  const endDate = new Date(slot.dateRange[slot.dateRange.length - 1]);
                   return (
                     <React.Fragment key={index}>
-                      <div style={{ display: "flex" }}>
-                        <DatePicker
+                       <div style={{ display: "flex" }}>
+                         <DatePicker
                           selected={startDate}
                           startDate={startDate}
                           endDate={endDate}
@@ -360,7 +360,7 @@ const BookingForm = props => {
                   return (
                     <React.Fragment key={index}>
                       <DatePicker
-                        selected={slot.date}
+                        selected={new Date(slot.date)}
                         onChange={date =>
                           dispatch({
                             type: "update_slot",
@@ -654,6 +654,7 @@ function singleBookingReducer(state, action) {
     }
 
     case "update_slot": {
+      debugger;
       const slot = state.slots[action.index];
       slot[action.key] = action.value;
       return {
@@ -723,7 +724,7 @@ function singleBookingReducer(state, action) {
           ...state.slots,
           {
             kind: "single-day",
-            date: action.date || new Date(),
+            date: action.date || (new Date()).valueOf(),
             startHour: (action.startDate && action.startDate.getHours()) || 9,
             startMinute:
               (action.startDate && action.startDate.getMinutes()) || 0,
