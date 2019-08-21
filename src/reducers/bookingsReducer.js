@@ -28,6 +28,12 @@ import {
   REUQEST_GET_BOOKING_SETTINGS,
   GET_BOOKING_SETTINGS_SUCCESS,
   GET_BOOKING_SETTINGS_ERROR,
+  REQUEST_CREATE_BOOKING_QUOTE,
+  GET_CREATE_BOOKING_QUOTE_SUCCESS,
+  GET_CREATE_BOOKING_QUOTE_ERROR,
+  REQUEST_UPDATE_BOOKING_QUOTE,
+  UPDATE_BOOKING_QUOTE_SUCCESS,
+  UPDATE_BOOKING_QUOTE_ERROR,
 } from "../reducers/actionType";
 
 let quoteBackup = null;
@@ -181,9 +187,47 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadingQuotes: false,
-        quote: [...action.payload]
+        quotes: action.payload.map(item => {
+          item.slots = JSON.parse(item.slots);
+          item.costItems = JSON.parse(item.costItems);
+        })
       }
     case GET_BOOKINGS_ERROR:
+      return {
+        ...state,
+        loadingQuotes: false,
+      }
+    case REQUEST_CREATE_BOOKING_QUOTE:
+      return {
+        ...state,
+        loadingQuotes: true,
+      }
+    case GET_CREATE_BOOKING_QUOTE_SUCCESS:
+      return {
+        ...state,
+        loadingQuotes: false,
+        quotes: state.quotes.map(item => {
+          if( item.id === -1 )
+            item.id = action.payload.id
+          return item;
+        })
+      }      
+    case GET_CREATE_BOOKING_QUOTE_ERROR:
+      return {
+        ...state,
+        loadingQuotes: false,
+      }
+    case REQUEST_UPDATE_BOOKING_QUOTE:
+      return {
+        ...state,
+        loadingQuotes: true,
+      }
+    case UPDATE_BOOKING_QUOTE_SUCCESS:
+      return {
+        ...state,
+        loadingQuotes: false,        
+      }
+    case UPDATE_BOOKING_QUOTE_ERROR:
       return {
         ...state,
         loadingQuotes: false,

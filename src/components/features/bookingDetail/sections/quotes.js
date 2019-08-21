@@ -16,6 +16,9 @@ import {
   REQUEST_GET_BOOKING_QUOTE,
   GET_BOOKING_QUOTE_SUCCESS,
   GET_BOOKING_QUOTE_ERROR,
+  REQUEST_CREATE_BOOKING_QUOTE,
+  GET_CREATE_BOOKING_QUOTE_SUCCESS,
+  GET_CREATE_BOOKING_QUOTE_ERROR,
 } from "../../../../reducers/actionType";
 
 const QuotesSection = props => {
@@ -37,7 +40,7 @@ const QuotesSection = props => {
         dispatch({ type: REQUEST_GET_BOOKING_QUOTE })
 
         const res = await axios.get(`/bookings/${booking.id}/quotes`);
-
+        debugger;
         dispatch({
           type: GET_BOOKING_QUOTE_SUCCESS,
           payload: res.data.quotes,
@@ -49,7 +52,7 @@ const QuotesSection = props => {
     getQuote();
   }, [])
 
-  const handleSave = (shouldSave) => {
+  const handleSave = async (shouldSave) => {
     dispatch({
       type: "quote_update_total",
       booking: booking.id,
@@ -70,6 +73,39 @@ const QuotesSection = props => {
         booking: booking.id,
         index: quoteBeingEditedIndex
       });
+    }
+
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      const saveOne = {...state.bookings.quotes[quoteBeingEditedIndex]};
+
+      dispatch({ type: REQUEST_CREATE_BOOKING_QUOTE })
+      debugger;
+      const res = await axios.post(
+        `/bookings/${booking.id}/quotes`,
+        {
+          slots: JSON.stringify(saveOne.slots),
+          costItems: JSON.stringify(saveOne.costItems),
+          value: saveOne.value,
+          discount: saveOne.discount,
+          created: saveOne.created,
+          notes: saveOne.notes
+        },
+        config
+      )
+
+      dispatch({ 
+        type: GET_CREATE_BOOKING_QUOTE_SUCCESS,
+        payload: res.data.quote
+      })
+      
+    } catch (err) {
+      dispatch({ type: GET_CREATE_BOOKING_QUOTE_ERROR });
     }
 
     setQuoteBeingEditedIndex(null);

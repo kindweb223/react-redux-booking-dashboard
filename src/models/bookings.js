@@ -37,6 +37,7 @@ function createEmptyInvoice(number, booking) {
 
 function createEmptyQuote(booking) {
   return {
+    id: -1,
     created: new Date(),
     slots: Array.from(booking.slots) || [],
     costItems: [],
