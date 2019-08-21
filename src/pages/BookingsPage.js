@@ -38,6 +38,9 @@ import {
   REQUEST_GET_BOOKING_BOOKINGSTATUS,
   GET_BOOKING_BOOKINGSTATUS_SUCCESS,
   GET_BOOKING_BOOKINGSATTUS_ERROR,
+  REUQEST_GET_BOOKING_SETTINGS,
+  GET_BOOKING_SETTINGS_SUCCESS,
+  GET_BOOKING_SETTINGS_ERROR,
 } from "../reducers/actionType";
 
 const BookingsPage = props => {
@@ -64,6 +67,23 @@ const BookingsPage = props => {
   }
 
   useEffect(() => {
+
+    const getCompany = async () => {
+      try {
+        dispatch({ type: REUQEST_GET_BOOKING_SETTINGS});
+
+        const res = await axios.get('/company');
+
+        dispatch({ 
+          type: GET_BOOKING_SETTINGS_SUCCESS, 
+          payload: res.data.company,
+        })
+      } catch (err) {
+        dispatch({ type: GET_BOOKING_SETTINGS_ERROR });
+      }      
+    }
+    getCompany();
+
     const getBookingStatus = async () => {
 
       try {

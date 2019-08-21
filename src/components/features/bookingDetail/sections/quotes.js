@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import axios from 'axios';
 import { Table, TableValue } from "../../../tables/tables";
 import { formatEventDate } from "../../../../utils/dateFormatting";
 import { formatCurrency } from "../../../../utils/numbers";
@@ -11,6 +12,12 @@ import { css } from "emotion";
 import Modal from "../../../modals/modal";
 import EditQuote from "./editQuote";
 
+import { 
+  REQUEST_GET_BOOKING_QUOTE,
+  GET_BOOKING_QUOTE_SUCCESS,
+  GET_BOOKING_QUOTE_ERROR,
+} from "../../../../reducers/actionType";
+
 const QuotesSection = props => {
   const { booking, onQuoteConverted } = props;
   const { state, dispatch } = useContext(AppReducerContext);
@@ -22,6 +29,52 @@ const QuotesSection = props => {
     false
     // true
   );
+    
+  useEffect(() => {
+    const getQuote = async () => {
+
+      try {
+        dispatch({ type: REQUEST_GET_BOOKING_QUOTE })
+
+        const res = await axios.get(`/bookings/${booking.id}/quotes`);
+
+        dispatch({
+          type: GET_BOOKING_QUOTE_SUCCESS,
+          payload: res.data.quotes,
+        })
+      } catch (err) {
+        dispatch({ GET_BOOKING_QUOTE_ERROR })
+      }      
+    }
+    getQuote();
+  }, [])
+
+  const handleSave = (shouldSave) => {
+    dispatch({
+      type: "quote_update_total",
+      booking: booking.id,
+      quote: quoteBeingEditedIndex
+    });
+
+    if (!shouldSave && quoteBeingEditedIsNew) {
+      dispatch({
+        type: "delete_quote",
+        booking: booking.id,
+        index: quoteBeingEditedIndex
+      });
+    }
+
+    if (!shouldSave && !quoteBeingEditedIsNew) {
+      dispatch({
+        type: "restore_quote_backup",
+        booking: booking.id,
+        index: quoteBeingEditedIndex
+      });
+    }
+
+    setQuoteBeingEditedIndex(null);
+    setQuoteBeingEditedIsNew(false);
+  }
 
   return (
     <>
@@ -34,36 +87,9 @@ const QuotesSection = props => {
       >
         <EditQuote
           booking={booking}
-          quote={booking.quotes[quoteBeingEditedIndex]}
+          quote={state.bookings.quotes[quoteBeingEditedIndex]}
           index={quoteBeingEditedIndex}
-          onEndEditing={shouldSave => {
-            // it's autosaved, nothing to do if autosave === true
-
-            dispatch({
-              type: "quote_update_total",
-              booking: booking.id,
-              quote: quoteBeingEditedIndex
-            });
-
-            if (!shouldSave && quoteBeingEditedIsNew) {
-              dispatch({
-                type: "delete_quote",
-                booking: booking.id,
-                index: quoteBeingEditedIndex
-              });
-            }
-
-            if (!shouldSave && !quoteBeingEditedIsNew) {
-              dispatch({
-                type: "restore_quote_backup",
-                booking: booking.id,
-                index: quoteBeingEditedIndex
-              });
-            }
-
-            setQuoteBeingEditedIndex(null);
-            setQuoteBeingEditedIsNew(false);
-          }}
+          onEndEditing={shouldSave => {handleSave(shouldSave)}}
         />
       </Modal>
       <div
@@ -71,12 +97,12 @@ const QuotesSection = props => {
           height: 100%;
         `}
       >
-        {booking.quotes.length > 0 && (
+        {state.bookings.quotes.length > 0 && (
           <Table
             columns="50px 120px 100px 120px"
             columnTitles={["ID", "Created", "Value", ""]}
           >
-            {booking.quotes.map((quote, index) => {
+            {state.bookings.quotes.map((quote, index) => {
               return (
                 <React.Fragment key={index}>
                   <TableValue>{index + 1}</TableValue>
@@ -133,7 +159,7 @@ const QuotesSection = props => {
           primary
           icon={addGlyph}
           onClick={() => {
-            const quotesCount = (booking.quotes && booking.quotes.length) || 0;
+            const quotesCount = (state.bookings.quotes && state.bookings.quotes.length) || 0;
             dispatch({ type: "create_quote", booking: booking.id });
             setQuoteBeingEditedIndex(quotesCount);
             setQuoteBeingEditedIsNew(true);

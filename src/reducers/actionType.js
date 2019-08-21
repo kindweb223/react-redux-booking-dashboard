@@ -95,3 +95,12 @@ export const REQUEST_GET_BOOKING_BOOKINGSTATUS = "Request get booking booking st
 export const GET_BOOKING_BOOKINGSTATUS_SUCCESS = "Get booking booking status success";
 export const GET_BOOKING_BOOKINGSATTUS_ERROR = "Get booking booking status error";
 export const UPDATE_ADD_BOOKINGFORM_VALIDATE = "Change add booking form validate";
+
+export const REUQEST_GET_BOOKING_SETTINGS = "Request get settings for booking";
+export const GET_BOOKING_SETTINGS_SUCCESS = "Get settings for booking success";
+export const GET_BOOKING_SETTINGS_ERROR = "Get settings for booking error";
+
+// Booking Quote
+export const REQUEST_GET_BOOKING_QUOTE = "Request get booking quote";
+export const GET_BOOKING_QUOTE_SUCCESS = "Get booking quote success";
+export const GET_BOOKING_QUOTE_ERROR = "Get booking quote error";

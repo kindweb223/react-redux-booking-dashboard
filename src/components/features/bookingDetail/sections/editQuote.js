@@ -430,7 +430,7 @@ const EditQuote = props => {
               type: "append_cost_item",
               booking: booking.id,
               quote: quoteIndex,
-              vatRate: state.settings.defaultVatRate
+              vatRate: state.bookings.defaultVatRate
             })
           }
           iconComponent={() => <AddGlyph fill={colors.grey} />}

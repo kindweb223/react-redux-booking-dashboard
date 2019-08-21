@@ -22,6 +22,12 @@ import {
   REQUEST_GET_BOOKING_BOOKINGSTATUS,
   GET_BOOKING_BOOKINGSTATUS_SUCCESS,
   GET_BOOKING_BOOKINGSATTUS_ERROR,
+  REQUEST_GET_BOOKING_QUOTE,
+  GET_BOOKING_QUOTE_SUCCESS,
+  GET_BOOKING_QUOTE_ERROR,
+  REUQEST_GET_BOOKING_SETTINGS,
+  GET_BOOKING_SETTINGS_SUCCESS,
+  GET_BOOKING_SETTINGS_ERROR,
 } from "../reducers/actionType";
 
 let quoteBackup = null;
@@ -149,22 +155,62 @@ function bookingsReducer(state, action) {
     }
 
     // QUOTES
-    case "create_quote": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      if (booking.quotes) {
-        booking.quotes.push(createEmptyQuote(booking));
-      } else {
-        booking.quotes = [createEmptyQuote(booking)];
+    case REUQEST_GET_BOOKING_SETTINGS: 
+      return {
+        ...state,
+        loadBooking: true,        
       }
-      return newState;
+    case GET_BOOKING_SETTINGS_SUCCESS:
+      return {
+        ...state,
+        defaultVatRate: action.payload.vatRate,
+        currency: action.payload.currency.toUpperCase(),
+        loadBooking: false,
+      }
+    case GET_BOOKING_SETTINGS_ERROR:
+      return {
+        ...state,
+        loadBooking: false,
+      }
+    case REQUEST_GET_BOOKING_QUOTE:
+      return {
+        ...state,
+        loadingQuotes: true,
+      }
+    case GET_BOOKING_QUOTE_SUCCESS:
+      return {
+        ...state,
+        loadingQuotes: false,
+        quote: [...action.payload]
+      }
+    case GET_BOOKINGS_ERROR:
+      return {
+        ...state,
+        loadingQuotes: false,
+      }
+    case "create_quote": {
+      const booking = state.bookings.find(booking => booking.id === action.booking);
+      const newQuotes = [ ...state.quotes];
+      if (state.quotes) {
+        newQuotes.push(createEmptyQuote(booking));
+      } else {
+        newQuotes = [createEmptyQuote(booking)];
+      }
+      return {
+        ...state,
+        quotes: newQuotes
+      }
     }
     case "backup_quote": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.index];
-      quoteBackup = { ...quote };
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.index];
+      // quoteBackup = { ...quote };
+      // return newState;
+      quoteBackup = { ...state.quotes[action.quote] };
+      return {
+        ...state,        
+      }
     }
     case "convert_quote_to_invoice": {
       const newState = Array.from(state);
@@ -178,171 +224,337 @@ function bookingsReducer(state, action) {
       return newState;
     }
     case "restore_quote_backup": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      booking.quotes[action.index] = quoteBackup;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // booking.quotes[action.index] = quoteBackup;
+      // quoteBackup = null;
+      // return newState;
+      const newOne = { ...quoteBackup };
       quoteBackup = null;
-      return newState;
+      return {
+        ...state,
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.index){            
+            return newOne;
+          }
+          return item;
+        })
+      }
     }
 
     case "delete_quote": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      booking.quotes.splice(action.index, 1);
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // booking.quotes.splice(action.index, 1);
+      // return newState;
+      return {
+        ...state,
+        quotes: state.quotes.filter((item, nIndex) => nIndex !== action.index)
+      }
     }
     case "set_quote_value": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.index];
-      quote[action.key] = action.value;
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.index];
+      // quote[action.key] = action.value;
+      // return newState;
+      return {
+        ...state,
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.nIndex)
+            item[action.key] = action.value;
+          return item;
+        })
+      }
     }
 
     case "quote_update_slot": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
-      const slot = quote.slots[action.index];
-      slot[action.key] = action.value;
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
+      // const slot = quote.slots[action.index];
+      // slot[action.key] = action.value;
+      // return newState;      
+      return {
+        ...state,
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.quote) {
+            item.slots[action.index][action.key] = action.value
+          }
+          return item;        
+        })
+      }
     }
     case "quote_update_multiday_slot_start": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
-      const slot = quote.slots[action.index];
-      slot.dateRange[0] = action.value;
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
+      // const slot = quote.slots[action.index];
+      // slot.dateRange[0] = action.value;
+      // return newState;
+      return {
+        ...state,
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.quote) {
+            item.slots[action.index].dateRange[0] = action.value;
+          }
+          return item;
+        })
+      }
     }
     case "quote_update_multiday_slot_end": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
-      const slot = quote.slots[action.index];
-      slot.dateRange[1] = action.value;
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
+      // const slot = quote.slots[action.index];
+      // slot.dateRange[1] = action.value;
+      // return newState;
+      return {
+        ...state,
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.quote) {
+            item.slots[action.index].dateRange[1] = action.value;
+          }
+          return item;
+        })
+      }
     }
     case "quote_update_slot_start_time": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
-      const slot = quote.slots[action.index];
-      slot.startHour = action.date.getHours();
-      slot.startMinute = action.date.getMinutes();
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
+      // const slot = quote.slots[action.index];
+      // slot.startHour = action.date.getHours();
+      // slot.startMinute = action.date.getMinutes();
+      // return newState;
+      return {
+        ...state,
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.quote) {
+            item.slots[action.index].startHour = action.date.getHours();
+            item.slots[action.index].startMinute = action.date.getMinutes();
+          }
+          return item;
+        })
+      }
     }
     case "quote_update_slot_end_time": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
-      const slot = quote.slots[action.index];
-      slot.endHour = action.date.getHours();
-      slot.endMinute = action.date.getMinutes();
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
+      // const slot = quote.slots[action.index];
+      // slot.endHour = action.date.getHours();
+      // slot.endMinute = action.date.getMinutes();
+      // return newState;
+      return {
+        ...state,
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.quote) {
+            item.slots[action.index].endHour = action.date.getHours();
+            item.slots[action.index].endMinute = action.date.getMinutes();
+          }
+          return item;
+        })
+      }
     }
 
     case "quote_append_slot":
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
-      quote.slots.push({
-        kind: "single-day",
-        date: action.date || new Date(),
-        startHour: (action.startDate && action.startDate.getHours()) || 9,
-        startMinute: (action.startDate && action.startDate.getMinutes()) || 0,
-        endHour: (action.endDate && action.endDate.getHours()) || 18,
-        endMinute: (action.endDate && action.endDate.getMinutes()) || 0
-      });
-      return newState;
-
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
+      // quote.slots.push({
+      //   kind: "single-day",
+      //   date: action.date || new Date(),
+      //   startHour: (action.startDate && action.startDate.getHours()) || 9,
+      //   startMinute: (action.startDate && action.startDate.getMinutes()) || 0,
+      //   endHour: (action.endDate && action.endDate.getHours()) || 18,
+      //   endMinute: (action.endDate && action.endDate.getMinutes()) || 0
+      // });
+      // return newState;            
+      return {
+        ...state,        
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.quote) {
+            item.slots.push({
+              kind: "single-day",
+              date: action.date || new Date(),
+              startHour: (action.startDate && action.startDate.getHours()) || 9,
+              startMinute: (action.startDate && action.startDate.getMinutes()) || 0,
+              endHour: (action.endDate && action.endDate.getHours()) || 18,
+              endMinute: (action.endDate && action.endDate.getMinutes()) || 0
+            })            
+          }
+          return item;            
+        })
+      }
     case "quote_append_slot_multi": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
-      quote.slots.push({
-        kind: "multi-day",
-        dateRange: [new Date(), addDays(new Date(), 1)],
-        startHour: 9,
-        startMinute: 0,
-        endHour: 18,
-        endMinute: 0
-      });
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
+      // quote.slots.push({
+      //   kind: "multi-day",
+      //   dateRange: [new Date(), addDays(new Date(), 1)],
+      //   startHour: 9,
+      //   startMinute: 0,
+      //   endHour: 18,
+      //   endMinute: 0
+      // });
+      // return newState;
+      return {
+        ...state,
+        quotes: state.quotes.map((item, nIndex) => {
+          if(nIndex === action.quote) {
+            item.slots.push({
+              kind: "multi-day",
+              dateRange: [new Date(), addDays(new Date(), 1)],
+              startHour: 9,
+              startMinute: 0,
+              endHour: 18,
+              endMinute: 0
+            })
+          }
+          return item;
+        })
+      }
     }
 
     case "quote_remove_slot": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
-      quote.slots.splice(action.index, 1);
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
+      // quote.slots.splice(action.index, 1);
+      // return newState;
+      return {
+        ...state,
+        quotes: state.quotes.filter((item, nIndex) => nIndex !== action.quote)
+      }
     }
 
     case "quote_update_total": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
 
-      if (!quote) {
-        return state;
-      }
+      // if (!quote) {
+      //   return state;
+      // }
 
-      const grandTotal = computeCostItemsSummary(
-        quote.costItems,
-        quote.discount
-      )[2];
+      // const grandTotal = computeCostItemsSummary(
+      //   quote.costItems,
+      //   quote.discount
+      // )[2];
 
-      quote.value = grandTotal;
+      // quote.value = grandTotal;
 
-      return newState;
+      // return newState;
+      const quote = state.quotes[action.quote];
+      if (!quote)
+        return {
+          ...state,
+        }
+      else {        
+        return {
+          ...state,
+          quotes: state.quotes.map((item, nIndex) => {
+            if (nIndex === action.quote) {
+              item.value = computeCostItemsSummary( item.costItems, item.discount )[2];
+            }              
+            return item;
+          })
+        }
+      }      
     }
 
     case "quote_update_discount": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
 
+      // if (action.value && action.value.length) {
+      //   try {
+      //     quote.discount = parseInt(action.value);
+      //   } catch (err) {
+      //     quote.discount = 0;
+      //   }
+      // } else {
+      //   quote.discount = 0;
+      // }
+
+      // quote.discountText = action.value;
+      // return newState;
+
+      const newOne = [ ...state.quotes ];
       if (action.value && action.value.length) {
         try {
-          quote.discount = parseInt(action.value);
+          newOne[action.quote].discount = parseInt(action.value);
         } catch (err) {
-          quote.discount = 0;
+          newOne[action.quote].discount = 0
         }
       } else {
-        quote.discount = 0;
+        newOne[action.quote].discount = 0;
       }
+      newOne[action.quote].discountText = action.value;
 
-      quote.discountText = action.value;
-
-      return newState;
+      return {
+        ...state,
+        quotes: [...newOne]
+      }
     }
 
     // COST ITEMS
 
     case "append_cost_item": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
-      quote.costItems.push(createEmptyCostItem({ vatRate: action.vatRate }));
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
+      // quote.costItems.push(createEmptyCostItem({ vatRate: action.vatRate }));
+      // return newState;
+      return {
+        ...state,
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.quote)
+            item.costItems.push(createEmptyCostItem({ vatRate: action.vatRate }));
+          return item;
+        })
+      }
     }
 
     case "remove_cost_item": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
-      quote.costItems.splice(action.index, 1);
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
+      // quote.costItems.splice(action.index, 1);
+      // return newState;
+
+      const newCostItems = state.quotes[action.quote].costItems.filter((item, nIndex) => nIndex !== action.index);      
+
+      return {
+        ...state,
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.quote) {
+            item.costItems = [ ...newCostItems ];
+          }
+          return item;
+        })
+      }
     }
 
     case "update_cost_item": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const quote = booking.quotes[action.quote];
-      const constItem = quote.costItems[action.index];
-      constItem[action.key] = action.value;
-      return newState;
+      // const newState = Array.from(state);
+      // const booking = newState.find(booking => booking.id === action.booking);
+      // const quote = booking.quotes[action.quote];
+      // const constItem = quote.costItems[action.index];
+      // constItem[action.key] = action.value;
+      // return newState;      
+      return {
+        ...state,
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.quote) {
+            item.costItems[action.index][action.key] = action.value;
+          }
+          return item;
+        })
+      }
     }
 
     // INVOICES

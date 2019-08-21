@@ -14,6 +14,11 @@ const initialState = {
     bookingStatus: [],
     loadBooking: false,
     loadBookingAction: false,
+    quotes: [],
+    loadingQuotes: false,
+    invoice: [],
+    defaultVatRate: "",
+    currency: "",
   },
   settings: {
     companyLoading: false,
