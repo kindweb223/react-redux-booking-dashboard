@@ -26,6 +26,7 @@ import SvgButton from "../../../buttons/SvgButton";
 import RemoveSvg from "../../../../images/ui/remove.svg";
 import { formatCurrency } from "../../../../utils/numbers";
 import { computeCostItemsSummary } from "../../../../utils/costItemsMath";
+import SpinnerContainer from "../../../layout/Spinner";
 
 const SvgButtonWrapper = styled.div`
   display: flex;
@@ -49,6 +50,7 @@ const EditQuote = props => {
 
   return (
     <ModalContainer>
+      <SpinnerContainer loading={state.bookings.loadingQuotes.toString()} />
       <ModalTopSection>
         <ModalTitleAndButtons>
           <H3 style={{ margin: 0 }}>
@@ -84,8 +86,9 @@ const EditQuote = props => {
               .map((slot, slotIndex) => {
                 switch (slot.kind) {
                   case "multi-day":
-                    const startDate = slot.dateRange[0];
-                    const endDate = slot.dateRange[slot.dateRange.length - 1];
+                    debugger;
+                    const startDate = new Date(slot.dateRange[0]);
+                    const endDate = new Date(slot.dateRange[slot.dateRange.length - 1]);
                     return (
                       <React.Fragment key={slotIndex}>
                         <div style={{ display: "flex" }}>
@@ -181,10 +184,11 @@ const EditQuote = props => {
                       </React.Fragment>
                     );
                   case "single-day":
+                            
                     return (
                       <React.Fragment key={slotIndex}>
                         <DatePicker
-                          selected={slot.date}
+                          selected={new Date(slot.date)}
                           onChange={date =>
                             dispatch({
                               type: "quote_update_slot",
@@ -489,7 +493,7 @@ const EditQuote = props => {
         <TableEditableValue
           // label="Notes"
           placeholder={"Optionally leave a note for the customer"}
-          value={quote.notes}
+          value={(quote.note) ? quote.note : ""}
           longText
           style={{
             width: "100%"
@@ -499,7 +503,7 @@ const EditQuote = props => {
               type: "set_quote_value",
               booking: booking.id,
               index: quoteIndex,
-              key: "notes",
+              key: "note",
               value
             });
           }}

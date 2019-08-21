@@ -1,5 +1,4 @@
 import React from "react";
-import { bookings } from "../models/bookings";
 import bookingsReducer from "../reducers/bookingsReducer";
 import settingsReducer from "../reducers/settingsReducer";
 import customersReducer from "../reducers/customersReducer";

@@ -34,6 +34,9 @@ import {
   REQUEST_UPDATE_BOOKING_QUOTE,
   UPDATE_BOOKING_QUOTE_SUCCESS,
   UPDATE_BOOKING_QUOTE_ERROR,
+  REQUEST_DELETE_BOOKING_QUOTE,
+  DELETE_BOOKING_QUOTE_SUCCESS,
+  DELETE_BOOKING_QUOTE_ERROR,
 } from "../reducers/actionType";
 
 let quoteBackup = null;
@@ -190,9 +193,10 @@ function bookingsReducer(state, action) {
         quotes: action.payload.map(item => {
           item.slots = JSON.parse(item.slots);
           item.costItems = JSON.parse(item.costItems);
+          return item;
         })
       }
-    case GET_BOOKINGS_ERROR:
+    case GET_BOOKING_QUOTE_ERROR:
       return {
         ...state,
         loadingQuotes: false,
@@ -232,9 +236,25 @@ function bookingsReducer(state, action) {
         ...state,
         loadingQuotes: false,
       }
+    case REQUEST_DELETE_BOOKING_QUOTE:
+      return {
+        ...state,
+        loadingQuotes: true,
+      }
+    case DELETE_BOOKING_QUOTE_SUCCESS:
+      return {
+        ...state,
+        quotes: state.quotes.filter(item => item.id !== action.payload),
+        loadingQuotes: false,
+      }
+    case DELETE_BOOKING_QUOTE_ERROR:
+      return {
+        ...state,
+        loadingQuotes: false,
+      }
     case "create_quote": {
       const booking = state.bookings.find(booking => booking.id === action.booking);
-      const newQuotes = [ ...state.quotes];
+      let newQuotes = [ ...state.quotes];
       if (state.quotes) {
         newQuotes.push(createEmptyQuote(booking));
       } else {
@@ -251,7 +271,8 @@ function bookingsReducer(state, action) {
       // const quote = booking.quotes[action.index];
       // quoteBackup = { ...quote };
       // return newState;
-      quoteBackup = { ...state.quotes[action.quote] };
+      quoteBackup = { ...state.quotes[action.index] };
+
       return {
         ...state,        
       }
@@ -302,10 +323,11 @@ function bookingsReducer(state, action) {
       // const quote = booking.quotes[action.index];
       // quote[action.key] = action.value;
       // return newState;
+      debugger;
       return {
         ...state,
         quotes: state.quotes.map((item, nIndex) => {
-          if (nIndex === action.nIndex)
+          if (nIndex === action.index)
             item[action.key] = action.value;
           return item;
         })

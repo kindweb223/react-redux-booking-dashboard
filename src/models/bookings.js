@@ -38,11 +38,12 @@ function createEmptyInvoice(number, booking) {
 function createEmptyQuote(booking) {
   return {
     id: -1,
-    created: new Date(),
+    createdAt: new Date(),
     slots: Array.from(booking.slots) || [],
     costItems: [],
     value: 0,
-    discount: 0
+    discount: 0,
+    note: "",
   };
 }
 
@@ -187,7 +188,7 @@ const bookings = [
             endMinute: 0
           }
         ],
-        notes:
+        note:
           "The price includes the venue hire and beverages. I also added a discount because I like you.",
         costItems: [
           {
