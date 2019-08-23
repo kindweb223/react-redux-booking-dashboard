@@ -86,7 +86,6 @@ const EditQuote = props => {
               .map((slot, slotIndex) => {
                 switch (slot.kind) {
                   case "multi-day":
-                    debugger;
                     const startDate = new Date(slot.dateRange[0]);
                     const endDate = new Date(slot.dateRange[slot.dateRange.length - 1]);
                     return (
@@ -184,7 +183,7 @@ const EditQuote = props => {
                       </React.Fragment>
                     );
                   case "single-day":
-                            
+
                     return (
                       <React.Fragment key={slotIndex}>
                         <DatePicker

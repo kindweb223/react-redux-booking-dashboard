@@ -22,15 +22,15 @@ import {
 import DropdownMenu from "../components/buttons/DropdownMenu";
 import SpinnerContainer from "../components/layout/Spinner";
 
-import { 
-  REQUSET_ADD_BOOKING, 
-  GET_ADD_BOOKING_SUCCESS, 
-  GET_ADD_BOOKING_ERROR, 
-  REQUEST_UPDATE_BOOKING, 
-  GET_UPDATE_BOOKING_SUCCESS, 
-  GET_UPDATE_BOOKIG_ERROR, 
+import {
+  REQUSET_ADD_BOOKING,
+  GET_ADD_BOOKING_SUCCESS,
+  GET_ADD_BOOKING_ERROR,
+  REQUEST_UPDATE_BOOKING,
+  GET_UPDATE_BOOKING_SUCCESS,
+  GET_UPDATE_BOOKIG_ERROR,
   REQUEST_GET_BOOKINGS,
-  GET_BOOKINGS_SUCCESS, 
+  GET_BOOKINGS_SUCCESS,
   GET_BOOKINGS_ERROR,
   REQUEST_DELETE_BOOKING,
   GET_DELETE_BOOKING_SUCCESS,
@@ -55,7 +55,7 @@ const BookingsPage = props => {
     // "99af5d47-3837-4623-be55-f85c0b511c0f"
   );
 
-  const filteredBookings = (state.bookings.bookings.length > 0 ) ? 
+  const filteredBookings = (state.bookings.bookings && state.bookings.bookings.length > 0 ) ?
     state.bookings.bookings.filter(
       booking =>
         selectedBookingStateFilter === "All" ||
@@ -63,7 +63,7 @@ const BookingsPage = props => {
     ) : [];
 
   function bookingWithID(id) {
-    return state.bookings.bookings.find(b => b.id === id);
+    return state.bookings.bookings && state.bookings.bookings.find(b => b.id === id);
   }
 
   useEffect(() => {
@@ -74,13 +74,13 @@ const BookingsPage = props => {
 
         const res = await axios.get('/company');
 
-        dispatch({ 
-          type: GET_BOOKING_SETTINGS_SUCCESS, 
+        dispatch({
+          type: GET_BOOKING_SETTINGS_SUCCESS,
           payload: res.data.company,
         })
       } catch (err) {
         dispatch({ type: GET_BOOKING_SETTINGS_ERROR });
-      }      
+      }
     }
     getCompany();
 
@@ -91,7 +91,7 @@ const BookingsPage = props => {
 
         const res = await axios.get('/statuses');
 
-        dispatch({ 
+        dispatch({
           type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
           payload: res.data.statuses
         });
@@ -107,7 +107,7 @@ const BookingsPage = props => {
         dispatch({ type: REQUEST_GET_BOOKINGS });
 
         const res = await axios.get('/bookings');
-        
+
         dispatch({
           type: GET_BOOKINGS_SUCCESS,
           payload: res.data.bookings
@@ -120,7 +120,7 @@ const BookingsPage = props => {
   }, [])
 
   const handleClickSave = async (booking) => {
-    
+
     setShowCreateBookingModal(false);
 
     if (booking === null) return;
@@ -132,13 +132,13 @@ const BookingsPage = props => {
 
     if (booking.id === -1) {
       try {
-  
+
         dispatch({ type: REQUSET_ADD_BOOKING })
         const filteredStatus = state.bookings.bookingStatus.filter(item => item.name === "Enquiry");
 
         const res = await axios.post(
-          '/bookings', 
-          { 
+          '/bookings',
+          {
             eventName: booking.eventName,
             venueId: booking.venueId,
             spaceId: booking.spaceId,
@@ -150,41 +150,40 @@ const BookingsPage = props => {
           config
         );
 
-        dispatch({ 
+        dispatch({
           type: GET_ADD_BOOKING_SUCCESS,
           payload: res.data.booking
         })
-  
+
       } catch (err) {
         dispatch({ type: GET_ADD_BOOKING_ERROR })
-      }    
+      }
     } else {
-      debugger
       try {
         dispatch({ type: REQUEST_UPDATE_BOOKING })
-        
+
         const res = await axios.put(
-          `/bookings/${booking.id}`, 
-          { 
+          `/bookings/${booking.id}`,
+          {
             eventName: booking.eventName,
             venueId: booking.venueId,
             spaceId: booking.spaceId,
             customerId: booking.customerId,
             ownerId: booking.ownerId,
             statusId: booking.statusId,
-            slots: JSON.stringify(booking.slots),            
+            slots: JSON.stringify(booking.slots),
           },
           config
         );
-  
-        dispatch({ 
+
+        dispatch({
           type: GET_UPDATE_BOOKING_SUCCESS,
           payload: res.data.booking
         })
       } catch (err) {
         dispatch({ type: GET_UPDATE_BOOKIG_ERROR});
       }
-    }    
+    }
 
     // if (booking) {
     //   dispatch({ type: "upsert_booking", booking: booking });
@@ -192,7 +191,7 @@ const BookingsPage = props => {
   }
 
 
-  
+
   const handleClickDelete = async (id) => {
 
     dispatch({ type: REQUEST_DELETE_BOOKING })
@@ -212,7 +211,7 @@ const BookingsPage = props => {
   }
 
   const handleChangeStatus = async (id, status) => {
-    
+
     try {
       dispatch({ type: REQUEST_UPDATE_BOOKING });
 
@@ -233,10 +232,10 @@ const BookingsPage = props => {
         ownerId: filteredBooking[0].ownerId,
         slots: JSON.stringify(filteredBooking[0].slots),
       }
-      
+
       const res = await axios.put(`/bookings/${id}`, updateBookingData, config);
 
-      dispatch({ 
+      dispatch({
         type: GET_UPDATE_BOOKING_SUCCESS,
         payload: res.data.booking
       })
@@ -259,8 +258,8 @@ const BookingsPage = props => {
           alignItems: "center",
           marginBottom: 40
         }}
-      > 
-        {state.bookings.bookingStatus.length > 0 &&
+      >
+        {state.bookings.bookingStatus && state.bookings.bookingStatus.length > 0 &&
           <BigTabbedFilter
             items={state.bookings.bookingStatus.map(item => item.name)}
             colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
@@ -269,14 +268,14 @@ const BookingsPage = props => {
               setSelectedBookingStateFilter(item);
             }}
             style={{ marginBottom: 0, marginTop: 0, height: 60 }}
-        />        
+        />
         }
-        
+
         <Button
           primary
           onClick={() => setShowCreateBookingModal(!showCreateBookingModal)}
           iconComponent={() => <AddGlyph fill={colors.white} />}
-          style={{ marginLeft: "2em" }}          
+          style={{ marginLeft: "2em" }}
           disabled={(state.bookings.loadBooking || state.bookings.loadBookingAction)}
         >
           Add Booking

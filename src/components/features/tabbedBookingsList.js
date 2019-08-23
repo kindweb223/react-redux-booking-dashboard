@@ -14,11 +14,11 @@ const TabbedBookingsList = props => {
 
   const bookings = (() => {
     if (selectedTab === "week") {
-      return state.bookings.filter(booking =>
+      return state.bookings.bookings && state.bookings.bookings.filter(booking =>
         isBookingWithDates(booking, startOfWeek(), endOfWeek())
       );
     } else if (selectedTab === "upcoming") {
-      return state.bookings.filter(
+      return state.bookings.bookings.filter(
         booking => !isBookingWithDates(booking, startOfWeek(), endOfWeek())
       );
     } else {
@@ -68,14 +68,14 @@ const TabbedBookingsList = props => {
         </P1>
       </Header>
       <BookingsList>
-        {bookings.map(booking => (
+        {state.bookings.bookings && state.bookings.bookings.map(booking => (
           <BookingRow
             key={booking.id}
             booking={booking}
             onClick={() => onSelect(booking)}
           />
         ))}
-        {bookings.length === 0 && (
+        {state.bookings.bookings && state.bookings.bookings.length === 0 && (
           <P2 style={{ marginTop: 10 }} color="grey">
             {selectedTab === "upcoming"
               ? "No bookings here. Add a booking in the coming weeks and it will show up here."

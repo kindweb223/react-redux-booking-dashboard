@@ -37,6 +37,18 @@ import {
   REQUEST_DELETE_BOOKING_QUOTE,
   DELETE_BOOKING_QUOTE_SUCCESS,
   DELETE_BOOKING_QUOTE_ERROR,
+  REQUEST_CREATE_BOOKING_INVOICE,
+  GET_CREATE_BOOKING_INVOICE_SUCCESS,
+  GET_CREATE_BOOKING_INVOICE_ERROR,
+  REQUEST_UPDATE_BOOKING_INVOICE,
+  UPDATE_BOOKING_INVOICE_SUCCESS,
+  UPDATE_BOOKING_INVOICE_ERROR,
+  REQUEST_DELETE_BOOKING_INVOICE,
+  DELETE_BOOKING_INVOICE_SUCCESS,
+  DELETE_BOOKING_INVOICE_ERROR,
+  GET_BOOKING_INVOICE_ERROR,
+  REQUEST_GET_BOOKING_INVOICE,
+  GET_BOOKING_INVOICE_SUCCESS,
 } from "../reducers/actionType";
 
 let quoteBackup = null;
@@ -70,10 +82,13 @@ function bookingsReducer(state, action) {
         loadBookingAction: true,
       }
     case GET_ADD_BOOKING_SUCCESS:
+      const newBookingss = action.payload;
+      if(newBookingss.slots)
+        newBookingss.slots = JSON.parse(newBookingss.slots);
       return {
         ...state,
         loadBookingAction: false,
-        bookings: [ ...state.bookings, action.payload ]        
+        bookings: [ ...state.bookings, newBookingss ]
       }
     case GET_ADD_BOOKING_ERROR:
       return {
@@ -83,7 +98,7 @@ function bookingsReducer(state, action) {
     case REQUEST_UPDATE_BOOKING:
       return {
         ...state,
-        loadBookingAction: true,        
+        loadBookingAction: true,
       }
     case GET_UPDATE_BOOKING_SUCCESS:
       return {
@@ -92,7 +107,7 @@ function bookingsReducer(state, action) {
         bookings: state.bookings.map(item => {
           if (item.id === action.payload.id) {
             return {...action.payload, slots: JSON.parse(action.payload.slots)};
-          }            
+          }
           else return item;
         })
       }
@@ -104,7 +119,7 @@ function bookingsReducer(state, action) {
     case REQUEST_DELETE_BOOKING:
       return {
         ...state,
-        loadBookingAction: true,        
+        loadBookingAction: true,
       }
     case GET_DELETE_BOOKING_SUCCESS:
       return {
@@ -164,10 +179,10 @@ function bookingsReducer(state, action) {
     }
 
     // QUOTES
-    case REUQEST_GET_BOOKING_SETTINGS: 
+    case REUQEST_GET_BOOKING_SETTINGS:
       return {
         ...state,
-        loadBooking: true,        
+        loadBooking: true,
       }
     case GET_BOOKING_SETTINGS_SUCCESS:
       return {
@@ -215,7 +230,7 @@ function bookingsReducer(state, action) {
             item.id = action.payload.id
           return item;
         })
-      }      
+      }
     case GET_CREATE_BOOKING_QUOTE_ERROR:
       return {
         ...state,
@@ -229,7 +244,7 @@ function bookingsReducer(state, action) {
     case UPDATE_BOOKING_QUOTE_SUCCESS:
       return {
         ...state,
-        loadingQuotes: false,        
+        loadingQuotes: false,
       }
     case UPDATE_BOOKING_QUOTE_ERROR:
       return {
@@ -274,7 +289,7 @@ function bookingsReducer(state, action) {
       quoteBackup = { ...state.quotes[action.index] };
 
       return {
-        ...state,        
+        ...state,
       }
     }
     case "convert_quote_to_invoice": {
@@ -299,7 +314,7 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         quotes: state.quotes.map((item, nIndex) => {
-          if (nIndex === action.index){            
+          if (nIndex === action.index){
             return newOne;
           }
           return item;
@@ -323,7 +338,6 @@ function bookingsReducer(state, action) {
       // const quote = booking.quotes[action.index];
       // quote[action.key] = action.value;
       // return newState;
-      debugger;
       return {
         ...state,
         quotes: state.quotes.map((item, nIndex) => {
@@ -340,14 +354,14 @@ function bookingsReducer(state, action) {
       // const quote = booking.quotes[action.quote];
       // const slot = quote.slots[action.index];
       // slot[action.key] = action.value;
-      // return newState;      
+      // return newState;
       return {
         ...state,
         quotes: state.quotes.map((item, nIndex) => {
           if (nIndex === action.quote) {
             item.slots[action.index][action.key] = action.value
           }
-          return item;        
+          return item;
         })
       }
     }
@@ -436,9 +450,9 @@ function bookingsReducer(state, action) {
       //   endHour: (action.endDate && action.endDate.getHours()) || 18,
       //   endMinute: (action.endDate && action.endDate.getMinutes()) || 0
       // });
-      // return newState;            
+      // return newState;
       return {
-        ...state,        
+        ...state,
         quotes: state.quotes.map((item, nIndex) => {
           if (nIndex === action.quote) {
             item.slots.push({
@@ -448,9 +462,9 @@ function bookingsReducer(state, action) {
               startMinute: (action.startDate && action.startDate.getMinutes()) || 0,
               endHour: (action.endDate && action.endDate.getHours()) || 18,
               endMinute: (action.endDate && action.endDate.getMinutes()) || 0
-            })            
+            })
           }
-          return item;            
+          return item;
         })
       }
     case "quote_append_slot_multi": {
@@ -518,17 +532,17 @@ function bookingsReducer(state, action) {
         return {
           ...state,
         }
-      else {        
+      else {
         return {
           ...state,
           quotes: state.quotes.map((item, nIndex) => {
             if (nIndex === action.quote) {
               item.value = computeCostItemsSummary( item.costItems, item.discount )[2];
-            }              
+            }
             return item;
           })
         }
-      }      
+      }
     }
 
     case "quote_update_discount": {
@@ -592,7 +606,7 @@ function bookingsReducer(state, action) {
       // quote.costItems.splice(action.index, 1);
       // return newState;
 
-      const newCostItems = state.quotes[action.quote].costItems.filter((item, nIndex) => nIndex !== action.index);      
+      const newCostItems = state.quotes[action.quote].costItems.filter((item, nIndex) => nIndex !== action.index);
 
       return {
         ...state,
@@ -611,7 +625,7 @@ function bookingsReducer(state, action) {
       // const quote = booking.quotes[action.quote];
       // const constItem = quote.costItems[action.index];
       // constItem[action.key] = action.value;
-      // return newState;      
+      // return newState;
       return {
         ...state,
         quotes: state.quotes.map((item, nIndex) => {
@@ -645,7 +659,7 @@ function bookingsReducer(state, action) {
     case "update_invoice": {
       const newState = Array.from(state);
       const booking = newState.find(booking => booking.id === action.booking);
-      booking.invoices[action.index] = action.invoice;
+      // booking.invoices[action.index] = action.invoice;
       return newState;
     }
 
@@ -655,6 +669,78 @@ function bookingsReducer(state, action) {
       booking.invoices.push(action.invoice);
       return newState;
     }
+
+    case REQUEST_GET_BOOKING_INVOICE:
+      return {
+        ...state,
+        loadingInvoice: true,
+      }
+    case GET_BOOKING_INVOICE_SUCCESS:
+      return {
+        ...state,
+        loadingInvoice: false,
+        invoices: action.payload.map(item => {
+          item.slots = item.slots && JSON.parse(item.slots);
+          item.costItems = item.cost_items && JSON.parse(item.cost_items);
+          return item;
+        })
+      }
+    case GET_BOOKING_INVOICE_ERROR:
+      return {
+        ...state,
+        loadingInvoice: false,
+      }
+    case REQUEST_CREATE_BOOKING_INVOICE:
+      return {
+        ...state,
+        loadingInvoice: true,
+      }
+    case GET_CREATE_BOOKING_INVOICE_SUCCESS:
+      return {
+        ...state,
+        loadingInvoice: false,
+        invoices: state.invoices.map(item => {
+          if( item.id === -1 )
+            item.id = action.payload.id
+          return item;
+        })
+      }
+    case GET_CREATE_BOOKING_INVOICE_ERROR:
+      return {
+        ...state,
+        loadingInvoice: false,
+      }
+    case REQUEST_UPDATE_BOOKING_INVOICE:
+      return {
+        ...state,
+        loadingInvoice: true,
+      }
+    case UPDATE_BOOKING_INVOICE_SUCCESS:
+      return {
+        ...state,
+        loadingInvoice: false,
+      }
+    case UPDATE_BOOKING_INVOICE_ERROR:
+      return {
+        ...state,
+        loadingInvoice: false,
+      }
+    case REQUEST_DELETE_BOOKING_INVOICE:
+      return {
+        ...state,
+        loadingInvoice: true,
+      }
+    case DELETE_BOOKING_INVOICE_SUCCESS:
+      return {
+        ...state,
+        quotes: state.quotes.filter(item => item.id !== action.payload),
+        loadingInvoice: false,
+      }
+    case DELETE_BOOKING_INVOICE_ERROR:
+      return {
+        ...state,
+        loadingInvoice: false,
+      }
 
     default: {
       return state;

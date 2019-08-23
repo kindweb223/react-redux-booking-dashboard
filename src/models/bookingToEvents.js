@@ -7,11 +7,10 @@ import { updatedDate } from "../utils/dates";
  */
 function bookingToEvents(booking, venues) {
   const res = [];
+  // const venue = venues.find(v => v.id === booking.venue);
 
-  const venue = venues.find(v => v.id === booking.venue);
-
-  booking.slots.forEach((slot, index) => {
-    const space = venue.spaces.find(space => space.id === booking.space);
+  booking.slots.length && booking.slots.forEach((slot, index) => {
+    // const space = venue.spaces.find(space => space.id === booking.space);
 
     switch (slot.kind) {
       case "multi-day":
@@ -20,10 +19,10 @@ function bookingToEvents(booking, venues) {
             id: `${booking.id}_${index}_${dateIndex}`,
             bookingID: booking.id,
             title: booking.title,
-            subtitle: `${venue.name} (${space.name})`,
+            subtitle: booking.eventName,
             start: updatedDate(slotDate, slot.startHour, slot.startMinute),
             end: updatedDate(slotDate, slot.endHour, slot.endMinute),
-            accent: space.accentColor
+            accent: "#4a9454"
           });
         });
 
@@ -34,11 +33,10 @@ function bookingToEvents(booking, venues) {
           id: `${booking.id}_${index}`,
           bookingID: booking.id,
           title: booking.title,
-          subtitle: `${venue.name} (${space.name})`,
+          subtitle: booking.eventName,
           start: updatedDate(slot.date, slot.startHour, slot.startMinute),
           end: updatedDate(slot.date, slot.endHour, slot.endMinute),
-          accent: venue.spaces.find(space => space.id === booking.space)
-            .accentColor
+          accent: "#6389ea"
         });
 
         break;

@@ -11,11 +11,11 @@ const BookingRow = props => {
   const { state } = useContext(AppReducerContext);
 
   const venue = state.settings.venues.find(v => v.id === booking.venue);
-  const space = venue.spaces.find(space => space.id === booking.space);
+  // const space = venue.spaces.find(space => space.id === booking.space);
 
   const Container = styled.div`
     background: white;
-    border: 1px solid ${space.accentColor};
+    border: 1px solid #ddd;
     border-radius: 8px;
     margin-bottom: 1em;
     overflow: hidden;
@@ -34,7 +34,7 @@ const BookingRow = props => {
   `;
 
   const Subtitle = styled(P2)`
-    color: ${space.accentColor};
+    color: #sss;
     padding: 0 1.2rem 0.7rem;
     margin: 0;
   `;
@@ -55,7 +55,7 @@ const BookingRow = props => {
   return (
     <Container onClick={onClick}>
       <Title>{booking.title}</Title>
-      <Subtitle strong>{`${venue.name} (${space.name})`}</Subtitle>
+      <Subtitle strong>{`${booking.eventName}`}</Subtitle>
       <Footer>
         <P2 color="grey">{formatSlotsDatesForFooter(booking.slots)}</P2>
       </Footer>
@@ -97,7 +97,7 @@ function formatSlotsDatesForFooter(slots) {
   }
 
   for (let date of sortedDates) {
-    if (prevMonthYear !== `${date.getMonth()}-${date.getYear()}`) {
+    if (typeof date.getMonth === 'function' && prevMonthYear !== `${date.getMonth()}-${date.getYear()}`) {
       flushBuffer();
       buffer = [];
       prevMonthYear = `${date.getMonth()}-${date.getYear()}`;

@@ -13,13 +13,13 @@ const NewInvoice = props => {
       invoice={newInvoice}
       onEndEditing={(invoice, save) => {
         if (save) {
-          dispatch({
-            type: "append_invoice",
-            booking: booking.id,
-            invoice: invoice
-          });
+          // dispatch({
+          //   type: "append_invoice",
+          //   booking: booking.id,
+          //   invoice: invoice
+          // });
         }
-        onEndEditing();
+        onEndEditing(true, invoice);
       }}
     />
   );

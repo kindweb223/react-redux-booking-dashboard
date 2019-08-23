@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext, useEffect} from "react";
 import Grid from "../components/layout/Grid";
 import constants from "../components/layout/constants";
 import Calendar from "../components/features/calendar";
@@ -10,6 +10,22 @@ import CalendarContext from "../contexts/CalendarContext";
 import { AppReducerContext } from "../contexts/AppReducerContext";
 import BookingDetailEdit from "../components/features/bookingDetail/bookingDetailEdit";
 import { createEmptyBooking } from "../models/bookings";
+import {
+  REQUSET_ADD_BOOKING,
+  GET_ADD_BOOKING_SUCCESS,
+  GET_ADD_BOOKING_ERROR,
+  GET_UPDATE_BOOKING_SUCCESS,
+  GET_UPDATE_BOOKIG_ERROR,
+  REQUEST_UPDATE_BOOKING,
+  GET_BOOKING_BOOKINGSATTUS_ERROR,
+  GET_BOOKING_BOOKINGSTATUS_SUCCESS, GET_BOOKING_SETTINGS_ERROR, GET_BOOKING_SETTINGS_SUCCESS, GET_BOOKINGS_ERROR,
+  GET_BOOKINGS_SUCCESS, GET_CUSTOMERS_ERROR, GET_CUSTOMERS_SUCCESS, GET_VENUE_ERROR, GET_VENUE_SUCCESS,
+  REQUEST_GET_BOOKING_BOOKINGSTATUS,
+  REQUEST_GET_BOOKINGS, REQUEST_GET_CUSTOMERS,
+  REQUEST_GET_VENUE,
+  REUQEST_GET_BOOKING_SETTINGS
+} from "../reducers/actionType";
+import axios from "axios/index";
 
 const CalendarPage = props => {
   const [selectedBookingID, setSelectedBookingID] = useState(null);
@@ -18,9 +34,168 @@ const CalendarPage = props => {
 
   const { calendarExpanded } = useContext(CalendarContext);
   const { state, dispatch } = useContext(AppReducerContext);
-
   const venues = state.settings.venues;
-  const events = state.bookings.map(b => bookingToEvents(b, venues)).flat();
+  const events = state.bookings.bookings && state.bookings.bookings.map(b => bookingToEvents(b, venues)).flat();
+
+  useEffect(() => {
+    const getCustomers = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_CUSTOMERS });
+
+        const res = await axios.get('/customers');
+
+        dispatch({
+          type: GET_CUSTOMERS_SUCCESS,
+          payload: res.data.customers
+        })
+      } catch (err) {
+        dispatch({ type: GET_CUSTOMERS_ERROR });
+      }
+    }
+    getCustomers();
+
+    const getVenue = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_VENUE });
+
+        const res = await axios.get('/venues');
+        const venues = res.data.venues;
+        venues.map(item => {
+          if (!item.spaces) {
+            item.spaces = [];
+          }
+          return item;
+        })
+
+        dispatch({
+          type: GET_VENUE_SUCCESS,
+          payload: venues
+        })
+
+      } catch (err) {
+        console.log("Get Venus Setting failed.")
+        dispatch({ type: GET_VENUE_ERROR });
+      }
+    }
+
+    getVenue();
+
+    const getCompany = async () => {
+      try {
+        dispatch({ type: REUQEST_GET_BOOKING_SETTINGS});
+
+        const res = await axios.get('/company');
+        dispatch({
+          type: GET_BOOKING_SETTINGS_SUCCESS,
+          payload: res.data.company,
+        })
+      } catch (err) {
+        dispatch({ type: GET_BOOKING_SETTINGS_ERROR });
+      }
+    }
+    getCompany();
+
+    const getBookingStatus = async () => {
+
+      try {
+        dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
+
+        const res = await axios.get('/statuses');
+
+        dispatch({
+          type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+          payload: res.data.statuses
+        });
+      } catch(err) {
+        // dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
+      }
+
+    }
+    getBookingStatus();
+
+    const getBookings = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_BOOKINGS });
+
+        const res = await axios.get('/bookings');
+
+        dispatch({
+          type: GET_BOOKINGS_SUCCESS,
+          payload: res.data.bookings
+        })
+      } catch (err) {
+        dispatch({ type: GET_BOOKINGS_ERROR });
+      }
+    }
+    getBookings();
+  }, [])
+
+  const handleClickSave = async (booking) => {
+
+    setShowCreateBookingModal(false);
+
+    if (booking === null) return;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    if (booking.id === -1) {
+      try {
+
+        dispatch({ type: REQUSET_ADD_BOOKING })
+        const filteredStatus = state.bookings.bookingStatus.filter(item => item.name === "Enquiry");
+
+        const res = await axios.post(
+          '/bookings',
+          {
+            eventName: booking.eventName,
+            venueId: booking.venueId,
+            spaceId: booking.spaceId,
+            customerId: booking.customerId,
+            ownerId: booking.ownerId,
+            slots: JSON.stringify(booking.slots),
+            statusId: filteredStatus[0].id,
+          },
+          config
+        );
+
+        dispatch({
+          type: GET_ADD_BOOKING_SUCCESS,
+          payload: res.data.booking
+        })
+
+      } catch (err) {
+        dispatch({ type: GET_ADD_BOOKING_ERROR })
+      }
+    } else {
+      try {
+        dispatch({ type: REQUEST_UPDATE_BOOKING })
+
+        const res = await axios.put(
+          `/bookings/${booking.id}`,
+          {
+            eventName: booking.eventName,
+            venueId: booking.venueId,
+            spaceId: booking.spaceId,
+            customerId: booking.customerId,
+            ownerId: booking.ownerId,
+            statusId: booking.statusId,
+            slots: JSON.stringify(booking.slots),
+          },
+          config
+        );
+
+        dispatch({
+          type: GET_UPDATE_BOOKING_SUCCESS,
+          payload: res.data.booking
+        })
+      } catch (err) {
+        dispatch({ type: GET_UPDATE_BOOKIG_ERROR});
+      }
+    }
+  }
 
   const handleSelectSlot = ({ start, end }) => {
     setShowCreateBookingModal(true);
@@ -30,7 +205,7 @@ const CalendarPage = props => {
   const onSelectEvent = event => {
     setSelectedBookingID(event.bookingID);
   };
-  
+
   return (
     <>
       <Grid
@@ -51,7 +226,7 @@ const CalendarPage = props => {
           onClose={() => setSelectedBookingID(null)}
         >
           <BookingDetail
-            booking={state.bookings.find(b => b.id === selectedBookingID)}
+            booking={state.bookings.bookings && state.bookings.bookings.find(b => b.id === selectedBookingID)}
           />
         </Modal>
         <Modal
@@ -62,7 +237,8 @@ const CalendarPage = props => {
             booking={createEmptyBooking()}
             onEndEditing={booking => {
               if (booking) {
-                dispatch({ type: "upsert_booking", booking: booking });
+                handleClickSave(booking)
+                // dispatch({ type: "upsert_booking", booking: booking });
               }
               setShowCreateBookingModal(false);
             }}

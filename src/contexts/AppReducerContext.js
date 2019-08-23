@@ -15,7 +15,8 @@ const initialState = {
     loadBookingAction: false,
     quotes: [],
     loadingQuotes: false,
-    invoice: [],
+    loadingInvoice: false,
+    invoices: [],
     defaultVatRate: "",
     currency: "",
   },
@@ -39,17 +40,17 @@ const initialState = {
     venues: [],
     loading: false,
     selectedVenueSpaces: [],
-    venuesLoading: false,       
+    venuesLoading: false,
     venueActionLoading: false,
-    spacesLoading: false, 
+    spacesLoading: false,
     spaceActionLoading: false,
   },
 
   customers: {
     customers: [],
     loadingCustomers: false,
-  },  
-  
+  },
+
   auth: {
     isAuthenticated: false,
     showInvalidMsg: false,
