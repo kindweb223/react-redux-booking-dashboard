@@ -39,7 +39,7 @@ const InvoicesPage = () => {
   const { state, dispatch } = useContext(AppReducerContext);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const invoices = state.bookings
+  const invoices = state.bookings.bookings
     .map(booking => {
       if (booking.invoices && booking.invoices.length > 0) {
         return booking.invoices.map((invoice, index) => ({
@@ -150,7 +150,7 @@ const InvoicesPage = () => {
                 <TableValue>{invoice.booking.title}</TableValue>
                 {/* amount */}
                 <TableValue>
-                  {formatCurrency(invoice.amount, state.settings.currency)}
+                  {formatCurrency(invoice.grand_total, state.bookings.currency)}
                 </TableValue>
                 {/* status */}
                 <PickerButton
@@ -230,7 +230,7 @@ const InvoicesPage = () => {
       >
         <NewInvoice
           invoiceNumber={invoices.length + 1}
-          booking={state.bookings.find(
+          booking={state.bookings.bookings.find(
             b => b.id === selectedBookingIdForNewInvoice
           )}
           onEndEditing={() => {

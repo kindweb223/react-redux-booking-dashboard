@@ -1,5 +1,6 @@
 function currencySymbol(name) {
   const currencySymbols = {
+    CAD: "C$", // US Dollar
     USD: "$", // US Dollar
     EUR: "€", // Euro
     CRC: "₡", // Costa Rican Colón

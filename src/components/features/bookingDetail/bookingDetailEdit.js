@@ -57,7 +57,7 @@ const BookingForm = props => {
     if(booking.venueId === null)
       return;
     const getSpaces = async () => {
-      try {        
+      try {
         dispatch({ type: REQUEST_GET_BOOKING_SPACES });
 
         const res = await axios.get(`/spaces/venue/${booking.venueId}`);
@@ -84,11 +84,11 @@ const BookingForm = props => {
         className={(!booking.validateForm.eventName? "error" : "")}
       />
       {
-        !booking.validateForm.eventName && 
-        <p 
+        !booking.validateForm.eventName &&
+        <p
           className={
             css`
-              color: #E92579;            
+              color: #E92579;
               margin: 0.2em 0 0 0;
               padding: 0 0.6em;
               font-size: 0.8em;
@@ -97,9 +97,9 @@ const BookingForm = props => {
         >
           Booking Event Name is required.
         </p>
-      }   
+      }
       <Grid columns="1fr 1fr" style={{ width: "100%", marginTop: 10 }}>
-        <div>          
+        <div>
           <TablePicker
             label="Venue"
             selectedOption={booking.venueId}
@@ -109,7 +109,7 @@ const BookingForm = props => {
               booking.venues.map(item => {
                 return {value: item.id, label: item.name}
               })
-            }            
+            }
             displayTransformer={opt => {
               const filteredVenue = booking.venues.filter(v => v.id === opt);
               if (filteredVenue.length > 0)
@@ -126,11 +126,11 @@ const BookingForm = props => {
             isValidate={booking.validateForm.venueId}
           />
           {
-            !booking.validateForm.venueId && 
-            <p 
+            !booking.validateForm.venueId &&
+            <p
               className={
                 css`
-                  color: #E92579;            
+                  color: #E92579;
                   margin: 0.2em 0 0 0;
                   padding: 0 0.6em;
                   font-size: 0.8em;
@@ -140,7 +140,7 @@ const BookingForm = props => {
               Venue is required.
             </p>
           }
-        </div>        
+        </div>
         <div>
           <TablePicker
             label="Space"
@@ -165,11 +165,11 @@ const BookingForm = props => {
             isValidate={booking.validateForm.spaceId}
           />
           {
-            !booking.validateForm.spaceId && 
-            <p 
+            !booking.validateForm.spaceId &&
+            <p
               className={
                 css`
-                  color: #E92579;            
+                  color: #E92579;
                   margin: 0.2em 0 0 0;
                   padding: 0 0.6em;
                   font-size: 0.8em;
@@ -188,7 +188,7 @@ const BookingForm = props => {
             optionsForSearch={
               booking.customers.map(item => {
                 return { value: item.id, label: item.name }
-              })            
+              })
             }
             selectedOption={booking.customerId}
             displayTransformer={customerId => {
@@ -208,11 +208,11 @@ const BookingForm = props => {
             isValidate={booking.validateForm.customerId}
           />
           {
-            !booking.validateForm.customerId && 
-            <p 
+            !booking.validateForm.customerId &&
+            <p
               className={
                 css`
-                  color: #E92579;            
+                  color: #E92579;
                   margin: 0.2em 0 0 0;
                   padding: 0 0.6em;
                   font-size: 0.8em;
@@ -245,11 +245,11 @@ const BookingForm = props => {
             }}
           />
           {
-            !booking.validateForm.ownerId && 
-            <p 
+            !booking.validateForm.ownerId &&
+            <p
               className={
                 css`
-                  color: #E92579;            
+                  color: #E92579;
                   margin: 0.2em 0 0 0;
                   padding: 0 0.6em;
                   font-size: 0.8em;
@@ -451,7 +451,7 @@ const BookingDetailEdit = props => {
   const { booking: bookingToEdit, onEndEditing, startDate, endDate } = props;
 
   const [state, dispatch] = useReducer(
-    singleBookingReducer, 
+    singleBookingReducer,
     {
       ...bookingToEdit,
       loadingBookingDetilas: false,
@@ -468,18 +468,18 @@ const BookingDetailEdit = props => {
         venueId: true,
         spaceId: true,
         customerId: true,
-        ownerId: true,        
+        ownerId: true,
       }
     }
   );
 
-  useEffect(() => {    
+  useEffect(() => {
     const getCustomers = async () => {
       try {
         dispatch({ type: REQUSET_GET_BOOKING_CUSTOMER });
 
         const res = await axios.get('/customers');
-        
+
         dispatch({
           type: GET_BOOKING_CUSTOMER_SUCCESS,
           payload: res.data.customers
@@ -490,7 +490,7 @@ const BookingDetailEdit = props => {
       }
     }
     getCustomers();
-    
+
     const getVenues = async () => {
       try {
         dispatch({ type: REQUSET_GET_BOOKING_VENUES });
@@ -524,7 +524,7 @@ const BookingDetailEdit = props => {
     if (startDate && endDate) {
       // opened from dragging in the calendar to create a new booking
       // with the time range selected in the calendar
-                
+
       dispatch({ type: "remove_slot", index: 0 });
 
       dispatch({
@@ -540,8 +540,8 @@ const BookingDetailEdit = props => {
     let isValidate = true;
     Object.keys(state.validateForm).forEach(item => {
       if (state[item] === null || state[item].length === 0) {
-        dispatch({ 
-          type: UPDATE_ADD_BOOKINGFORM_VALIDATE, 
+        dispatch({
+          type: UPDATE_ADD_BOOKINGFORM_VALIDATE,
           payload: { key: item ,value: false }
         })
         isValidate = false;
@@ -587,7 +587,7 @@ const BookingDetailEdit = props => {
 
 function singleBookingReducer(state, action) {
   switch (action.type) {
-    case REQUSET_GET_BOOKING_CUSTOMER: 
+    case REQUSET_GET_BOOKING_CUSTOMER:
       return {
         ...state,
         loadingBookingDetilas: true,
@@ -642,19 +642,18 @@ function singleBookingReducer(state, action) {
         ...state,
         validateForm: { ...newValidateForm },
       }
-    }      
+    }
     case "set_title": {
       const newValidateForm = { ...state.validateForm };
       newValidateForm.eventName = (action.value.length > 0);
-      return { 
-        ...state, 
-        eventName: action.value,         
+      return {
+        ...state,
+        eventName: action.value,
         validateForm: { ...newValidateForm }
       };
     }
 
     case "update_slot": {
-      debugger;
       const slot = state.slots[action.index];
       slot[action.key] = action.value;
       return {

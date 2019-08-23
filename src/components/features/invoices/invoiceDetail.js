@@ -27,7 +27,7 @@ import { computeCostItemsSummary } from "../../../utils/costItemsMath";
 import InvoiceDetailEdit from "./invoiceDetailEdit";
 
 const InvoiceDetail = props => {
-  const { invoice: invoiceCoordinates } = props;
+  const { invoice: invoiceCoordinates, handleUpdate } = props;
   const [editing, setEditing] = useState(
     // true
     false
@@ -38,9 +38,9 @@ const InvoiceDetail = props => {
     return null;
   }
 
-  const booking = state.bookings.find(b => b.id === invoiceCoordinates.booking);
+  const booking = state.bookings.bookings && state.bookings.bookings.find(b => b.id === invoiceCoordinates.booking);
   const invoice = {
-    ...booking.invoices[invoiceCoordinates.index],
+    ...state.bookings.invoices[invoiceCoordinates.index],
     coordinates: invoiceCoordinates,
     booking: booking
   };
@@ -51,12 +51,13 @@ const InvoiceDetail = props => {
         invoice={invoice}
         onEndEditing={(editedInvoice, save) => {
           if (save) {
-            dispatch({
-              type: "update_invoice",
-              ...invoiceCoordinates,
-              invoice: editedInvoice
-            });
+            // dispatch({
+            //   type: "update_invoice",
+            //   ...invoiceCoordinates,
+            //   invoice: editedInvoice
+            // });
           }
+          handleUpdate(editedInvoice, save)
           setEditing(false);
         }}
       />
@@ -109,8 +110,8 @@ const InvoiceDetail = props => {
           <TableItem
             label={"Customer"}
             value={
-              state.customers.find(c => c.id === invoice.booking.customer)
-                .name || "N/A"
+              "N/A" || state.customers.customers.find(c => c.id === invoice.booking.customer)
+                .name
             }
           />
           <TableItem
@@ -121,7 +122,7 @@ const InvoiceDetail = props => {
 
         <TableSectionHeader title={"Booking Slots"} />
         <Table columns="20% auto" columnTitles={["Date", "Time"]}>
-          {invoice.slots
+          {invoice.slots && invoice.slots
             .map(slot => {
               switch (slot.kind) {
                 case "multi-day":
@@ -161,7 +162,7 @@ const InvoiceDetail = props => {
             "Total"
           ]}
         >
-          {invoice.costItems.map((item, index) => {
+          {invoice.costItems && invoice.costItems.map((item, index) => {
             return (
               <React.Fragment key={index}>
                 <TableValue>{item.name}</TableValue>
@@ -193,7 +194,7 @@ const InvoiceDetail = props => {
             Net subtotal
           </TableLabel>
           <TableValue>
-            {formatCurrency(netSubtotal, state.settings.currency)}
+            {formatCurrency(netSubtotal || 0, state.bookings.currency)}
           </TableValue>
 
           <span>&nbsp;</span>
@@ -207,7 +208,7 @@ const InvoiceDetail = props => {
             Taxes
           </TableLabel>
           <TableValue>
-            {formatCurrency(taxes, state.settings.currency)}
+            {formatCurrency(taxes || 0, state.bookings.currency)}
           </TableValue>
 
           <span>&nbsp;</span>
@@ -215,7 +216,7 @@ const InvoiceDetail = props => {
             Grand Total
           </TableLabel>
           <TableValue>
-            {formatCurrency(grandTotal, state.settings.currency)}
+            {formatCurrency(grandTotal || 0, state.bookings.currency)}
           </TableValue>
         </Table>
       </ModalBottomSection>

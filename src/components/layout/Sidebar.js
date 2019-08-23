@@ -80,13 +80,13 @@ const SidebarWrapper = styled.div`
 `;
 
 const TopLinks = [
-  { title: "Calendar", svg: CalendarSvg, href: "/" },
+  { title: "Calendar", svg: CalendarSvg, href: "/calendar" },
   { title: "Bookings", svg: BookingsSvg, href: "/bookings" },
   { title: "Customers", svg: CustomersSvg, href: "/customers" },
   { title: "Invoices", svg: InvoicesSvg, href: "/invoices" }
 ];
 const BottomLinks = [
-  { title: "Settings", svg: SettingsSvg, href: "/settings" },  
+  { title: "Settings", svg: SettingsSvg, href: "/settings" },
 ];
 
 const Sidebar = props => {
@@ -128,7 +128,7 @@ const Sidebar = props => {
           ))}
           <SidebarButton
             key={"logout"}
-            onClick={logout}            
+            onClick={logout}
           >
             <img alt="Log Out" src={LogOutSvg} />
             <P1>Log Out</P1>

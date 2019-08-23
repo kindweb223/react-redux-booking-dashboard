@@ -13,7 +13,7 @@ import Modal from "../../../modals/modal";
 import EditQuote from "./editQuote";
 import SpinnerContainer from "../../../layout/Spinner";
 
-import { 
+import {
   REQUEST_GET_BOOKING_QUOTE,
   GET_BOOKING_QUOTE_SUCCESS,
   GET_BOOKING_QUOTE_ERROR,
@@ -39,7 +39,7 @@ const QuotesSection = props => {
     false
     // true
   );
-    
+
   useEffect(() => {
     const getQuote = async () => {
 
@@ -54,7 +54,7 @@ const QuotesSection = props => {
         })
       } catch (err) {
         dispatch({ GET_BOOKING_QUOTE_ERROR })
-      }      
+      }
     }
     getQuote();
   }, [])
@@ -91,11 +91,11 @@ const QuotesSection = props => {
               'Content-Type': 'application/json'
             }
           };
-    
+
           const saveOne = {...state.bookings.quotes[quoteBeingEditedIndex]};
-    
+
           dispatch({ type: REQUEST_CREATE_BOOKING_QUOTE })
-  
+
           const res = await axios.post(
             `/bookings/${booking.id}/quotes`,
             {
@@ -108,12 +108,12 @@ const QuotesSection = props => {
             },
             config
           )
-    
-          dispatch({ 
+
+          dispatch({
             type: GET_CREATE_BOOKING_QUOTE_SUCCESS,
             payload: res.data.quote
           })
-          
+
         } catch (err) {
           dispatch({ type: GET_CREATE_BOOKING_QUOTE_ERROR });
         }
@@ -124,9 +124,9 @@ const QuotesSection = props => {
               'Content-Type': 'application/json'
             }
           };
-    
+
           const saveOne = {...state.bookings.quotes[quoteBeingEditedIndex]};
-    
+
           dispatch({ type: REQUEST_UPDATE_BOOKING_QUOTE })
 
           const res = await axios.put(
@@ -141,12 +141,12 @@ const QuotesSection = props => {
             },
             config
           )
-    
-          dispatch({ 
+
+          dispatch({
             type: UPDATE_BOOKING_QUOTE_SUCCESS,
             payload: res.data.quote
           })
-          
+
         } catch (err) {
           dispatch({ type: UPDATE_BOOKING_QUOTE_ERROR });
         }
@@ -158,19 +158,18 @@ const QuotesSection = props => {
   }
 
   const handleDelete = async (bookingId, quoteId) => {
-    debugger;
     try {
       dispatch({ type: REQUEST_DELETE_BOOKING_QUOTE });
 
       const res = await axios.delete(`/bookings/${bookingId}/quotes/${quoteId}`);
 
-      dispatch({ 
+      dispatch({
         type: DELETE_BOOKING_QUOTE_SUCCESS,
         payload: quoteId,
       })
     } catch (err) {
       dispatch({ type: DELETE_BOOKING_QUOTE_ERROR })
-    }  
+    }
   }
 
   return (

@@ -85,7 +85,7 @@ const InvoiceDetailEdit = props => {
           <TableItem
             label={"Customer"}
             value={
-              state.customers.find(c => c.id === invoice.booking.customer)
+              state.customers.length && state.customers.find(c => c.id === invoice.booking.customer)
                 .name || "N/A"
             }
           />
@@ -105,7 +105,7 @@ const InvoiceDetailEdit = props => {
 
         {/* Booking Slots */}
         <TableSectionHeader title={"Booking Slots"} />
-        {invoice.slots.length > 0 && (
+        {invoice.slots && invoice.slots.length > 0 && (
           <Table
             columns="1fr 1fr 1fr auto"
             columnTitles={["Date", "Start", "End", ""]}
@@ -120,7 +120,7 @@ const InvoiceDetailEdit = props => {
                       <React.Fragment key={slotIndex}>
                         <div style={{ display: "flex" }}>
                           <DatePicker
-                            selected={startDate}
+                            selected={new Date(startDate).getTime()}
                             startDate={startDate}
                             endDate={endDate}
                             selectsEnd
@@ -133,7 +133,7 @@ const InvoiceDetailEdit = props => {
                             }}
                           />
                           <DatePicker
-                            selected={endDate}
+                            selected={new Date(endDate).getTime()}
                             startDate={startDate}
                             endDate={endDate}
                             minDate={startDate}
@@ -204,7 +204,7 @@ const InvoiceDetailEdit = props => {
                     return (
                       <React.Fragment key={slotIndex}>
                         <DatePicker
-                          selected={slot.date}
+                          selected={new Date(slot.date).getTime()}
                           onChange={date => {
                             dispatch({
                               type: "update_slot",
@@ -301,7 +301,7 @@ const InvoiceDetailEdit = props => {
 
         {/* COST ITEMS */}
         <TableSectionHeader title={"Cost Items"} />
-        {invoice.costItems.length > 0 && (
+        {invoice.costItems && invoice.costItems.length > 0 && (
           <Table
             columns="2fr 2fr 0.5fr 0.8fr 1fr 1fr auto"
             columnTitles={[
@@ -314,7 +314,7 @@ const InvoiceDetailEdit = props => {
               ""
             ]}
           >
-            {invoice.costItems.map((item, costItemIndex) => {
+            {invoice.costItems && invoice.costItems.map((item, costItemIndex) => {
               return (
                 <React.Fragment key={costItemIndex}>
                   <TableEditableValue
@@ -456,7 +456,7 @@ const InvoiceDetailEdit = props => {
             Net subtotal
           </TableLabel>
           <TableValue>
-            {formatCurrency(netSubtotal, state.settings.currency)}
+            {formatCurrency(netSubtotal || 0, state.bookings.currency)}
           </TableValue>
 
           <TableLabel tall right>
@@ -484,14 +484,14 @@ const InvoiceDetailEdit = props => {
             Taxes
           </TableLabel>
           <TableValue>
-            {formatCurrency(taxes, state.settings.currency)}
+            {formatCurrency(taxes || 0, state.bookings.currency)}
           </TableValue>
 
           <TableLabel tall right>
             Grand Total
           </TableLabel>
           <TableValue>
-            {formatCurrency(grandTotal, state.settings.currency)}
+            {formatCurrency(grandTotal || 0, state.bookings.currency)}
           </TableValue>
         </Table>
       </ModalBottomSection>

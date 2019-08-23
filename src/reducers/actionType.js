@@ -109,3 +109,18 @@ export const GET_BOOKING_SETTINGS_ERROR = "Get settings for booking error";
 export const REQUEST_DELETE_BOOKING_QUOTE = "Request delete bookig quote";
 export const DELETE_BOOKING_QUOTE_SUCCESS = "Delete booking quote success";
 export const DELETE_BOOKING_QUOTE_ERROR = "Delete booking quote error";
+
+
+// Booking Invoice
+export const REQUEST_GET_BOOKING_INVOICE = "Request get booking invoice";
+export const GET_BOOKING_INVOICE_SUCCESS = "Get booking invoice success";
+export const GET_BOOKING_INVOICE_ERROR = "Get booking invoice error";
+export const REQUEST_CREATE_BOOKING_INVOICE = "Request create booking invoice";
+export const GET_CREATE_BOOKING_INVOICE_SUCCESS = "Get create booking invoice success";
+export const GET_CREATE_BOOKING_INVOICE_ERROR = "Get create booking invoice error";
+export const REQUEST_UPDATE_BOOKING_INVOICE = "Request update booking invoice";
+export const UPDATE_BOOKING_INVOICE_SUCCESS = "Update booking invoice success";
+export const UPDATE_BOOKING_INVOICE_ERROR = "Update booking invoice error";
+export const REQUEST_DELETE_BOOKING_INVOICE = "Request delete bookig invoice";
+export const DELETE_BOOKING_INVOICE_SUCCESS = "Delete booking invoice success";
+export const DELETE_BOOKING_INVOICE_ERROR = "Delete booking invoice error";

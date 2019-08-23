@@ -72,7 +72,7 @@ const SelectBookingModal = props => {
   const { state } = useContext(AppReducerContext);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const bookings = state.bookings;
+  const bookings = state.bookings.bookings;
   const filteredBookings = bookings.filter(b =>
     b.title.toLowerCase().includes(searchQuery.toLowerCase())
   );

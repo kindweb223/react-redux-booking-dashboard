@@ -33,7 +33,7 @@ function isBookingWithDates(booking, startDate, endDate) {
       case "multi-day":
         for (const date of slot.dateRange) {
           if (
-            startDate.getTime() < date.getTime() &&
+            typeof date.getTime === 'function' && startDate.getTime() < date.getTime() &&
             date.getTime() < endDate.getTime()
           ) {
             return true;
@@ -44,7 +44,7 @@ function isBookingWithDates(booking, startDate, endDate) {
 
       case "single-day":
         if (
-          startDate.getTime() < slot.date.getTime() &&
+          typeof slot.date.getTime === 'function' && startDate.getTime() < slot.date.getTime() &&
           slot.date.getTime() < endDate.getTime()
         ) {
           return true;
