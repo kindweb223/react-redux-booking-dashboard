@@ -26,6 +26,7 @@ import {
   REUQEST_GET_BOOKING_SETTINGS
 } from "../reducers/actionType";
 import axios from "axios/index";
+import SpinnerContainer from "../components/layout/Spinner";
 
 const CalendarPage = props => {
   const [selectedBookingID, setSelectedBookingID] = useState(null);
@@ -208,6 +209,7 @@ const CalendarPage = props => {
 
   return (
     <>
+      <SpinnerContainer loading={(state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
       <Grid
         fullheight
         columns={`${!calendarExpanded && constants.leftPanelWidth} 1fr`}

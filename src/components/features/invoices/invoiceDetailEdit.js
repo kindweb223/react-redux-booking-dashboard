@@ -81,12 +81,12 @@ const InvoiceDetailEdit = props => {
             label={"Created"}
             value={formatEventDate(invoice.created)}
           />
-          <TableItem label={"Booking"} value={invoice.booking.title} />
+          <TableItem label={"Booking"} value={invoice.booking && invoice.booking.title} />
           <TableItem
             label={"Customer"}
             value={
-              state.customers.length && state.customers.find(c => c.id === invoice.booking.customer)
-                .name || "N/A"
+              (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
+                state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A"
             }
           />
           <TablePicker

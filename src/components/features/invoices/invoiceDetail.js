@@ -106,17 +106,17 @@ const InvoiceDetail = props => {
             label={"Created"}
             value={formatEventDate(invoice.created)}
           />
-          <TableItem label={"Booking"} value={invoice.booking.title} />
+          <TableItem label={"Booking"} value={invoice.booking && invoice.booking.title} />
           <TableItem
             label={"Customer"}
             value={
-              "N/A" || state.customers.customers.find(c => c.id === invoice.booking.customer)
-                .name
+              (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
+                state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A"
             }
           />
           <TableItem
             label={"Payment Method"}
-            value={invoice.paymentMethod || "N/A"}
+            value={invoice.payment_method || "N/A"}
           />
         </Grid>
 

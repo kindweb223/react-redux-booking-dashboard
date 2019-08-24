@@ -648,10 +648,10 @@ function bookingsReducer(state, action) {
     }
 
     case "delete_invoice": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      booking.invoices.splice(action.invoice);
-      return newState;
+      return {
+        ...state,
+        invoices: state.invoices.filter((item, nIndex) => nIndex !== action.index)
+      }
     }
 
     // INVOICES
