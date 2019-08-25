@@ -31,6 +31,7 @@ import OutlinedButton from "../../buttons/OutlinedButton";
 import colors from "../../style/colors";
 import RemoveSvg from "../../../images/ui/remove.svg";
 import AddGlyph from "../../../images/Glyphs/AddGlyph";
+import SpinnerContainer from "../../../components/layout/Spinner"
 
 const SvgButtonWrapper = styled.div`
   display: flex;
@@ -76,6 +77,7 @@ const InvoiceDetailEdit = props => {
       </ModalTopSection>
 
       <ModalBottomSection>
+        <SpinnerContainer loading={state.bookings.loadingInvoice.toString()} />
         <Grid columns="1fr 1fr" style={{ width: "100%" }}>
           <TableItem
             label={"Created"}

@@ -402,7 +402,7 @@ const EditQuote = props => {
                   <TableValue>
                     {formatCurrency(
                       item.unitPrice * item.quantity * (1 + item.vatRate / 100),
-                      "GBP"
+                      state.bookings.currency
                     )}
                   </TableValue>
 

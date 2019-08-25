@@ -175,7 +175,7 @@ const InvoiceDetail = props => {
                 <TableValue>
                   {formatCurrency(
                     item.unitPrice * item.quantity * (1 + item.vatRate),
-                    "GBP"
+                    state.bookings.currency
                   )}
                 </TableValue>
               </React.Fragment>
@@ -201,7 +201,7 @@ const InvoiceDetail = props => {
           <TableLabel tall right>
             Discount
           </TableLabel>
-          <TableValue>{formatPercentage(invoice.discount)}</TableValue>
+          <TableValue>{formatPercentage(invoice.discount / 100)}</TableValue>
 
           <span>&nbsp;</span>
           <TableLabel tall right>
