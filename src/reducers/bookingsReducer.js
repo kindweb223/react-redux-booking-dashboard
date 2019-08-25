@@ -640,11 +640,15 @@ function bookingsReducer(state, action) {
     // INVOICES
 
     case "update_invoice_status": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      const invoice = booking.invoices[action.index];
-      invoice.status = action.status;
-      return newState;
+      return {
+        ...state,
+        invoices: state.invoices.map((item, nIndex) => {
+          if (nIndex === action.index) {
+            item.status = action.status;
+          }
+          return item;
+        })
+      }
     }
 
     case "delete_invoice": {
@@ -733,7 +737,7 @@ function bookingsReducer(state, action) {
     case DELETE_BOOKING_INVOICE_SUCCESS:
       return {
         ...state,
-        invoice: state.invoices.filter(item => item.id !== action.payload),
+        invoices: state.invoices.filter(item => item.id !== action.payload),
         loadingInvoice: false,
       }
     case DELETE_BOOKING_INVOICE_ERROR:

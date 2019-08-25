@@ -21,13 +21,14 @@ import SelectBookingModal from "../components/features/invoices/selectBooking";
 import NewInvoice from "../components/features/invoices/newInvoice";
 import SpinnerContainer from "../components/layout/Spinner";
 import {
+  DELETE_BOOKING_INVOICE_ERROR, DELETE_BOOKING_INVOICE_SUCCESS,
   GET_BOOKING_BOOKINGSATTUS_ERROR,
   GET_BOOKING_BOOKINGSTATUS_SUCCESS,
   GET_BOOKING_INVOICE_ERROR, GET_BOOKING_INVOICE_SUCCESS, GET_BOOKING_SETTINGS_ERROR, GET_BOOKING_SETTINGS_SUCCESS,
   GET_BOOKINGS_ERROR,
   GET_BOOKINGS_SUCCESS,
   GET_CUSTOMERS_ERROR,
-  GET_CUSTOMERS_SUCCESS, REQUEST_GET_BOOKING_BOOKINGSTATUS,
+  GET_CUSTOMERS_SUCCESS, REQUEST_DELETE_BOOKING_INVOICE, REQUEST_GET_BOOKING_BOOKINGSTATUS,
   REQUEST_GET_BOOKING_INVOICE, REQUEST_GET_BOOKINGS, REQUEST_GET_CUSTOMERS, REQUEST_UPDATE_BOOKING_INVOICE,
   REUQEST_GET_BOOKING_SETTINGS, UPDATE_BOOKING_INVOICE_ERROR, UPDATE_BOOKING_INVOICE_SUCCESS
 } from "../reducers/actionType";
@@ -137,7 +138,7 @@ const InvoicesPage = () => {
     getInvoice();
   }, [])
 
-  const handleUpdate = async (invoice, shouldSave) => {
+  const handleUpdate = async (invoice, status) => {
 
     try {
       const config = {
@@ -160,7 +161,7 @@ const InvoicesPage = () => {
           sub_total: invoice.amount,
           // tax: saveOne.amount,
           grand_total: invoice.grand_total,
-          status: invoice.status,
+          status: status || invoice.status,
         },
         config
       )
@@ -172,6 +173,22 @@ const InvoicesPage = () => {
 
     } catch (err) {
       dispatch({ type: UPDATE_BOOKING_INVOICE_ERROR });
+    }
+  }
+
+  const handleDelete = async (invoice) => {
+
+    try {
+      dispatch({ type: REQUEST_DELETE_BOOKING_INVOICE });
+
+      const res = await axios.delete(`/bookings/${invoice.BookingId}/invoices/${invoice.id}`);
+
+      dispatch({
+        type: DELETE_BOOKING_INVOICE_SUCCESS,
+        payload: invoice.id,
+      })
+    } catch (err) {
+      dispatch({ type: DELETE_BOOKING_INVOICE_ERROR })
     }
   }
 
@@ -291,8 +308,10 @@ const InvoicesPage = () => {
                     dispatch({
                       type: "update_invoice_status",
                       ...invoice.coordinates,
+                      index: index,
                       status: status
                     });
+                    handleUpdate(invoice, status)
                   }}
                 />
                 {/* actions */}
@@ -313,6 +332,7 @@ const InvoicesPage = () => {
                   items={["Delete"]}
                   colors={["#D13636"]}
                   onItemSelected={item => {
+                    handleDelete(invoice)
                     dispatch({
                       type: "delete_invoice",
                       ...invoice.coordinates,
