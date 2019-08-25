@@ -56,7 +56,7 @@ const QuotesSection = props => {
         dispatch({ GET_BOOKING_QUOTE_ERROR })
       }
     }
-    getQuote();
+    // getQuote();
   }, [])
 
   const handleSave = async (shouldSave) => {
