@@ -733,7 +733,7 @@ function bookingsReducer(state, action) {
     case DELETE_BOOKING_INVOICE_SUCCESS:
       return {
         ...state,
-        invoice: state.invoice.filter(item => item.id !== action.payload),
+        invoice: state.invoices.filter(item => item.id !== action.payload),
         loadingInvoice: false,
       }
     case DELETE_BOOKING_INVOICE_ERROR:
