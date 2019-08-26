@@ -23,7 +23,8 @@ import {
   REQUEST_GET_BOOKING_BOOKINGSTATUS,
   REQUEST_GET_BOOKINGS, REQUEST_GET_CUSTOMERS,
   REQUEST_GET_VENUE,
-  REUQEST_GET_BOOKING_SETTINGS
+  REUQEST_GET_BOOKING_SETTINGS,
+  CLEAR_BOOKING_DATA
 } from "../reducers/actionType";
 import axios from "axios/index";
 import SpinnerContainer from "../components/layout/Spinner";
@@ -39,6 +40,24 @@ const CalendarPage = props => {
   const events = state.bookings.bookings && state.bookings.bookings.map(b => bookingToEvents(b, venues)).flat();
 
   useEffect(() => {
+
+    const getBookings = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_BOOKINGS });
+
+        const res = await axios.get('/bookings');
+
+        dispatch({
+          type: GET_BOOKINGS_SUCCESS,
+          payload: res.data.bookings
+        })
+      } catch (err) {
+        dispatch({ type: GET_BOOKINGS_ERROR });
+      }
+    }
+
+    getBookings();
+
     const getCustomers = async () => {
       try {
         dispatch({ type: REQUEST_GET_CUSTOMERS });
@@ -88,7 +107,7 @@ const CalendarPage = props => {
         const res = await axios.get('/company');
         dispatch({
           type: GET_BOOKING_SETTINGS_SUCCESS,
-          payload: res.data.company,
+          payload: {...res.data.company, loadBooking: true},
         })
       } catch (err) {
         dispatch({ type: GET_BOOKING_SETTINGS_ERROR });
@@ -108,27 +127,12 @@ const CalendarPage = props => {
           payload: res.data.statuses
         });
       } catch(err) {
-        // dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
+        dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
       }
 
     }
     getBookingStatus();
 
-    const getBookings = async () => {
-      try {
-        dispatch({ type: REQUEST_GET_BOOKINGS });
-
-        const res = await axios.get('/bookings');
-
-        dispatch({
-          type: GET_BOOKINGS_SUCCESS,
-          payload: res.data.bookings
-        })
-      } catch (err) {
-        dispatch({ type: GET_BOOKINGS_ERROR });
-      }
-    }
-    getBookings();
   }, [])
 
   const handleClickSave = async (booking) => {
@@ -204,6 +208,10 @@ const CalendarPage = props => {
   };
 
   const onSelectEvent = event => {
+    dispatch({
+      type: CLEAR_BOOKING_DATA,
+      payload: ""
+    })
     setSelectedBookingID(event.bookingID);
   };
 

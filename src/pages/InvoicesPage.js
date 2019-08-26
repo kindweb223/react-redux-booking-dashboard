@@ -138,42 +138,45 @@ const InvoicesPage = () => {
     getInvoice();
   }, [])
 
-  const handleUpdate = async (invoice, status) => {
+  const handleUpdate = async (invoice, isSave ,status) => {
 
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
+    if (isSave) {
+      try {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        };
 
-      dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
+        dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
 
-      const res = await axios.put(
-        `/bookings/${invoice.BookingId}/invoices/${invoice.id}`,
-        {
-          slots: JSON.stringify(invoice.slots),
-          cost_items: JSON.stringify(invoice.costItems),
-          value: invoice.value,
-          payment_method: invoice.paymentMethod,
-          discount: invoice.discount,
-          customerId: invoice.customerId,
-          sub_total: invoice.amount,
-          // tax: saveOne.amount,
-          grand_total: invoice.grand_total,
-          status: status || invoice.status,
-        },
-        config
-      )
+        const res = await axios.put(
+          `/bookings/${invoice.BookingId}/invoices/${invoice.id}`,
+          {
+            slots: JSON.stringify(invoice.slots),
+            cost_items: JSON.stringify(invoice.costItems),
+            value: invoice.value,
+            payment_method: invoice.paymentMethod,
+            discount: invoice.discount,
+            customerId: invoice.customerId,
+            sub_total: invoice.amount,
+            // tax: saveOne.amount,
+            grand_total: invoice.grand_total,
+            status: status || invoice.status,
+          },
+          config
+        )
 
-      dispatch({
-        type: UPDATE_BOOKING_INVOICE_SUCCESS,
-        payload: res.data.quote
-      })
+        dispatch({
+          type: UPDATE_BOOKING_INVOICE_SUCCESS,
+          payload: res.data.invoice
+        })
 
-    } catch (err) {
-      dispatch({ type: UPDATE_BOOKING_INVOICE_ERROR });
+      } catch (err) {
+        dispatch({ type: UPDATE_BOOKING_INVOICE_ERROR });
+      }
     }
+
   }
 
   const handleDelete = async (invoice) => {
@@ -278,7 +281,7 @@ const InvoicesPage = () => {
             return (
               <React.Fragment key={index}>
                 {/* number */}
-                <TableValue>{invoice.number || index}</TableValue>
+                <TableValue>{invoice.number || (index + 1)}</TableValue>
                 {/* created */}
                 <TableValue>{formatEventDate(invoice.created)}</TableValue>
                 {/* customer */}
@@ -311,7 +314,7 @@ const InvoicesPage = () => {
                       index: index,
                       status: status
                     });
-                    handleUpdate(invoice, status)
+                    handleUpdate(invoice, true, status)
                   }}
                 />
                 {/* actions */}
@@ -319,14 +322,12 @@ const InvoicesPage = () => {
                   width={24}
                   height={24}
                   svg={viewGlyph}
-                  onClick={() =>
-                    // setSelectedInvoiceCoordinates(invoice.coordinates)
+                  onClick={() => {
                     setSelectedInvoiceCoordinates({
-                    booking: invoice.id,
-                    index: index
-                  })
-
-                  }
+                      booking: invoice.id,
+                      index: index
+                    })
+                  }}
                 />
                 <DropdownMenu
                   items={["Delete"]}

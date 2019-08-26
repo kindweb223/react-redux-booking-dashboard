@@ -19,7 +19,7 @@ const NewInvoice = props => {
           //   invoice: invoice
           // });
         }
-        onEndEditing(true, invoice);
+        onEndEditing(save, invoice);
       }}
     />
   );

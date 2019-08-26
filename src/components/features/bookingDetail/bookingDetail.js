@@ -66,6 +66,7 @@ const TopSection = styled.div`
   position: sticky;
   top: 0;
   border-radius: 0.25em 0.25em 0 0;
+  z-index: 99;
 `;
 
 const TitleAndButtons = styled.div`
@@ -127,7 +128,7 @@ const BookingDetail = props => {
         dispatch({ GET_BOOKING_INVOICE_ERROR })
       }
     }
-    getQuote();
+    // getQuote();
   },[])
 
   const handleUpdateBooking = async (updateBooking) => {

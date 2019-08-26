@@ -57,7 +57,7 @@ const InvoiceDetailEdit = props => {
     <ModalContainer>
       <ModalTopSection>
         <ModalTitleAndButtons>
-          <H3 style={{ margin: 0 }}>Invoice #{invoice.number}</H3>
+          <H3 style={{ margin: 0 }}>Invoice #{invoice.number || props.invoice.coordinates.index + 1}</H3>
           <div>
             <Button
               style={{ marginRight: 10 }}

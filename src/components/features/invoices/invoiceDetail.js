@@ -56,8 +56,8 @@ const InvoiceDetail = props => {
             //   ...invoiceCoordinates,
             //   invoice: editedInvoice
             // });
+            handleUpdate(editedInvoice, save)
           }
-          handleUpdate(editedInvoice, save)
           setEditing(false);
         }}
       />
@@ -73,7 +73,7 @@ const InvoiceDetail = props => {
     <ModalContainer>
       <ModalTopSection>
         <ModalTitleAndButtons>
-          <H3 style={{ margin: 0 }}>Invoice #{invoice.number}</H3>
+          <H3 style={{ margin: 0 }}>Invoice #{props.invoice.index + 1}</H3>
           <div>
             <PickerButton
               style={{ minWidth: 80, marginRight: 10 }}
@@ -122,7 +122,7 @@ const InvoiceDetail = props => {
 
         <TableSectionHeader title={"Booking Slots"} />
         <Table columns="20% auto" columnTitles={["Date", "Time"]}>
-          {invoice.slots && invoice.slots
+          {invoice.slots.length > 0 && invoice.slots
             .map(slot => {
               switch (slot.kind) {
                 case "multi-day":

@@ -49,6 +49,7 @@ import {
   GET_BOOKING_INVOICE_ERROR,
   REQUEST_GET_BOOKING_INVOICE,
   GET_BOOKING_INVOICE_SUCCESS,
+  CLEAR_BOOKING_DATA
 } from "../reducers/actionType";
 
 let quoteBackup = null;
@@ -59,6 +60,12 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadBooking: true,
+      }
+    case CLEAR_BOOKING_DATA:
+      return {
+        ...state,
+        quotes: "",
+        invoices: "",
       }
     case GET_BOOKINGS_SUCCESS:
       const newBookings = action.payload.map(item => {
@@ -140,7 +147,7 @@ function bookingsReducer(state, action) {
     case GET_BOOKING_BOOKINGSTATUS_SUCCESS:
       return {
         ...state,
-        loadBooking: false,
+        // loadBooking: false,
         bookingStatus: [ ...action.payload ]
       }
     case GET_BOOKING_BOOKINGSATTUS_ERROR:
@@ -189,7 +196,7 @@ function bookingsReducer(state, action) {
         ...state,
         defaultVatRate: action.payload.vatRate,
         currency: action.payload.currency.toUpperCase(),
-        loadBooking: false,
+        loadBooking: action.payload.loadBooking || false,
       }
     case GET_BOOKING_SETTINGS_ERROR:
       return {
@@ -668,10 +675,12 @@ function bookingsReducer(state, action) {
     }
 
     case "append_invoice": {
-      const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
-      booking.invoices.push(action.invoice);
-      return newState;
+      let newInvoice = state.invoices;
+      newInvoice.push(action.invoice);
+      return {
+        ...state,
+        invoices: newInvoice
+      };
     }
 
     case REQUEST_GET_BOOKING_INVOICE:
@@ -700,15 +709,18 @@ function bookingsReducer(state, action) {
         loadingInvoice: true,
       }
     case GET_CREATE_BOOKING_INVOICE_SUCCESS:
+      const invoices = state.invoices;
+      const newInvoice = action.payload;
+
+      newInvoice.slots = newInvoice.slots && JSON.parse(newInvoice.slots);
+      newInvoice.costItems = newInvoice.cost_items && JSON.parse(newInvoice.cost_items);
+      invoices.push(newInvoice)
+
       return {
         ...state,
         loadingInvoice: false,
-        invoices: state.invoices.map(item => {
-          if( item.id === -1 )
-            item.id = action.payload.id
-          return item;
-        })
-      }
+        invoices
+      };
     case GET_CREATE_BOOKING_INVOICE_ERROR:
       return {
         ...state,
@@ -723,7 +735,15 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadingInvoice: false,
+        invoices: state.invoices.map(item => {
+          if( item.id === action.payload.id )
+            item = action.payload;
+            item.slots = action.payload.slots && JSON.parse(action.payload.slots);
+            item.costItems = action.payload.cost_items && JSON.parse(action.payload.cost_items);
+            return item;
+        })
       }
+
     case UPDATE_BOOKING_INVOICE_ERROR:
       return {
         ...state,
