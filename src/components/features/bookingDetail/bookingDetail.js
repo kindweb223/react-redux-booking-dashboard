@@ -114,7 +114,11 @@ const BookingDetail = props => {
       } catch (err) {
         dispatch({ GET_BOOKING_QUOTE_ERROR })
       }
+    }
 
+    getQuote();
+
+    const getInvoice = async () => {
       try {
         dispatch({ type: REQUEST_GET_BOOKING_INVOICE })
 
@@ -128,7 +132,8 @@ const BookingDetail = props => {
         dispatch({ GET_BOOKING_INVOICE_ERROR })
       }
     }
-    // getQuote();
+
+    getInvoice();
   },[])
 
   const handleUpdateBooking = async (updateBooking) => {
@@ -248,7 +253,7 @@ const BookingDetail = props => {
       </TopSection>
 
       <BottomSection>
-        <SpinnerContainer loading={state.bookings.loadingQuotes.toString()} />
+        {/*<SpinnerContainer loading={state.bookings.loadingQuotes.toString()} />*/}
         <BottomSectionWrapper>
           {renderSelectedSection(selectedTab, { booking }, setSelectedTab)}
         </BottomSectionWrapper>

@@ -251,7 +251,8 @@ const BookingsPage = props => {
   }
   return (
     <>
-      <SpinnerContainer loading={(state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
+      <SpinnerContainer loading={ (filteredBookings && filteredBookings.length <= 0) &&
+      (state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
       <div
         style={{
           display: "flex",

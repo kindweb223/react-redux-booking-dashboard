@@ -50,7 +50,7 @@ const CustomersPage = () => {
         dispatch({ type: REQUEST_GET_CUSTOMERS });
 
         const res = await axios.get('/customers');
-        
+
         dispatch({
           type: GET_CUSTOMERS_SUCCESS,
           payload: res.data.customers
@@ -62,7 +62,7 @@ const CustomersPage = () => {
     getCustomers();
   }, []);
 
-  const onEditCustomer = async (customer) => {    
+  const onEditCustomer = async (customer) => {
     const config = {
       headers: {
         'Content-Type': 'application/json'
@@ -73,11 +73,11 @@ const CustomersPage = () => {
       setShowCreateClientModal(false);
       try {
         dispatch({ type: REQUEST_ADD_CUSTOMER })
-       
+
         delete customer.id;
         const res = await axios.post('/customers', JSON.stringify(customer), config);
 
-        dispatch({ 
+        dispatch({
           type: GET_ADD_CUSTOMER_SUCCESS,
           payload: res.data.customer,
         })
@@ -89,15 +89,15 @@ const CustomersPage = () => {
         dispatch({ type: REQUEST_UPDATE_CUSTOMER });
 
         const res = await axios.put(`/customers/${customer.id}`, JSON.stringify(customer), config);
-        
+
         dispatch({
           type: GET_UPDATE_CUSTOMER_SUCCESS,
           payload: res.data.customer,
         })
       } catch (err) {
         dispatch({ type: GET_UPDATE_CUSTOMER_ERROR });
-      }      
-    }            
+      }
+    }
   }
 
   const handleClickDelete = async (id) => {
@@ -128,7 +128,7 @@ const CustomersPage = () => {
           margin-bottom: 40px;
         `}
       >
-        <SpinnerContainer loading={state.customers.loadingCustomers.toString()} />
+        <SpinnerContainer loading={(searchResults && searchResults.length <= 0) && state.customers.loadingCustomers.toString()} />
         <SearchField
           query={searchQuery}
           placeholder={"Search Customers"}
@@ -169,7 +169,7 @@ const CustomersPage = () => {
                   items={["Delete"]}
                   colors={["#D13636"]}
                   onItemSelected={item => {
-                    handleClickDelete(customer.id)                    
+                    handleClickDelete(customer.id)
                   }}
                 />
               </React.Fragment>

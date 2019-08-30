@@ -56,7 +56,7 @@ const QuotesSection = props => {
         dispatch({ GET_BOOKING_QUOTE_ERROR })
       }
     }
-    getQuote();
+    // getQuote();
   }, [])
 
   const handleSave = async (shouldSave) => {
@@ -193,7 +193,7 @@ const QuotesSection = props => {
           height: 100%;
         `}
       >
-        <SpinnerContainer loading={state.bookings.loadingQuotes.toString()} />
+        {/*<SpinnerContainer loading={state.bookings.loadingQuotes.toString()} />*/}
 
         {state.bookings.quotes.length > 0 && (
           <Table

@@ -118,6 +118,7 @@ const InvoicesPage = () => {
         dispatch({ type: GET_BOOKINGS_ERROR });
       }
     }
+
     getBookings();
 
     const getInvoice = async () => {
@@ -219,7 +220,7 @@ const InvoicesPage = () => {
 
   return (
     <>
-      <SpinnerContainer loading={state.bookings.loadingInvoice.toString()} />
+      <SpinnerContainer loading={invoices && invoices.length <= 0 && state.bookings.loadingInvoice.toString()} />
       <div
         style={{
           display: "flex",

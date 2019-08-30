@@ -57,7 +57,7 @@ const InvoicesSection = props => {
         dispatch({ GET_BOOKING_INVOICE_ERROR })
       }
     }
-    getInvoice();
+    // getInvoice();
   }, [])
 
   const handleSave = async (shouldSave, invoice) => {

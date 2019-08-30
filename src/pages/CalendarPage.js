@@ -72,6 +72,7 @@ const CalendarPage = props => {
         dispatch({ type: GET_CUSTOMERS_ERROR });
       }
     }
+    if (!(state.customers.customers && state.customers.customers.length))
     getCustomers();
 
     const getVenue = async () => {
@@ -98,6 +99,7 @@ const CalendarPage = props => {
       }
     }
 
+    if (!(venues && venues.length > 0))
     getVenue();
 
     const getCompany = async () => {
@@ -113,6 +115,8 @@ const CalendarPage = props => {
         dispatch({ type: GET_BOOKING_SETTINGS_ERROR });
       }
     }
+
+    if (!(state.bookings && state.bookings.currency))
     getCompany();
 
     const getBookingStatus = async () => {
@@ -131,6 +135,7 @@ const CalendarPage = props => {
       }
 
     }
+    if(!(state.bookings.bookingStatus && state.bookings.bookingStatus.length > 0))
     getBookingStatus();
 
   }, [])
@@ -214,10 +219,10 @@ const CalendarPage = props => {
     })
     setSelectedBookingID(event.bookingID);
   };
-
+  console.log("state", state)
   return (
     <>
-      <SpinnerContainer loading={(state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
+      <SpinnerContainer loading={ (events && events.length <= 0) && (state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
       <Grid
         fullheight
         columns={`${!calendarExpanded && constants.leftPanelWidth} 1fr`}
