@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext, useEffect} from "react";
 import axios from 'axios';
 import styled from "styled-components";
 import H3 from "../../typography/H3";
@@ -18,8 +18,10 @@ import InvoicesSection from "./sections/invoices";
 import {
   REQUEST_UPDATE_BOOKING,
   GET_UPDATE_BOOKING_SUCCESS,
-  GET_UPDATE_BOOKIG_ERROR,
+  GET_UPDATE_BOOKIG_ERROR, GET_BOOKING_QUOTE_SUCCESS, GET_BOOKING_INVOICE_SUCCESS, REQUEST_GET_BOOKING_QUOTE,
+  GET_BOOKING_INVOICE_ERROR, GET_BOOKING_QUOTE_ERROR, REQUEST_GET_BOOKING_INVOICE,
 } from "../../../reducers/actionType";
+import SpinnerContainer from "../../layout/Spinner";
 
 const TABBAR_ITEM_DETAILS = "Details";
 const TABBAR_ITEM_QUOTES = "Quotes";
@@ -64,6 +66,7 @@ const TopSection = styled.div`
   position: sticky;
   top: 0;
   border-radius: 0.25em 0.25em 0 0;
+  z-index: 99;
 `;
 
 const TitleAndButtons = styled.div`
@@ -97,6 +100,42 @@ const BookingDetail = props => {
   const [editing, setEditing] = useState(false);
   const { state, dispatch } = useContext(AppReducerContext);
 
+  useEffect(() => {
+    const getQuote = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_BOOKING_QUOTE })
+
+        const res = await axios.get(`/bookings/${booking.id}/quotes`);
+
+        dispatch({
+          type: GET_BOOKING_QUOTE_SUCCESS,
+          payload: res.data.quotes,
+        })
+      } catch (err) {
+        dispatch({ GET_BOOKING_QUOTE_ERROR })
+      }
+    }
+
+    getQuote();
+
+    const getInvoice = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_BOOKING_INVOICE })
+
+        const res = await axios.get(`/bookings/${booking.id}/invoices`);
+
+        dispatch({
+          type: GET_BOOKING_INVOICE_SUCCESS,
+          payload: res.data.invoices,
+        })
+      } catch (err) {
+        dispatch({ GET_BOOKING_INVOICE_ERROR })
+      }
+    }
+
+    getInvoice();
+  },[])
+
   const handleUpdateBooking = async (updateBooking) => {
     if (updateBooking) {
       const config = {
@@ -107,22 +146,22 @@ const BookingDetail = props => {
 
       try {
         dispatch({ type: REQUEST_UPDATE_BOOKING })
-        
+
         const res = await axios.put(
-          `/bookings/${booking.id}`, 
-          { 
+          `/bookings/${booking.id}`,
+          {
             eventName: updateBooking.eventName,
             venueId: updateBooking.venueId,
             spaceId: updateBooking.spaceId,
             customerId: updateBooking.customerId,
             ownerId: updateBooking.ownerId,
             statusId: updateBooking.statusId,
-            slots: JSON.stringify(updateBooking.slots),            
+            slots: JSON.stringify(updateBooking.slots),
           },
           config
         );
-  
-        dispatch({ 
+
+        dispatch({
           type: GET_UPDATE_BOOKING_SUCCESS,
           payload: res.data.booking
         })
@@ -134,7 +173,7 @@ const BookingDetail = props => {
   }
 
   const handleChangeStatus = async (status) => {
-    try { 
+    try {
 
       const config = {
         headers: {
@@ -146,20 +185,20 @@ const BookingDetail = props => {
       const filteredStatus = state.bookings.bookingStatus.filter(item => item.name === status )
 
       const res = await axios.put(
-        `/bookings/${booking.id}`, 
-          { 
+        `/bookings/${booking.id}`,
+          {
             eventName: booking.eventName,
             venueId: booking.venueId,
             spaceId: booking.spaceId,
             customerId: booking.customerId,
             ownerId: booking.ownerId,
             statusId: filteredStatus[0].id,
-            slots: JSON.stringify(booking.slots),            
+            slots: JSON.stringify(booking.slots),
           },
           config
         );
 
-      dispatch({ 
+      dispatch({
         type: GET_UPDATE_BOOKING_SUCCESS,
         payload: res.data.booking
       })
@@ -178,12 +217,12 @@ const BookingDetail = props => {
         booking={booking}
         onEndEditing={booking => {
           handleUpdateBooking(booking);
-        }}d
+        }}
       />
     );
   }
 
-  
+
   return (
     <Container>
       <TopSection>
@@ -196,7 +235,7 @@ const BookingDetail = props => {
               colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
               selectedOption={booking.status.name}
               onOptionSelected={opt =>
-                handleChangeStatus(opt)                
+                handleChangeStatus(opt)
               }
             />
             <Button primary onClick={() => setEditing(true)}>
@@ -214,6 +253,7 @@ const BookingDetail = props => {
       </TopSection>
 
       <BottomSection>
+        {/*<SpinnerContainer loading={state.bookings.loadingQuotes.toString()} />*/}
         <BottomSectionWrapper>
           {renderSelectedSection(selectedTab, { booking }, setSelectedTab)}
         </BottomSectionWrapper>

@@ -39,14 +39,6 @@ const InvoicesSection = props => {
     null
   );
 
-  const [invoiceBeingEditedIndex, setinvoiceBeingEditedIndex] = useState(
-    null
-    // 0
-  );
-  const [invoiceBeingEditedIsNew, setinvoiceBeingEditedIsNew] = useState(
-    false
-    // true
-  );
   const [showCreateInvoiceModal, setshowCreateInvoiceModal] = useState(false);
 
   useEffect(() => {
@@ -65,7 +57,7 @@ const InvoicesSection = props => {
         dispatch({ GET_BOOKING_INVOICE_ERROR })
       }
     }
-    getInvoice();
+    // getInvoice();
   }, [])
 
   const handleSave = async (shouldSave, invoice) => {
@@ -105,24 +97,10 @@ const InvoicesSection = props => {
           payload: res.data.invoice
         })
 
-        try {
-          dispatch({ type: REQUEST_GET_BOOKING_INVOICE })
-
-          const res = await axios.get(`/bookings/${booking.id}/invoices`);
-
-          dispatch({
-            type: GET_BOOKING_INVOICE_SUCCESS,
-            payload: res.data.invoices,
-          })
-        } catch (err) {
-          dispatch({ GET_BOOKING_INVOICE_ERROR })
-        }
-
       } catch (err) {
         dispatch({ type: GET_CREATE_BOOKING_INVOICE_ERROR });
       }
     }
-    setinvoiceBeingEditedIndex(null)
     setshowCreateInvoiceModal(false);
   }
   const handleUpdate = async (invoice, shouldSave) => {
@@ -155,7 +133,7 @@ const InvoicesSection = props => {
 
       dispatch({
         type: UPDATE_BOOKING_INVOICE_SUCCESS,
-        payload: res.data.quote
+        payload: res.data.invoice
       })
 
     } catch (err) {
@@ -189,7 +167,7 @@ const InvoicesSection = props => {
           {state.bookings.invoices.map((invoice, index) => {
             return (
               <React.Fragment key={index}>
-                <TableValue>{invoice.number || index}</TableValue>
+                <TableValue>{invoice.number || index + 1}</TableValue>
                 <TableValue>{formatEventDate(invoice.created)}</TableValue>
                 <TableValue>
                   {formatCurrency(invoice.grand_total || 0, state.bookings.currency)}
@@ -257,7 +235,7 @@ const InvoicesSection = props => {
           }
           booking={booking}
           onEndEditing={(invoice, data) => {
-            handleSave(true, data)
+            handleSave(invoice, data)
           }}
         />
       </Modal>

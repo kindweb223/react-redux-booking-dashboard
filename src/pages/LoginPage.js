@@ -52,7 +52,7 @@ const LoginPage = props => {
   const { state, dispatch } = useContext(AppReducerContext);
 
   if(state.auth.isAuthenticated) {
-    return <Redirect to='/settings' />;
+    return <Redirect to='/calendar' />;
   }
 
   return (
@@ -70,27 +70,27 @@ const LoginPage = props => {
           try {
             const res = await axios.post(
               '/auth/login',
-              JSON.stringify(values), 
+              JSON.stringify(values),
               config
             );
-            
+
             setSubmitting(false);
             if(res.data.success) {
               dispatch({
                 type: 'get_login_success',
                 payload: {...res.data},
-              })            
-            }  
+              })
+            }
           } catch (err) {
             dispatch({
               type: 'get_login_error',
               payload: {...values},
-            })  
+            })
           }
         }}
 
         validationSchema={Yup.object().shape({
-          email: Yup.string().email().required("Email Required"),            
+          email: Yup.string().email().required("Email Required"),
           password: Yup.string()
             .required("Password Required.")
             .min(4, "Password is too short - should be 4 chars minimum.")
@@ -147,16 +147,16 @@ const LoginPage = props => {
                   </div>
 
                   <div className="form-group">
-                    <Button 
+                    <Button
                       primary
                       className="login-button"
-                      disabled={isSubmitting}                
+                      disabled={isSubmitting}
                       onClick={handleSubmit}
                     >
                       Login
                     </Button>
-                  </div>                
-                </Grid>                                                  
+                  </div>
+                </Grid>
               </form>
           );
         }}

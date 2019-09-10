@@ -74,7 +74,7 @@ const SelectBookingModal = props => {
 
   const bookings = state.bookings.bookings;
   const filteredBookings = bookings.filter(b =>
-    b.title.toLowerCase().includes(searchQuery.toLowerCase())
+    b.eventName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (

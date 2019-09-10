@@ -37,7 +37,7 @@ const Modal = props => {
           position: "absolute",
           right: -11,
           top: -11,
-          zIndex: 2
+          zIndex: 999
         }}
         onClick={onClose}
       />

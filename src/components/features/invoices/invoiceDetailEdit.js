@@ -31,6 +31,7 @@ import OutlinedButton from "../../buttons/OutlinedButton";
 import colors from "../../style/colors";
 import RemoveSvg from "../../../images/ui/remove.svg";
 import AddGlyph from "../../../images/Glyphs/AddGlyph";
+import SpinnerContainer from "../../../components/layout/Spinner"
 
 const SvgButtonWrapper = styled.div`
   display: flex;
@@ -56,7 +57,7 @@ const InvoiceDetailEdit = props => {
     <ModalContainer>
       <ModalTopSection>
         <ModalTitleAndButtons>
-          <H3 style={{ margin: 0 }}>Invoice #{invoice.number}</H3>
+          <H3 style={{ margin: 0 }}>Invoice #{invoice.number || props.invoice.coordinates.index + 1}</H3>
           <div>
             <Button
               style={{ marginRight: 10 }}
@@ -76,17 +77,18 @@ const InvoiceDetailEdit = props => {
       </ModalTopSection>
 
       <ModalBottomSection>
+        <SpinnerContainer loading={state.bookings.loadingInvoice.toString()} />
         <Grid columns="1fr 1fr" style={{ width: "100%" }}>
           <TableItem
             label={"Created"}
             value={formatEventDate(invoice.created)}
           />
-          <TableItem label={"Booking"} value={invoice.booking.title} />
+          <TableItem label={"Booking"} value={invoice.booking && invoice.booking.title} />
           <TableItem
             label={"Customer"}
             value={
-              state.customers.length && state.customers.find(c => c.id === invoice.booking.customer)
-                .name || "N/A"
+              (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
+                state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A"
             }
           />
           <TablePicker
@@ -405,7 +407,7 @@ const InvoiceDetailEdit = props => {
                   <TableValue>
                     {formatCurrency(
                       item.unitPrice * item.quantity * (1 + item.vatRate / 100),
-                      "GBP"
+                      state.bookings.currency
                     )}
                   </TableValue>
 

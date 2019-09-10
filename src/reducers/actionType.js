@@ -124,3 +124,5 @@ export const UPDATE_BOOKING_INVOICE_ERROR = "Update booking invoice error";
 export const REQUEST_DELETE_BOOKING_INVOICE = "Request delete bookig invoice";
 export const DELETE_BOOKING_INVOICE_SUCCESS = "Delete booking invoice success";
 export const DELETE_BOOKING_INVOICE_ERROR = "Delete booking invoice error";
+
+export const CLEAR_BOOKING_DATA = "CLEAR BOOKING DATA";

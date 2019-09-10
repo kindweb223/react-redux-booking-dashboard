@@ -56,8 +56,8 @@ const InvoiceDetail = props => {
             //   ...invoiceCoordinates,
             //   invoice: editedInvoice
             // });
+            handleUpdate(editedInvoice, save)
           }
-          handleUpdate(editedInvoice, save)
           setEditing(false);
         }}
       />
@@ -73,7 +73,7 @@ const InvoiceDetail = props => {
     <ModalContainer>
       <ModalTopSection>
         <ModalTitleAndButtons>
-          <H3 style={{ margin: 0 }}>Invoice #{invoice.number}</H3>
+          <H3 style={{ margin: 0 }}>Invoice #{props.invoice.index + 1}</H3>
           <div>
             <PickerButton
               style={{ minWidth: 80, marginRight: 10 }}
@@ -106,23 +106,23 @@ const InvoiceDetail = props => {
             label={"Created"}
             value={formatEventDate(invoice.created)}
           />
-          <TableItem label={"Booking"} value={invoice.booking.title} />
+          <TableItem label={"Booking"} value={invoice.booking && invoice.booking.title} />
           <TableItem
             label={"Customer"}
             value={
-              "N/A" || state.customers.customers.find(c => c.id === invoice.booking.customer)
-                .name
+              (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
+                state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A"
             }
           />
           <TableItem
             label={"Payment Method"}
-            value={invoice.paymentMethod || "N/A"}
+            value={invoice.payment_method || "N/A"}
           />
         </Grid>
 
         <TableSectionHeader title={"Booking Slots"} />
         <Table columns="20% auto" columnTitles={["Date", "Time"]}>
-          {invoice.slots && invoice.slots
+          {invoice.slots.length > 0 && invoice.slots
             .map(slot => {
               switch (slot.kind) {
                 case "multi-day":
@@ -175,7 +175,7 @@ const InvoiceDetail = props => {
                 <TableValue>
                   {formatCurrency(
                     item.unitPrice * item.quantity * (1 + item.vatRate),
-                    "GBP"
+                    state.bookings.currency
                   )}
                 </TableValue>
               </React.Fragment>
@@ -201,7 +201,7 @@ const InvoiceDetail = props => {
           <TableLabel tall right>
             Discount
           </TableLabel>
-          <TableValue>{formatPercentage(invoice.discount)}</TableValue>
+          <TableValue>{formatPercentage(invoice.discount / 100)}</TableValue>
 
           <span>&nbsp;</span>
           <TableLabel tall right>

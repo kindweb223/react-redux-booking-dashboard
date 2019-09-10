@@ -23,9 +23,11 @@ import {
   REQUEST_GET_BOOKING_BOOKINGSTATUS,
   REQUEST_GET_BOOKINGS, REQUEST_GET_CUSTOMERS,
   REQUEST_GET_VENUE,
-  REUQEST_GET_BOOKING_SETTINGS
+  REUQEST_GET_BOOKING_SETTINGS,
+  CLEAR_BOOKING_DATA
 } from "../reducers/actionType";
 import axios from "axios/index";
+import SpinnerContainer from "../components/layout/Spinner";
 
 const CalendarPage = props => {
   const [selectedBookingID, setSelectedBookingID] = useState(null);
@@ -38,6 +40,24 @@ const CalendarPage = props => {
   const events = state.bookings.bookings && state.bookings.bookings.map(b => bookingToEvents(b, venues)).flat();
 
   useEffect(() => {
+
+    const getBookings = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_BOOKINGS });
+
+        const res = await axios.get('/bookings');
+
+        dispatch({
+          type: GET_BOOKINGS_SUCCESS,
+          payload: res.data.bookings
+        })
+      } catch (err) {
+        dispatch({ type: GET_BOOKINGS_ERROR });
+      }
+    }
+
+    getBookings();
+
     const getCustomers = async () => {
       try {
         dispatch({ type: REQUEST_GET_CUSTOMERS });
@@ -52,6 +72,7 @@ const CalendarPage = props => {
         dispatch({ type: GET_CUSTOMERS_ERROR });
       }
     }
+    if (!(state.customers.customers && state.customers.customers.length))
     getCustomers();
 
     const getVenue = async () => {
@@ -78,6 +99,7 @@ const CalendarPage = props => {
       }
     }
 
+    if (!(venues && venues.length > 0))
     getVenue();
 
     const getCompany = async () => {
@@ -87,12 +109,14 @@ const CalendarPage = props => {
         const res = await axios.get('/company');
         dispatch({
           type: GET_BOOKING_SETTINGS_SUCCESS,
-          payload: res.data.company,
+          payload: {...res.data.company, loadBooking: true},
         })
       } catch (err) {
         dispatch({ type: GET_BOOKING_SETTINGS_ERROR });
       }
     }
+
+    if (!(state.bookings && state.bookings.currency))
     getCompany();
 
     const getBookingStatus = async () => {
@@ -107,27 +131,13 @@ const CalendarPage = props => {
           payload: res.data.statuses
         });
       } catch(err) {
-        // dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
+        dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
       }
 
     }
+    if(!(state.bookings.bookingStatus && state.bookings.bookingStatus.length > 0))
     getBookingStatus();
 
-    const getBookings = async () => {
-      try {
-        dispatch({ type: REQUEST_GET_BOOKINGS });
-
-        const res = await axios.get('/bookings');
-
-        dispatch({
-          type: GET_BOOKINGS_SUCCESS,
-          payload: res.data.bookings
-        })
-      } catch (err) {
-        dispatch({ type: GET_BOOKINGS_ERROR });
-      }
-    }
-    getBookings();
   }, [])
 
   const handleClickSave = async (booking) => {
@@ -203,11 +213,16 @@ const CalendarPage = props => {
   };
 
   const onSelectEvent = event => {
+    dispatch({
+      type: CLEAR_BOOKING_DATA,
+      payload: ""
+    })
     setSelectedBookingID(event.bookingID);
   };
-
+  console.log("state", state)
   return (
     <>
+      <SpinnerContainer loading={ (events && events.length <= 0) && (state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
       <Grid
         fullheight
         columns={`${!calendarExpanded && constants.leftPanelWidth} 1fr`}

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext, useEffect} from "react";
 import Modal from "../components/modals/modal";
 import { Table, TableValue } from "../components/tables/tables";
 import AddGlyph from "../images/Glyphs/AddGlyph";
@@ -19,6 +19,20 @@ import SearchField from "../components/inputs/searchField";
 import { css } from "emotion";
 import SelectBookingModal from "../components/features/invoices/selectBooking";
 import NewInvoice from "../components/features/invoices/newInvoice";
+import SpinnerContainer from "../components/layout/Spinner";
+import {
+  DELETE_BOOKING_INVOICE_ERROR, DELETE_BOOKING_INVOICE_SUCCESS,
+  GET_BOOKING_BOOKINGSATTUS_ERROR,
+  GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+  GET_BOOKING_INVOICE_ERROR, GET_BOOKING_INVOICE_SUCCESS, GET_BOOKING_SETTINGS_ERROR, GET_BOOKING_SETTINGS_SUCCESS,
+  GET_BOOKINGS_ERROR,
+  GET_BOOKINGS_SUCCESS,
+  GET_CUSTOMERS_ERROR,
+  GET_CUSTOMERS_SUCCESS, REQUEST_DELETE_BOOKING_INVOICE, REQUEST_GET_BOOKING_BOOKINGSTATUS,
+  REQUEST_GET_BOOKING_INVOICE, REQUEST_GET_BOOKINGS, REQUEST_GET_CUSTOMERS, REQUEST_UPDATE_BOOKING_INVOICE,
+  REUQEST_GET_BOOKING_SETTINGS, UPDATE_BOOKING_INVOICE_ERROR, UPDATE_BOOKING_INVOICE_SUCCESS
+} from "../reducers/actionType";
+import axios from "axios/index";
 
 const InvoicesPage = () => {
   const [selectedInvoiceCoordinates, setSelectedInvoiceCoordinates] = useState(
@@ -39,34 +53,165 @@ const InvoicesPage = () => {
   const { state, dispatch } = useContext(AppReducerContext);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const invoices = state.bookings.bookings
-    .map(booking => {
-      if (booking.invoices && booking.invoices.length > 0) {
-        return booking.invoices.map((invoice, index) => ({
-          ...invoice,
-          booking: booking,
-          coordinates: {
-            booking: booking.id,
-            index: index
-          }
-        }));
-      } else {
-        return null;
+  useEffect(() => {
+    const getCompany = async () => {
+      try {
+        dispatch({ type: REUQEST_GET_BOOKING_SETTINGS});
+
+        const res = await axios.get('/company');
+
+        dispatch({
+          type: GET_BOOKING_SETTINGS_SUCCESS,
+          payload: res.data.company,
+        })
+      } catch (err) {
+        dispatch({ type: GET_BOOKING_SETTINGS_ERROR });
       }
-    })
+    }
+    getCompany();
+
+    const getCustomers = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_CUSTOMERS });
+
+        const res = await axios.get('/customers');
+
+        dispatch({
+          type: GET_CUSTOMERS_SUCCESS,
+          payload: res.data.customers
+        })
+      } catch (err) {
+        dispatch({ type: GET_CUSTOMERS_ERROR });
+      }
+    }
+    getCustomers();
+
+    const getBookingStatus = async () => {
+
+      try {
+        dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
+
+        const res = await axios.get('/statuses');
+
+        dispatch({
+          type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+          payload: res.data.statuses
+        });
+      } catch(err) {
+        dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
+      }
+
+    }
+    getBookingStatus();
+
+    const getBookings = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_BOOKINGS });
+
+        const res = await axios.get('/bookings');
+
+        dispatch({
+          type: GET_BOOKINGS_SUCCESS,
+          payload: res.data.bookings
+        })
+      } catch (err) {
+        dispatch({ type: GET_BOOKINGS_ERROR });
+      }
+    }
+
+    getBookings();
+
+    const getInvoice = async () => {
+
+      try {
+        dispatch({ type: REQUEST_GET_BOOKING_INVOICE })
+
+        const res = await axios.get(`/bookings/invoices/all`);
+
+        dispatch({
+          type: GET_BOOKING_INVOICE_SUCCESS,
+          payload: res.data.invoices,
+        })
+      } catch (err) {
+        dispatch({ GET_BOOKING_INVOICE_ERROR })
+      }
+    }
+    getInvoice();
+  }, [])
+
+  const handleUpdate = async (invoice, isSave ,status) => {
+
+    if (isSave) {
+      try {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        };
+
+        dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
+
+        const res = await axios.put(
+          `/bookings/${invoice.BookingId}/invoices/${invoice.id}`,
+          {
+            slots: JSON.stringify(invoice.slots),
+            cost_items: JSON.stringify(invoice.costItems),
+            value: invoice.value,
+            payment_method: invoice.paymentMethod,
+            discount: invoice.discount,
+            customerId: invoice.customerId,
+            sub_total: invoice.amount,
+            // tax: saveOne.amount,
+            grand_total: invoice.grand_total,
+            status: status || invoice.status,
+          },
+          config
+        )
+
+        dispatch({
+          type: UPDATE_BOOKING_INVOICE_SUCCESS,
+          payload: res.data.invoice
+        })
+
+      } catch (err) {
+        dispatch({ type: UPDATE_BOOKING_INVOICE_ERROR });
+      }
+    }
+
+  }
+
+  const handleDelete = async (invoice) => {
+
+    try {
+      dispatch({ type: REQUEST_DELETE_BOOKING_INVOICE });
+
+      const res = await axios.delete(`/bookings/${invoice.BookingId}/invoices/${invoice.id}`);
+
+      dispatch({
+        type: DELETE_BOOKING_INVOICE_SUCCESS,
+        payload: invoice.id,
+      })
+    } catch (err) {
+      dispatch({ type: DELETE_BOOKING_INVOICE_ERROR })
+    }
+  }
+
+  const invoices = state.bookings.invoices
     .filter(invoice => invoice !== null)
     .flat()
     .filter(invoice => {
-      const customerName = state.customers.find(
-        c => c.id === invoice.booking.customer
-      ).name;
+      const customerName =  (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
+        state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A";
+      const bookingName =  (invoice.BookingId && state.bookings.bookings && state.bookings.bookings.find(c => c.id === invoice.BookingId) &&
+        state.bookings.bookings.find(c => c.id === invoice.BookingId).eventName) || "N/A"
 
       return (
         (invoice.status === selectedFilter || selectedFilter === "All") && // apply filters
         (!searchQuery ||
-          invoice.number.toString() === searchQuery ||
+          invoice.number && invoice.number.toString() === searchQuery ||
           customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          invoice.booking.title
+          bookingName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          invoice.booking && invoice.booking.title
             .toLowerCase()
             .includes(searchQuery.toLowerCase()))
       );
@@ -75,6 +220,7 @@ const InvoicesPage = () => {
 
   return (
     <>
+      <SpinnerContainer loading={invoices && invoices.length <= 0 && state.bookings.loadingInvoice.toString()} />
       <div
         style={{
           display: "flex",
@@ -136,21 +282,26 @@ const InvoicesPage = () => {
             return (
               <React.Fragment key={index}>
                 {/* number */}
-                <TableValue>{invoice.number}</TableValue>
+                <TableValue>{invoice.number || (index + 1)}</TableValue>
                 {/* created */}
                 <TableValue>{formatEventDate(invoice.created)}</TableValue>
                 {/* customer */}
                 <TableValue>
                   {
-                    state.customers.find(c => c.id === invoice.booking.customer)
-                      .name
+                    (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
+                    state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A"
                   }
                 </TableValue>
                 {/* booking */}
-                <TableValue>{invoice.booking.title}</TableValue>
+                <TableValue>
+                  {
+                    (invoice.BookingId && state.bookings.bookings && state.bookings.bookings.find(c => c.id === invoice.BookingId) &&
+                      state.bookings.bookings.find(c => c.id === invoice.BookingId).eventName) || "N/A"
+                  }
+                </TableValue>
                 {/* amount */}
                 <TableValue>
-                  {formatCurrency(invoice.grand_total, state.bookings.currency)}
+                  {formatCurrency(invoice.grand_total || 0, state.bookings.currency)}
                 </TableValue>
                 {/* status */}
                 <PickerButton
@@ -161,8 +312,10 @@ const InvoicesPage = () => {
                     dispatch({
                       type: "update_invoice_status",
                       ...invoice.coordinates,
+                      index: index,
                       status: status
                     });
+                    handleUpdate(invoice, true, status)
                   }}
                 />
                 {/* actions */}
@@ -170,17 +323,23 @@ const InvoicesPage = () => {
                   width={24}
                   height={24}
                   svg={viewGlyph}
-                  onClick={() =>
-                    setSelectedInvoiceCoordinates(invoice.coordinates)
-                  }
+                  onClick={() => {
+                    setSelectedInvoiceCoordinates({
+                      booking: invoice.id,
+                      index: index
+                    })
+                  }}
                 />
                 <DropdownMenu
                   items={["Delete"]}
                   colors={["#D13636"]}
                   onItemSelected={item => {
+                    handleDelete(invoice)
                     dispatch({
                       type: "delete_invoice",
-                      ...invoice.coordinates
+                      ...invoice.coordinates,
+                      invoice: item.id,
+                      index: index
                     });
                   }}
                 />
@@ -209,7 +368,12 @@ const InvoicesPage = () => {
         isOpen={selectedInvoiceCoordinates !== null}
         onClose={() => setSelectedInvoiceCoordinates(null)}
       >
-        <InvoiceDetail invoice={selectedInvoiceCoordinates} />
+        <InvoiceDetail
+          invoice={selectedInvoiceCoordinates}
+          handleUpdate={(invoice, invoiceId)=> {
+            handleUpdate(invoice, invoiceId)
+          }}
+        />
       </Modal>
       <Modal
         isOpen={showSelectBookingModal}
