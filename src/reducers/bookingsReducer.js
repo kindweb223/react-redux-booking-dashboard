@@ -713,6 +713,7 @@ function bookingsReducer(state, action) {
       const invoices = state.invoices;
       const newInvoice = action.payload;
 
+      newInvoice.BookingId = parseInt(newInvoice.BookingId);
       newInvoice.slots = newInvoice.slots && JSON.parse(newInvoice.slots);
       newInvoice.costItems = newInvoice.cost_items && JSON.parse(newInvoice.cost_items);
       invoices.push(newInvoice)
@@ -720,7 +721,7 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadingInvoice: false,
-        invoices
+        invoices: [ ...invoices ],
       };
     case GET_CREATE_BOOKING_INVOICE_ERROR:
       return {

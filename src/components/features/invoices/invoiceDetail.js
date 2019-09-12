@@ -27,7 +27,6 @@ import { computeCostItemsSummary } from "../../../utils/costItemsMath";
 import InvoiceDetailEdit from "./invoiceDetailEdit";
 
 const InvoiceDetail = props => {
-  debugger;
   const { invoice: invoiceCoordinates, handleUpdate } = props;
   const [editing, setEditing] = useState(
     // true
@@ -94,6 +93,7 @@ const InvoiceDetail = props => {
                   ...invoice.coordinates,
                   status: opt
                 });
+                handleUpdate(invoice, true, opt);
               }}
             />
             <Button style={{ marginRight: 10 }}>Export</Button>

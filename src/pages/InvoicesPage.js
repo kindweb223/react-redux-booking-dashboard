@@ -30,7 +30,8 @@ import {
   GET_CUSTOMERS_ERROR,
   GET_CUSTOMERS_SUCCESS, REQUEST_DELETE_BOOKING_INVOICE, REQUEST_GET_BOOKING_BOOKINGSTATUS,
   REQUEST_GET_BOOKING_INVOICE, REQUEST_GET_BOOKINGS, REQUEST_GET_CUSTOMERS, REQUEST_UPDATE_BOOKING_INVOICE,
-  REUQEST_GET_BOOKING_SETTINGS, UPDATE_BOOKING_INVOICE_ERROR, UPDATE_BOOKING_INVOICE_SUCCESS
+  REUQEST_GET_BOOKING_SETTINGS, UPDATE_BOOKING_INVOICE_ERROR, UPDATE_BOOKING_INVOICE_SUCCESS,
+  REQUEST_CREATE_BOOKING_INVOICE, GET_CREATE_BOOKING_INVOICE_SUCCESS, GET_CREATE_BOOKING_INVOICE_ERROR
 } from "../reducers/actionType";
 import axios from "axios/index";
 
@@ -87,8 +88,7 @@ const InvoicesPage = () => {
     .catch(error => console.log(error));
   }, [])
 
-  const handleUpdate = async (isSave, invoice, statusValue) => {
-    debugger;
+  const handleUpdate = async (invoice, isSave,statusValue) => {
     if (isSave) {
       try {
         const config = {
@@ -107,7 +107,7 @@ const InvoicesPage = () => {
             value: invoice.value,
             payment_method: invoice.paymentMethod,
             discount: invoice.discount,
-            customerId: invoice.customerId,
+            customerId: invoice.customerId? invoice.customerId : invoice.booking.customerId,
             sub_total: invoice.amount,
             // tax: saveOne.amount,
             grand_total: invoice.grand_total,
@@ -129,6 +129,48 @@ const InvoicesPage = () => {
     setshowCreateInvoiceModal(false);
   }
 
+  const handleCreate = async(isSave, invoice) => {
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      const saveOne = {...invoice};
+
+      dispatch({ type: REQUEST_CREATE_BOOKING_INVOICE })
+
+      const res = await axios.post(
+        `/bookings/${saveOne.booking.id}/invoices`,
+        {
+          slots: JSON.stringify(saveOne.slots),
+          cost_items: JSON.stringify(saveOne.costItems),
+          value: saveOne.value,
+          payment_method: saveOne.paymentMethod,
+          discount: saveOne.discount,
+          customerId: saveOne.booking.customerId,
+          createdAt: saveOne.createdAtAt,
+          sub_total: saveOne.amount,
+          // tax: saveOne.amount,
+          grand_total: saveOne.grand_total,
+          status: saveOne.status,
+        },
+        config
+      )
+
+      dispatch({
+        type: GET_CREATE_BOOKING_INVOICE_SUCCESS,
+        payload: res.data.invoice
+      })
+
+    } catch (err) {
+      dispatch({ type: GET_CREATE_BOOKING_INVOICE_ERROR });
+    }
+
+    setshowCreateInvoiceModal(false);
+  }
+
   const handleDelete = async (invoice) => {
 
     try {
@@ -145,34 +187,38 @@ const InvoicesPage = () => {
     }
   }
 
-  const getBookingNameWithId = (bookingId) => {
-    const filteredOne = state.bookings.bookings.filter(item => item.id === bookingId);
+  const getBookingNameWithId = (bookingId) => {    
+    const filteredOne = state.bookings.bookings.filter(item => item.id === parseInt(bookingId));
     if (filteredOne.length > 0)
       return filteredOne[0].eventName;
     else return "";
   }
 
-  const invoices = state.bookings.invoices
-    .filter(invoice => invoice !== null)
-    .flat()
-    .filter(invoice => {
-      const customerName =  (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
-        state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A";
-      const bookingName =  (invoice.BookingId && state.bookings.bookings && state.bookings.bookings.find(c => c.id === invoice.BookingId) &&
-        state.bookings.bookings.find(c => c.id === invoice.BookingId).eventName) || "N/A"
+  const [invoices, setInvoices] = useState([]);
+  useEffect(() => {
+    const newInvoices = state.bookings.invoices
+      .filter(invoice => invoice !== null)
+      .flat()
+      .filter(invoice => {
+        const customerName =  (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
+          state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A";
+        const bookingName =  (invoice.BookingId && state.bookings.bookings && state.bookings.bookings.find(c => c.id === invoice.BookingId) &&
+          state.bookings.bookings.find(c => c.id === invoice.BookingId).eventName) || "N/A"
 
-      return (
-        (invoice.status === selectedFilter || selectedFilter === "All") && // apply filters
-        (!searchQuery ||
-          invoice.number && invoice.number.toString() === searchQuery ||
-          customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          bookingName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          invoice.booking && invoice.booking.title
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()))
-      );
-    })
-    .sort((inv1, inv2) => (inv1.created > inv2.created ? -1 : 1));
+        return (
+          (invoice.status === selectedFilter || selectedFilter === "All") && // apply filters
+          (!searchQuery ||
+            invoice.number && invoice.number.toString() === searchQuery ||
+            customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            bookingName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            invoice.booking && invoice.booking.title
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase()))
+        );
+      })
+      .sort((inv1, inv2) => (inv1.created > inv2.created ? -1 : 1));
+      setInvoices([...newInvoices]);
+  }, [state.bookings.invoices])
 
   return (
     <>
@@ -268,7 +314,7 @@ const InvoicesPage = () => {
                       index: index,
                       status: status
                     });
-                    handleUpdate(true, invoice, status)
+                    handleUpdate(invoice, true, status)
                   }}
                 />
                 {/* actions */}
@@ -278,7 +324,7 @@ const InvoicesPage = () => {
                   svg={viewGlyph}
                   onClick={() => {
                     setSelectedInvoiceCoordinates({
-                      booking: invoice.id,
+                      booking: invoice.BookingId,
                       index: index
                     })
                   }}
@@ -323,9 +369,7 @@ const InvoicesPage = () => {
       >
         <InvoiceDetail
           invoice={selectedInvoiceCoordinates}
-          handleUpdate={(invoice, invoiceId)=> {
-            handleUpdate(invoice, invoiceId)
-          }}
+          handleUpdate={handleUpdate}
         />
       </Modal>
       <Modal
@@ -353,7 +397,7 @@ const InvoicesPage = () => {
           // onEndEditing={() => {
           //   setshowCreateInvoiceModal(false);
           // }}
-          onEndEditing={handleUpdate}
+          onEndEditing={handleCreate}
         />
       </Modal>
     </>

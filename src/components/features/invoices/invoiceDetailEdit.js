@@ -54,7 +54,6 @@ const InvoiceDetailEdit = props => {
   );
   
   const getBookingTitle = (bookingId) => {
-    debugger;
     const filteredBooking = state.bookings.bookings.filter(item => item.id === bookingId)
     if (filteredBooking.length > 0)
       return filteredBooking[0].eventName;
@@ -93,14 +92,15 @@ const InvoiceDetailEdit = props => {
           />
           <TableItem 
             label={"Booking"} 
-            value={getBookingTitle(invoice.BookingId)} 
+            value={getBookingTitle(invoice.booking.id)} 
           />
           <TableItem
             label={"Customer"}
-            value={
-              (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
-                state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A"
-            }
+            // value={
+            //   (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
+            //     state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A"
+            // }
+            value={invoice.booking.customer.name}
           />
           <TablePicker
             label="Payment Method"
