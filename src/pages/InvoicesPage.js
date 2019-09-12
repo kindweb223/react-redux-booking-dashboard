@@ -148,7 +148,7 @@ const InvoicesPage = () => {
             'Content-Type': 'application/json'
           }
         };
-        debugger;
+
         dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
 
         const res = await axios.put(

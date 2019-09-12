@@ -73,7 +73,6 @@ function isBookingWithDates(booking, startDate, endDate) {
         throw new Error();
     }
   }
-  debugger;
   return false;
 }
 
