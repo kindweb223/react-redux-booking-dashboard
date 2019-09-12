@@ -53,94 +53,42 @@ const InvoicesPage = () => {
   const { state, dispatch } = useContext(AppReducerContext);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const getCompany = async () => {
-      try {
-        dispatch({ type: REUQEST_GET_BOOKING_SETTINGS});
 
-        const res = await axios.get('/company');
+    setLoading(true);
+    axios.all([
+      axios.get('/customers'),
+      axios.get('/statuses'),
+      axios.get('/bookings'),
+      axios.get(`/bookings/invoices/all`)
+    ]).then(axios.spread(function (customers, statuses, bookings, invoices) {
+      dispatch({
+        type: GET_CUSTOMERS_SUCCESS,
+        payload: customers.data.customers
+      })
 
-        dispatch({
-          type: GET_BOOKING_SETTINGS_SUCCESS,
-          payload: res.data.company,
-        })
-      } catch (err) {
-        dispatch({ type: GET_BOOKING_SETTINGS_ERROR });
-      }
-    }
-    getCompany();
+      dispatch({
+        type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+        payload: statuses.data.statuses
+      })
 
-    const getCustomers = async () => {
-      try {
-        dispatch({ type: REQUEST_GET_CUSTOMERS });
+      dispatch({
+        type: GET_BOOKINGS_SUCCESS,
+        payload: bookings.data.bookings
+      })
 
-        const res = await axios.get('/customers');
-
-        dispatch({
-          type: GET_CUSTOMERS_SUCCESS,
-          payload: res.data.customers
-        })
-      } catch (err) {
-        dispatch({ type: GET_CUSTOMERS_ERROR });
-      }
-    }
-    getCustomers();
-
-    const getBookingStatus = async () => {
-
-      try {
-        dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
-
-        const res = await axios.get('/statuses');
-
-        dispatch({
-          type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
-          payload: res.data.statuses
-        });
-      } catch(err) {
-        dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
-      }
-
-    }
-    getBookingStatus();
-
-    const getBookings = async () => {
-      try {
-        dispatch({ type: REQUEST_GET_BOOKINGS });
-
-        const res = await axios.get('/bookings');
-
-        dispatch({
-          type: GET_BOOKINGS_SUCCESS,
-          payload: res.data.bookings
-        })
-      } catch (err) {
-        dispatch({ type: GET_BOOKINGS_ERROR });
-      }
-    }
-
-    getBookings();
-
-    const getInvoice = async () => {
-
-      try {
-        dispatch({ type: REQUEST_GET_BOOKING_INVOICE })
-
-        const res = await axios.get(`/bookings/invoices/all`);
-
-        dispatch({
-          type: GET_BOOKING_INVOICE_SUCCESS,
-          payload: res.data.invoices,
-        })
-      } catch (err) {
-        dispatch({ GET_BOOKING_INVOICE_ERROR })
-      }
-    }
-    getInvoice();
+      dispatch({
+        type: GET_BOOKING_INVOICE_SUCCESS,
+        payload: invoices.data.invoices,
+      })
+      setLoading(false);
+    }))
+    .catch(error => console.log(error));
   }, [])
 
-  const handleUpdate = async (invoice, isSave ,statusValue) => {
-
+  const handleUpdate = async (isSave, invoice, statusValue) => {
+    debugger;
     if (isSave) {
       try {
         const config = {
@@ -178,6 +126,7 @@ const InvoicesPage = () => {
       }
     }
 
+    setshowCreateInvoiceModal(false);
   }
 
   const handleDelete = async (invoice) => {
@@ -194,6 +143,13 @@ const InvoicesPage = () => {
     } catch (err) {
       dispatch({ type: DELETE_BOOKING_INVOICE_ERROR })
     }
+  }
+
+  const getBookingNameWithId = (bookingId) => {
+    const filteredOne = state.bookings.bookings.filter(item => item.id === bookingId);
+    if (filteredOne.length > 0)
+      return filteredOne[0].eventName;
+    else return "";
   }
 
   const invoices = state.bookings.invoices
@@ -220,7 +176,7 @@ const InvoicesPage = () => {
 
   return (
     <>
-      <SpinnerContainer loading={(invoices && invoices.length <= 0 && state.bookings.loadingInvoice).toString()} />
+      <SpinnerContainer loading={(loading || state.bookings.loadingInvoice).toString()} />
       <div
         style={{
           display: "flex",
@@ -264,7 +220,7 @@ const InvoicesPage = () => {
         </Button>
       </div>
 
-      {invoices && invoices.length > 0 && (
+      {!loading && invoices && invoices.length > 0 && (
         <Table
           columns="50px auto auto auto auto 150px 50px 50px"
           columnTitles={[
@@ -294,10 +250,11 @@ const InvoicesPage = () => {
                 </TableValue>
                 {/* booking */}
                 <TableValue>
-                  {
+                  {/* {
                     (invoice.BookingId && state.bookings.bookings && state.bookings.bookings.find(c => c.id === invoice.BookingId) &&
                       state.bookings.bookings.find(c => c.id === invoice.BookingId).eventName) || "N/A"
-                  }
+                  } */}
+                  {getBookingNameWithId(invoice.BookingId)}
                 </TableValue>
                 {/* amount */}
                 <TableValue>
@@ -315,7 +272,7 @@ const InvoicesPage = () => {
                       index: index,
                       status: status
                     });
-                    handleUpdate(invoice, true, status)
+                    handleUpdate(true, invoice, status)
                   }}
                 />
                 {/* actions */}
@@ -397,9 +354,10 @@ const InvoicesPage = () => {
           booking={state.bookings.bookings.find(
             b => b.id === selectedBookingIdForNewInvoice
           )}
-          onEndEditing={() => {
-            setshowCreateInvoiceModal(false);
-          }}
+          // onEndEditing={() => {
+          //   setshowCreateInvoiceModal(false);
+          // }}
+          onEndEditing={handleUpdate}
         />
       </Modal>
     </>
