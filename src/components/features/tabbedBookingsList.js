@@ -1,9 +1,15 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
 import colors from "../style/colors";
 import P1 from "../typography/P1";
 import BookingRow from "./bookingRow";
-import { isBookingWithDates, startOfWeek, endOfWeek } from "../../utils/dates";
+import { 
+  isBookingWithDates, 
+  startOfWeek, 
+  endOfWeek,
+  startOfUpcomingWeek,
+  endOfUpcomingWeek,
+} from "../../utils/dates";
 import P2 from "../typography/P2";
 import { AppReducerContext } from "../../contexts/AppReducerContext";
 
@@ -11,20 +17,24 @@ const TabbedBookingsList = props => {
   const { onSelect } = props;
   const [selectedTab, setSelectedTab] = useState("week");
   const { state } = useContext(AppReducerContext);
+  
+  const [ selectedBookings, setSelectedBookings ] = useState([]);
 
-  const bookings = (() => {
+  useEffect(() => {
     if (selectedTab === "week") {
-      return state.bookings.bookings && state.bookings.bookings.filter(booking =>
+      const newFiltered = state.bookings.bookings && state.bookings.bookings.filter(booking =>
         isBookingWithDates(booking, startOfWeek(), endOfWeek())
       );
+      setSelectedBookings([...newFiltered]);
     } else if (selectedTab === "upcoming") {
-      return state.bookings.bookings.filter(
-        booking => !isBookingWithDates(booking, startOfWeek(), endOfWeek())
-      );
+      const newFiltered = state.bookings.bookings.filter(
+        booking => isBookingWithDates(booking, startOfUpcomingWeek(), endOfUpcomingWeek())
+      )
+      setSelectedBookings([...newFiltered]);
     } else {
       throw new Error();
     }
-  })();
+  }, [state.bookings.bookings, selectedTab])
 
   const Wrapper = styled.div`
     display: flex;
@@ -68,14 +78,14 @@ const TabbedBookingsList = props => {
         </P1>
       </Header>
       <BookingsList>
-        {state.bookings.bookings && state.bookings.bookings.map(booking => (
+        {selectedBookings && selectedBookings.map(booking => (
           <BookingRow
             key={booking.id}
             booking={booking}
             onClick={() => onSelect(booking)}
           />
         ))}
-        {state.bookings.bookings && state.bookings.bookings.length === 0 && (
+        {selectedBookings && selectedBookings.length === 0 && (
           <P2 style={{ marginTop: 10 }} color="grey">
             {selectedTab === "upcoming"
               ? "No bookings here. Add a booking in the coming weeks and it will show up here."

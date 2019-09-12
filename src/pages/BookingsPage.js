@@ -249,10 +249,23 @@ const BookingsPage = props => {
     //   status: status
     // })
   }
+
+  const getBookingStatusColor = (selectedBooking) => {
+    if (selectedBooking.status && selectedBooking.status.name)
+      return getStatuColor(selectedBooking.status.name);
+    else return getStatuColor("");
+  }
+
+  const getBookingVenueAndSpaceName = (selectedBooking) => {
+    const venueName = (selectedBooking.venue && selectedBooking.venue.name) ? selectedBooking.venue.name : "";    
+    const spaceName = (selectedBooking.space && selectedBooking.space.name) ? selectedBooking.space.name : "";
+    return (venueName + "(" + spaceName + ")");
+  }
+
   return (
     <>
-      <SpinnerContainer loading={ (filteredBookings && filteredBookings.length <= 0) &&
-      (state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
+      <SpinnerContainer loading={ ((filteredBookings && filteredBookings.length <= 0) &&
+      (state.bookings.loadBooking || state.bookings.loadBookingAction)) ? "true" : "false"} />
       <div
         style={{
           display: "flex",
@@ -304,14 +317,16 @@ const BookingsPage = props => {
                 <TableValue>{booking.eventName}</TableValue>
                 <TableValue
                   style={{
-                    color: `${getStatuColor(booking.status.name)} !important`,
+                    color: `${getBookingStatusColor(booking)} !important`,
                     margin: 0
                   }}
                 >
-                  {`${booking.venue.name} (${booking.space.name})`}
+                  {getBookingVenueAndSpaceName(booking)}
                 </TableValue>
                 <TableValue>
-                  {booking.customer.name}
+                  {                    
+                    (booking.customer && booking.customer.name)? booking.customer.name : ""
+                  }
                 </TableValue>
                 <TableValue>{booking.owner.firstName + " " + booking.owner.lastName}</TableValue>
                 <PickerButton

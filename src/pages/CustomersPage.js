@@ -128,7 +128,7 @@ const CustomersPage = () => {
           margin-bottom: 40px;
         `}
       >
-        <SpinnerContainer loading={(searchResults && searchResults.length <= 0) && state.customers.loadingCustomers.toString()} />
+        <SpinnerContainer loading={((searchResults && searchResults.length <= 0) && state.customers.loadingCustomers).toString()} />
         <SearchField
           query={searchQuery}
           placeholder={"Search Customers"}

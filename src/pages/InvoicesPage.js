@@ -139,7 +139,7 @@ const InvoicesPage = () => {
     getInvoice();
   }, [])
 
-  const handleUpdate = async (invoice, isSave ,status) => {
+  const handleUpdate = async (invoice, isSave ,statusValue) => {
 
     if (isSave) {
       try {
@@ -148,7 +148,7 @@ const InvoicesPage = () => {
             'Content-Type': 'application/json'
           }
         };
-
+        debugger;
         dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
 
         const res = await axios.put(
@@ -163,7 +163,7 @@ const InvoicesPage = () => {
             sub_total: invoice.amount,
             // tax: saveOne.amount,
             grand_total: invoice.grand_total,
-            status: status || invoice.status,
+            status: statusValue || invoice.status,
           },
           config
         )
@@ -220,7 +220,7 @@ const InvoicesPage = () => {
 
   return (
     <>
-      <SpinnerContainer loading={invoices && invoices.length <= 0 && state.bookings.loadingInvoice.toString()} />
+      <SpinnerContainer loading={(invoices && invoices.length <= 0 && state.bookings.loadingInvoice).toString()} />
       <div
         style={{
           display: "flex",

@@ -73,7 +73,7 @@ const InvoicesSection = props => {
         const saveOne = {...invoice};
 
         dispatch({ type: REQUEST_CREATE_BOOKING_INVOICE })
-
+        debugger;
         const res = await axios.post(
           `/bookings/${booking.id}/invoices`,
           {
@@ -111,7 +111,7 @@ const InvoicesSection = props => {
           'Content-Type': 'application/json'
         }
       };
-
+      debugger;
       dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
 
       const res = await axios.put(
