@@ -16,15 +16,27 @@ const DetailsSection = props => {
   const { booking } = props;
   const { state } = useContext(AppReducerContext);
 
+  const getBookingStatusColor = (selectedBooking) => {
+    if (selectedBooking.status && selectedBooking.status.name)
+      return getStatuColor(selectedBooking.status.name);
+    else return getStatuColor("");
+  }
+
+  const getBookingVenueAndSpaceName = (selectedBooking) => {
+    const venueName = (selectedBooking.venue && selectedBooking.venue.name) ? selectedBooking.venue.name : "";    
+    const spaceName = (selectedBooking.space && selectedBooking.space.name) ? selectedBooking.space.name : "";
+    return (venueName + "(" + spaceName + ")");
+  }
+
   return (
     <>
       <Grid columns="1fr 1fr">
         <TableItem
-          style={{ color: `${getStatuColor(booking.space.name)} !important` }}
+          style={{ color: `${getBookingStatusColor(booking)}} !important` }}
           label={"Venue (Space)"}
-          value={`${booking.venue.name} (${booking.space.name})`}
+          value={getBookingVenueAndSpaceName(booking)}
         />
-        <TableItem label={"Customer"} value={booking.customer.name} />
+        <TableItem label={"Customer"} value={ (booking.customer && booking.customer.name) ? booking.customer.name : ""} />
       </Grid>
       <TableSectionHeader title={"Booking Slots"} />
       <Table columns="20% auto" columnTitles={["Date", "Time"]}>
