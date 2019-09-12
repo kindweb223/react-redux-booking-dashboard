@@ -250,10 +250,6 @@ const InvoicesPage = () => {
                 </TableValue>
                 {/* booking */}
                 <TableValue>
-                  {/* {
-                    (invoice.BookingId && state.bookings.bookings && state.bookings.bookings.find(c => c.id === invoice.BookingId) &&
-                      state.bookings.bookings.find(c => c.id === invoice.BookingId).eventName) || "N/A"
-                  } */}
                   {getBookingNameWithId(invoice.BookingId)}
                 </TableValue>
                 {/* amount */}

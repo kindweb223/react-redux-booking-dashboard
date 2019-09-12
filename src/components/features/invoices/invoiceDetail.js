@@ -27,6 +27,7 @@ import { computeCostItemsSummary } from "../../../utils/costItemsMath";
 import InvoiceDetailEdit from "./invoiceDetailEdit";
 
 const InvoiceDetail = props => {
+  debugger;
   const { invoice: invoiceCoordinates, handleUpdate } = props;
   const [editing, setEditing] = useState(
     // true
@@ -44,6 +45,13 @@ const InvoiceDetail = props => {
     coordinates: invoiceCoordinates,
     booking: booking
   };
+
+  const getBookingTitle = (bookingId) => {
+    const filteredBooking = state.bookings.bookings.filter(item => item.id === bookingId)
+    if (filteredBooking.length > 0)
+      return filteredBooking[0].eventName;
+    else return '';
+  }
 
   if (editing) {
     return (
@@ -106,7 +114,7 @@ const InvoiceDetail = props => {
             label={"Created"}
             value={formatEventDate(invoice.created)}
           />
-          <TableItem label={"Booking"} value={invoice.booking && invoice.booking.title} />
+          <TableItem label={"Booking"} value={getBookingTitle(invoice.BookingId)} />
           <TableItem
             label={"Customer"}
             value={
