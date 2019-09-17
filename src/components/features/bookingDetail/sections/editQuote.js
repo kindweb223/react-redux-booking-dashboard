@@ -105,6 +105,7 @@ const EditQuote = props => {
                                 value: date
                               })
                             }
+                            dateFormat="dd/MM/yyyy"
                           />
                           <DatePicker
                             selected={endDate}
@@ -121,6 +122,7 @@ const EditQuote = props => {
                                 value: date
                               })
                             }
+                            dateFormat="dd/MM/yyyy"
                           />
                         </div>
                         <DatePicker
@@ -198,6 +200,7 @@ const EditQuote = props => {
                               value: date
                             })
                           }
+                          dateFormat="dd/MM/yyyy"
                         />
                         <DatePicker
                           selected={updatedDate(

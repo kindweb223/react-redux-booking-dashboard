@@ -291,6 +291,7 @@ const BookingForm = props => {
                               value: date
                             })
                           }
+                          dateFormat="dd/MM/yyyy"
                         />
                         <DatePicker
                           selected={endDate}
@@ -305,6 +306,7 @@ const BookingForm = props => {
                               value: date
                             })
                           }
+                          dateFormat="dd/MM/yyyy"
                         />
                       </div>
                       <DatePicker
@@ -370,6 +372,7 @@ const BookingForm = props => {
                             value: date
                           })
                         }
+                        dateFormat="dd/MM/yyyy"
                       />
                       <DatePicker
                         selected={updatedDate(

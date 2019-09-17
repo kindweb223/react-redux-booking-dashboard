@@ -144,6 +144,7 @@ const InvoiceDetailEdit = props => {
                                 value: date
                               });
                             }}
+                            dateFormat="dd/MM/yyyy"
                           />
                           <DatePicker
                             selected={new Date(endDate).getTime()}
@@ -158,6 +159,7 @@ const InvoiceDetailEdit = props => {
                                 value: date
                               });
                             }}
+                            dateFormat="dd/MM/yyyy"
                           />
                         </div>
                         <DatePicker
@@ -226,6 +228,7 @@ const InvoiceDetailEdit = props => {
                               value: date
                             });
                           }}
+                          dateFormat="dd/MM/yyyy"
                         />
                         <DatePicker
                           selected={updatedDate(
