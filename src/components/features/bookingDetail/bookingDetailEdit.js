@@ -50,6 +50,7 @@ const SvgButtonWrapper = styled.div`
 `;
 
 const BookingForm = props => {
+
   const { booking, dispatch } = props;
   const { state } = useContext(AppReducerContext);
 
@@ -290,6 +291,7 @@ const BookingForm = props => {
                               value: date
                             })
                           }
+                          dateFormat="dd/MM/yyyy"
                         />
                         <DatePicker
                           selected={endDate}
@@ -304,6 +306,7 @@ const BookingForm = props => {
                               value: date
                             })
                           }
+                          dateFormat="dd/MM/yyyy"
                         />
                       </div>
                       <DatePicker
@@ -369,6 +372,7 @@ const BookingForm = props => {
                             value: date
                           })
                         }
+                        dateFormat="dd/MM/yyyy"
                       />
                       <DatePicker
                         selected={updatedDate(
@@ -517,6 +521,7 @@ const BookingDetailEdit = props => {
 
     getVenues();
 
+
   }, [])
 
   useEffect(() => {
@@ -538,16 +543,51 @@ const BookingDetailEdit = props => {
 
   const handleClickSave = () => {
     let isValidate = true;
-    Object.keys(state.validateForm).forEach(item => {
-      if (state[item] === null || state[item].length === 0) {
-        dispatch({
-          type: UPDATE_ADD_BOOKINGFORM_VALIDATE,
-          payload: { key: item ,value: false }
-        })
-        isValidate = false;
-      }
-    })
 
+    // check title
+    if (state.validateForm.eventName === null || state.validateForm.eventName.length === 0) {
+      dispatch({
+        type: UPDATE_ADD_BOOKINGFORM_VALIDATE,
+        payload: {key: 'eventName', value: false}
+      })
+      isValidate = false;
+    }
+  
+    if (state.ownerId === null || state.ownerId.length === 0) {
+      dispatch({
+        type: UPDATE_ADD_BOOKINGFORM_VALIDATE,
+        payload: {key: 'ownerId', value: false}
+      })
+      isValidate = false;
+    }
+
+    const filteredVenue = state.venues.filter(item => item.id === state.venueId)
+    if (filteredVenue.length === 0) {
+      dispatch({
+        type: UPDATE_ADD_BOOKINGFORM_VALIDATE,
+        payload: {key: 'venueId', value: false}
+      })
+      isValidate = false;
+    }
+
+    const filteredSpace = state.spaces.filter(item => item.id === state.spaceId)
+    if (filteredSpace.length === 0) {
+      dispatch({
+        type: UPDATE_ADD_BOOKINGFORM_VALIDATE,
+        payload: {key: 'spaceId', value: false}
+      })
+      isValidate = false;
+    }
+
+    const filteredCustomer = state.customers.filter(item => item.id === state.customerId)
+    if (filteredCustomer.length === 0) {
+      dispatch({
+        type: UPDATE_ADD_BOOKINGFORM_VALIDATE,
+        payload: {key: 'customerId', value: false}
+      })
+      isValidate = false;
+    }
+    
     if (isValidate) {
       onEndEditing(state)
     }

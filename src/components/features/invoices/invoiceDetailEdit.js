@@ -52,6 +52,13 @@ const InvoiceDetailEdit = props => {
     invoice.costItems,
     invoice.discount
   );
+  
+  const getBookingTitle = (bookingId) => {
+    const filteredBooking = state.bookings.bookings.filter(item => item.id === bookingId)
+    if (filteredBooking.length > 0)
+      return filteredBooking[0].eventName;
+    else return '';
+  }
 
   return (
     <ModalContainer>
@@ -83,13 +90,17 @@ const InvoiceDetailEdit = props => {
             label={"Created"}
             value={formatEventDate(invoice.created)}
           />
-          <TableItem label={"Booking"} value={invoice.booking && invoice.booking.title} />
+          <TableItem 
+            label={"Booking"} 
+            value={getBookingTitle(invoice.booking.id)} 
+          />
           <TableItem
             label={"Customer"}
-            value={
-              (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
-                state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A"
-            }
+            // value={
+            //   (invoice.customerId && state.customers.customers && state.customers.customers.find(c => c.id === invoice.customerId) &&
+            //     state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A"
+            // }
+            value={invoice.booking.customer.name}
           />
           <TablePicker
             label="Payment Method"
@@ -133,6 +144,7 @@ const InvoiceDetailEdit = props => {
                                 value: date
                               });
                             }}
+                            dateFormat="dd/MM/yyyy"
                           />
                           <DatePicker
                             selected={new Date(endDate).getTime()}
@@ -147,6 +159,7 @@ const InvoiceDetailEdit = props => {
                                 value: date
                               });
                             }}
+                            dateFormat="dd/MM/yyyy"
                           />
                         </div>
                         <DatePicker
@@ -215,6 +228,7 @@ const InvoiceDetailEdit = props => {
                               value: date
                             });
                           }}
+                          dateFormat="dd/MM/yyyy"
                         />
                         <DatePicker
                           selected={updatedDate(

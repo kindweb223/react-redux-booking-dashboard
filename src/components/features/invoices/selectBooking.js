@@ -16,7 +16,7 @@ import SearchField from "../../inputs/searchField";
 
 const BookingRow = props => {
   const { onSelectBooking, booking } = props;
-  const { title, customer, received } = booking;
+  const { eventName, customer, received } = booking;
 
   return (
     <div
@@ -50,7 +50,7 @@ const BookingRow = props => {
           }
         `}
       >
-        <P1 color="dark">{title}</P1>
+        <P1 color="dark">{eventName}</P1>
         <P2 color="grey">{customer.name}</P2>
         <P2 color="light_grey">{formatEventDate(received)}</P2>
       </div>
@@ -95,13 +95,14 @@ const SelectBookingModal = props => {
           style={{ marginBottom: 30 }}
         />
 
-        {filteredBookings.map(b => (
-          <BookingRow
-            key={b.id}
-            booking={b}
-            onSelectBooking={() => onSelectBooking(b.id)}
-          />
-        ))}
+        {filteredBookings.map(b => {
+          if( b.customer )
+            return <BookingRow
+              key={b.id}
+              booking={b}
+              onSelectBooking={() => onSelectBooking(b.id)}
+            />
+        })}
       </ModalBottomSection>
     </ModalContainer>
   );

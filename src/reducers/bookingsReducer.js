@@ -192,6 +192,7 @@ function bookingsReducer(state, action) {
         loadBooking: true,
       }
     case GET_BOOKING_SETTINGS_SUCCESS:
+      debugger;
       return {
         ...state,
         defaultVatRate: action.payload.vatRate,
@@ -229,6 +230,7 @@ function bookingsReducer(state, action) {
         loadingQuotes: true,
       }
     case GET_CREATE_BOOKING_QUOTE_SUCCESS:
+      debugger;
       return {
         ...state,
         loadingQuotes: false,
@@ -510,12 +512,19 @@ function bookingsReducer(state, action) {
       // const booking = newState.find(booking => booking.id === action.booking);
       // const quote = booking.quotes[action.quote];
       // quote.slots.splice(action.index, 1);
-      // return newState;
+      // return newState;      
+
+      const newSlot = state.quotes[action.quote].slots.filter((item, nIndex) => nIndex != action.index);
+
       return {
         ...state,
-        quotes: state.quotes.filter((item, nIndex) => nIndex !== action.quote)
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.quote)
+            item.slots = [ ...newSlot ];
+          return item;
+        })
       }
-    }
+    }    
 
     case "quote_update_total": {
       // const newState = Array.from(state);
@@ -712,6 +721,7 @@ function bookingsReducer(state, action) {
       const invoices = state.invoices;
       const newInvoice = action.payload;
 
+      newInvoice.BookingId = parseInt(newInvoice.BookingId);
       newInvoice.slots = newInvoice.slots && JSON.parse(newInvoice.slots);
       newInvoice.costItems = newInvoice.cost_items && JSON.parse(newInvoice.cost_items);
       invoices.push(newInvoice)
@@ -719,7 +729,7 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadingInvoice: false,
-        invoices
+        invoices: [ ...invoices ],
       };
     case GET_CREATE_BOOKING_INVOICE_ERROR:
       return {

@@ -32,11 +32,16 @@ const CompanyInfoSettingsSection = props => {
       try {
         dispatch({ type: REQUEST_GET_COMPANYINFO });
         const res = await axios.get('/company');
-
-        dispatch({ 
-          type: GET_COMPANYINFO_SUCCESS,
-          payload: res.data.company,
-        })
+        
+        if (res.data.company != null) {
+          dispatch({ 
+            type: GET_COMPANYINFO_SUCCESS,
+            payload: res.data.company,
+          })
+        } else {
+          dispatch({ type: GET_COMPANYINFO_ERROR })  
+        }
+        
       } catch (err) {
         dispatch({ type: GET_COMPANYINFO_ERROR })
       }      
@@ -55,12 +60,21 @@ const CompanyInfoSettingsSection = props => {
           'Content-Type': 'application/json'
         }
       };
-    
-      const res = await axios.put(
-        `/companies/${state.companyInfo.id}`, 
-        JSON.stringify(state.companyInfo),
-        config
-      );
+      
+      let res = {};
+      if (state.companyInfo.id) {
+        res = await axios.put(
+          `/companies/${state.companyInfo.id}`, 
+          JSON.stringify(state.companyInfo),
+          config
+        );
+      } else {
+        res = await axios.post(
+          `/companies`, 
+          JSON.stringify(state.companyInfo),
+          config
+        );
+      }
 
       dispatch({
         type: GET_UPDATE_COMPANYINFO_SUCCESS,

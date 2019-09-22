@@ -332,7 +332,9 @@ const BookingsPage = props => {
                 <PickerButton
                   options={state.bookings.bookingStatus.map(item => item.name)}
                   colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
-                  selectedOption={booking.status.name}
+                  selectedOption={
+                    (booking.status && booking.status.name) ? booking.status.name : "" 
+                  }
                   onOptionSelected={status => {handleChangeStatus(booking.id, status)}
                   }
                 />
