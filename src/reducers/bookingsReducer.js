@@ -512,12 +512,19 @@ function bookingsReducer(state, action) {
       // const booking = newState.find(booking => booking.id === action.booking);
       // const quote = booking.quotes[action.quote];
       // quote.slots.splice(action.index, 1);
-      // return newState;
+      // return newState;      
+
+      const newSlot = state.quotes[action.quote].slots.filter((item, nIndex) => nIndex != action.index);
+
       return {
         ...state,
-        quotes: state.quotes.filter((item, nIndex) => nIndex !== action.quote)
+        quotes: state.quotes.map((item, nIndex) => {
+          if (nIndex === action.quote)
+            item.slots = [ ...newSlot ];
+          return item;
+        })
       }
-    }
+    }    
 
     case "quote_update_total": {
       // const newState = Array.from(state);
