@@ -195,9 +195,9 @@ function bookingsReducer(state, action) {
       debugger;
       return {
         ...state,
-        defaultVatRate: action.payload.vatRate,
-        currency: action.payload.currency.toUpperCase(),
-        loadBooking: action.payload.loadBooking || false,
+        defaultVatRate: (action.payload && action.payload.vatRate)? action.payload.vatRate : 0,
+        currency: (action.payload && action.payload.currency) ? action.payload.currency.toUpperCase() : "",
+        loadBooking: false,
       }
     case GET_BOOKING_SETTINGS_ERROR:
       return {
