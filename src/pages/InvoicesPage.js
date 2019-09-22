@@ -204,7 +204,7 @@ const InvoicesPage = () => {
           state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A";
         const bookingName =  (invoice.BookingId && state.bookings.bookings && state.bookings.bookings.find(c => c.id === invoice.BookingId) &&
           state.bookings.bookings.find(c => c.id === invoice.BookingId).eventName) || "N/A"
-
+        debugger;
         return (
           (invoice.status === selectedFilter || selectedFilter === "All") && // apply filters
           (!searchQuery ||
@@ -218,7 +218,7 @@ const InvoicesPage = () => {
       })
       .sort((inv1, inv2) => (inv1.created > inv2.created ? -1 : 1));
       setInvoices([...newInvoices]);
-  }, [state.bookings.invoices])
+  }, [state.bookings.invoices, searchQuery, selectedFilter])
 
   return (
     <>
