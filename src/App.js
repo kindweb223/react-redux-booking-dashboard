@@ -18,7 +18,7 @@ import LoginPage from "./pages/LoginPage";
 
 import CONFIG from './config';
 
-axios.defaults.baseURL = CONFIG.API_URL;
+axios.defaults.baseURL = CONFIG.REACT_APP_API_URL;
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
