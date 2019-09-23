@@ -204,7 +204,6 @@ const InvoicesPage = () => {
           state.customers.customers.find(c => c.id === invoice.customerId).name) || "N/A";
         const bookingName =  (invoice.BookingId && state.bookings.bookings && state.bookings.bookings.find(c => c.id === invoice.BookingId) &&
           state.bookings.bookings.find(c => c.id === invoice.BookingId).eventName) || "N/A"
-        debugger;
         return (
           (invoice.status === selectedFilter || selectedFilter === "All") && // apply filters
           (!searchQuery ||

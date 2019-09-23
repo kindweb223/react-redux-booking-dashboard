@@ -16,7 +16,11 @@ import {
 import setAuthToken from './utils/setAuthToken';
 import LoginPage from "./pages/LoginPage";
 
-axios.defaults.baseURL = 'https://justvenue.herokuapp.com/v1';
+import {
+  API_URL
+} from './config';
+
+axios.defaults.baseURL = API_URL;
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
