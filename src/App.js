@@ -17,11 +17,10 @@ import setAuthToken from './utils/setAuthToken';
 import LoginPage from "./pages/LoginPage";
 
 import {
-  LOCAL_API_BASE_URL,
-  LIVE_API_BASE_URL,
+  API_URL
 } from './config';
 
-axios.defaults.baseURL = LOCAL_API_BASE_URL;
+axios.defaults.baseURL = API_URL;
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
