@@ -16,11 +16,9 @@ import {
 import setAuthToken from './utils/setAuthToken';
 import LoginPage from "./pages/LoginPage";
 
-import {
-  API_URL
-} from './config';
+import CONFIG from './config';
 
-axios.defaults.baseURL = API_URL;
+axios.defaults.baseURL = CONFIG.API_URL;
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
