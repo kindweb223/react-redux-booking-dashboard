@@ -192,7 +192,6 @@ function bookingsReducer(state, action) {
         loadBooking: true,
       }
     case GET_BOOKING_SETTINGS_SUCCESS:
-      debugger;
       return {
         ...state,
         defaultVatRate: (action.payload && action.payload.vatRate)? action.payload.vatRate : 0,

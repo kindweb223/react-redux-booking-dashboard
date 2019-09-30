@@ -9,6 +9,7 @@
     "email-validator": "^2.0.4",
     "emotion": "^10.0.17",
     "formik": "^1.5.8",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",

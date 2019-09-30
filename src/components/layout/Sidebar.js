@@ -96,6 +96,9 @@ const Sidebar = props => {
   const logout = () => {
     setAuthToken("");
     dispatch({type: 'set_logout'});
+    setTimeout(() => {
+      window.location.replace("https://heyagenda.com/");
+    }, 100)    
   }
 
   return (

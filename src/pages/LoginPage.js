@@ -1,16 +1,10 @@
-import React, { useContext } from "react";
-import { Formik } from "formik";
-import * as Yup from "yup";
+import React, { useContext, useEffect } from "react";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
-import { cx } from "emotion";
+import jsonwebtoken from 'jsonwebtoken';
 
-import Button from "../components/buttons/Button";
-import InputField from "../components/buttons/InputField";
-import InputLabel from "../components/buttons/InputLabel";
-import H3 from "../components/typography/H3";
-import P2 from "../components/typography/P2";
-import Grid from "../components/layout/Grid";
+import SpinnerContainer from '../components/layout/Spinner';
+
 
 import styled from "styled-components";
 
@@ -29,52 +23,42 @@ const LoginPage = props => {
     display: flex;
     align-items: center;
     justify-content: center;
+  `;  
+  
+  useEffect(() => {
+    const indexStr = 'access_token=';      
+    const href = window.location.href;
+    const nIndex = href.indexOf(indexStr);
 
-    .login-form {
-      width: 300px;      
-      min-height: 320px;
-    }
+    if( nIndex >= 0) {
+      const accessToken = href.substring(nIndex + indexStr.length, href.length);
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-    }
+      if(accessToken.length > 0) {
 
-    .login-title {
-      text-align: center;
-    }
-    .invalite_user_pwd {
-      margin-bottom: 1em;
-    }
+        const decoded = jsonwebtoken.decode(accessToken);
 
-  `;
+        const values = {
+          outseta_id: decoded.nameid,
+          email: decoded.unique_name,
+          firstName: decoded.family_name,
+          lastName: decoded.given_name,
+        };
 
-  const { state, dispatch } = useContext(AppReducerContext);
-
-  if(state.auth.isAuthenticated) {
-    return <Redirect to='/calendar' />;
-  }
-
-  return (
-    <Container>
-      <Formik
-        initialValues={{ email: state.auth.user.email, password: state.auth.user.password }}
-        onSubmit={async (values, { setSubmitting }) => {
+        const loginOutSeta = async () => {
 
           const config = {
             headers: {
               'Content-Type': 'application/json'
             }
           };
-
+          
           try {
             const res = await axios.post(
               '/auth/login',
               JSON.stringify(values),
               config
-            );
-
-            setSubmitting(false);
+            );      
+            
             if(res.data.success) {
               dispatch({
                 type: 'get_login_success',
@@ -86,81 +70,29 @@ const LoginPage = props => {
               type: 'get_login_error',
               payload: {...values},
             })
+            window.location.replace("https://heyagenda.com/");
           }
-        }}
+        }
 
-        validationSchema={Yup.object().shape({
-          email: Yup.string().email().required("Email Required"),
-          password: Yup.string()
-            .required("Password Required.")
-            .min(4, "Password is too short - should be 4 chars minimum.")
-            .matches(/(?=.*[0-9])/, "Password must contain a number.")
-        })}
-      >
-        {props => {
-          const {
-            values,
-            touched,
-            errors,
-            isSubmitting,
-            handleChange,
-            handleBlur,
-            handleSubmit
-          } = props;
-          return (
-              <form className="login-form" onSubmit={handleSubmit}>
-                <H3 className="login-title">Login</H3>
-                { state.auth.showInvalidMsg && <P2 className="invalite_user_pwd" color="accent_pink" center={true} >Invalid Username and Password</P2>}
-                <Grid>
-                  <div className="form-group">
-                    <InputLabel>Email</InputLabel>
-                    <InputField
-                      name="email"
-                      type="text"
-                      placeholder="Enter your email"
-                      value={values.email}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      autoComplete="new-password"
-                      className={errors.email && touched.email && cx("error")}
-                    />
-                    {errors.email && touched.email && (
-                      <div className={cx("input-feedback")}>{errors.email}</div>
-                    )}
-                  </div>
+        loginOutSeta();
+      }else {
+        window.location.replace("https://heyagenda.com/");
+      }
+    } else {
+      window.location.replace("https://heyagenda.com/");
+    }
 
-                  <div className="form-group">
-                    <InputLabel>Password</InputLabel>
-                    <InputField
-                      name="password"
-                      type="password"
-                      placeholder="Enter your password"
-                      value={values.password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      autoComplete="new-password"
-                      className={errors.password && touched.password && cx("error")}
-                    />
-                    {errors.password && touched.password && (
-                      <div className={cx("input-feedback")}>{errors.password}</div>
-                    )}
-                  </div>
+  }, [])
+  
+  const { state, dispatch } = useContext(AppReducerContext);
 
-                  <div className="form-group">
-                    <Button
-                      primary
-                      className="login-button"
-                      disabled={isSubmitting}
-                      onClick={handleSubmit}
-                    >
-                      Login
-                    </Button>
-                  </div>
-                </Grid>
-              </form>
-          );
-        }}
-      </Formik>
+  if(state.auth.isAuthenticated) {
+    return <Redirect to='/calendar' />;
+  }
+
+  return (
+    <Container>
+      <SpinnerContainer loading={"true"} />
     </Container>
   )
 }
