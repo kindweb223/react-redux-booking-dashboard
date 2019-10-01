@@ -16,6 +16,7 @@ import Button from "../../buttons/Button";
 import AddGlyph from "../../../images/Glyphs/AddGlyph";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SpinnerContainer from "../../../components/layout/Spinner";
+import reorder from "../../../utils/reorder";
 
 import {
   REQUEST_GET_BOOKINGSTATUS,
@@ -33,6 +34,7 @@ import {
   APPEND_CUSTOM_STATUS,
   REMOVE_NEW_BOOKING_STATUS,
   SET_BOOKING_STATUS_PAGE_STATUS,
+  UPDATE_ALL_BOOKINGSTATUS_SUCCESS,
 } from "../../../reducers/actionType";
 
 const DefaultStatusRow = props => {
@@ -236,20 +238,77 @@ const BookingStatusesSettingsSection = props => {
     getBookingStatus();
   }, []);
 
-  function onDragEnd(result) {
-    if (!result.destination) {
+  const onDragEnd = async (result) => {
+    if (!result.destination || result.destination.index == 0) {
       return;
     }
 
     if (result.destination.index === result.source.index) {
       return;
     }
+   
+    let nIndex = 0
+    if(result.destination.index >= 1)
+      nIndex = result.destination.index-1;
+
+    let newUpdateStatus = state.bookingStatuses[result.source.index];
+    if (state.bookingStatuses[nIndex].type === 'default')
+      newUpdateStatus.parentId = state.bookingStatuses[nIndex].name;
+    else newUpdateStatus.parentId = state.bookingStatuses[nIndex].parentId;    
+
+    newUpdateStatus.order = result.destination.index;        
+
+    dispatch({ type: REQUEST_UPDATE_BOOKING_STATUS });
 
     dispatch({
       type: "reorder_status",
       from: result.source.index,
       to: result.destination.index
     });
+
+    const { id, name, active, order, parentId } = newUpdateStatus;
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const res = await axios.put(
+      `./statuses/${id}`, 
+      JSON.stringify({
+        id, name, active, parentId, order
+      }), 
+      config
+    );
+
+    let bookingStatuses = reorder(state.bookingStatuses, result.source.index, result.destination.index);
+    bookingStatuses = bookingStatuses.map(item => {
+      if (item.id === res.data.status.id)
+        return res.data.status;
+      else return item;
+    })
+    
+    dispatch({ 
+      type: UPDATE_ALL_BOOKINGSTATUS_SUCCESS,
+      payload: bookingStatuses
+    })
+    // dispatch({
+    //   type: "reorder_status",
+    //   payload: bookingStatuses
+    // });
+
+    // dispatch({
+    //   type: GET_UPDATE_BOOKING_STATUS_SUCCESS,
+    //   payload: res.data.status
+    // })
+
+    // dispatch({
+    //   type: "reorder_status",
+    //   from: result.source.index,
+    //   to: result.destination.index
+    // });
+    
   }
 
   const changeBookingStatus = async (nameValue, index) => {

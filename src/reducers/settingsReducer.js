@@ -47,6 +47,7 @@ import {
   GET_UPDATE_COMPANYINFO_SUCCESS,
   GET_UPDATE_COMPANYINFO_ERROR,
   CHANGE_COMPANY_INFO,
+  UPDATE_ALL_BOOKINGSTATUS_SUCCESS,
 } from "./actionType";
 
 function settingsReducer(state = {}, action) {
@@ -77,6 +78,13 @@ function settingsReducer(state = {}, action) {
       };
     }
 
+    case UPDATE_ALL_BOOKINGSTATUS_SUCCESS:{
+      return {
+        ...state,
+        bookingStatusActionLoading: false,
+        bookingStatuses: [ ...action.payload ],
+      }
+    }
     // VENUES AND SPACES
     case REQUEST_GET_VENUE: {
       return {
