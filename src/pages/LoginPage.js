@@ -29,7 +29,6 @@ const LoginPage = props => {
     const indexStr = 'access_token=';      
     const href = window.location.href;
     const nIndex = href.indexOf(indexStr);
-
     if( nIndex >= 0) {
       const accessToken = href.substring(nIndex + indexStr.length, href.length);
 

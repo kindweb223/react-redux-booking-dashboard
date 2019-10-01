@@ -51,7 +51,7 @@ export const GET_DELETE_BOOKING_STATUS_ERROR = "Get delete booking status error"
 export const APPEND_CUSTOM_STATUS = "Append new booking status";
 export const REMOVE_NEW_BOOKING_STATUS = "Remove appended new booking status";
 export const SET_BOOKING_STATUS_PAGE_STATUS = "Set booking status page status";
-
+export const UPDATE_ALL_BOOKINGSTATUS_SUCCESS = "Update all booking status";
 // Customer Actions
 export const REQUEST_GET_CUSTOMERS = "Request get customers";
 export const GET_CUSTOMERS_SUCCESS = "Get customers success";
