@@ -51,7 +51,8 @@ const TableEditableValue = props => {
     type = "text",
     onChange,
     autoFocus,
-    tabIndex
+    tabIndex,
+    longTextHeight = '120px'
   } = props;
 
   let mergedStyle = {
@@ -72,6 +73,7 @@ const TableEditableValue = props => {
           onChange={event => onChange && onChange(event.target.value)}
           tabIndex={tabIndex}
           rows={6}
+          style={{maxHeight: longTextHeight}}
         />
       ) : (
         <InputField
