@@ -618,7 +618,7 @@ const BookingDetailEdit = props => {
     }
 
     const filteredCustomer = state.customers.filter(item => item.id === state.customerId)
-    if (filteredCustomer.length === 0) {
+    if (filteredCustomer.length === 0 && state.customerId !== CUSTOMER_OPTION_CREATE_USER) {
       dispatch({
         type: UPDATE_ADD_BOOKINGFORM_VALIDATE,
         payload: {key: 'customerId', value: false}
