@@ -1,0 +1,2 @@
+export const CUSTOMER_OPTION_CREATE_USER = -10;
+export const CUSTOMER_OPTION_CASUAL_USER = -11;

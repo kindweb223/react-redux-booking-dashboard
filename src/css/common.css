@@ -1,0 +1,12 @@
+.select-option-icon {
+    padding-left: 25px;
+    position: relative;
+}
+
+.select-option-icon .fa-icons {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-55%);
+}
+

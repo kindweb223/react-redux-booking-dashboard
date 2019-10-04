@@ -1,4 +1,6 @@
 import React, { useReducer, useEffect, useContext } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHome, faUser, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios';
 import styled from "styled-components";
 import { css } from "emotion";
@@ -29,6 +31,9 @@ import {
 import Spacer from "../../layout/Spacer";
 import { AppReducerContext } from "../../../contexts/AppReducerContext";
 import SpinnerContainer from "../../layout/Spinner";
+import CustomerSection from "./sections/customer";
+
+import "../../../css/common.css";
 
 import {
   REQUSET_GET_BOOKING_CUSTOMER,
@@ -43,6 +48,11 @@ import {
   UPDATE_ADD_BOOKINGFORM_VALIDATE,
 } from "../../../reducers/actionType";
 
+import {
+  CUSTOMER_OPTION_CREATE_USER,
+  CUSTOMER_OPTION_CASUAL_USER,
+} from '../../../constants';
+
 const SvgButtonWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -53,7 +63,15 @@ const BookingForm = props => {
 
   const { booking, dispatch } = props;
   const { state } = useContext(AppReducerContext);
-
+  
+  const bookingCustomers = [
+    {value: CUSTOMER_OPTION_CREATE_USER, label: 'Create a new user'},
+    {value: CUSTOMER_OPTION_CASUAL_USER, label: 'Casual User'},
+    ...booking.customers.map(customer => {
+        return {value: customer.id, label: customer.name}
+    })
+  ]
+  
   useEffect(() => {
     if(booking.venueId === null)
       return;
@@ -99,7 +117,7 @@ const BookingForm = props => {
           Booking Event Name is required.
         </p>
       }
-      <Grid columns="1fr 1fr" style={{ width: "100%", marginTop: 10 }}>
+      <Grid columns="1fr 1fr" style={{ width: "100%", marginTop: "1.4rem" }}>
         <div>
           <TablePicker
             label="Venue"
@@ -183,19 +201,28 @@ const BookingForm = props => {
         </div>
 
         <div>
-          <TablePicker
-            label="Customer"
-            options={booking.customers.map(customer => customer.id)}
-            optionsForSearch={
-              booking.customers.map(item => {
-                return { value: item.id, label: item.name }
-              })
-            }
+          <TablePicker            
+            label="Customer"            
+            options={bookingCustomers.map(customer => customer.value)}
+            optionsForSearch={bookingCustomers}
             selectedOption={booking.customerId}
             displayTransformer={customerId => {
+              if (customerId === CUSTOMER_OPTION_CREATE_USER)
+                return <span className="select-option-icon">
+                  <FontAwesomeIcon className="fa-icons" icon={faUserPlus} />
+                  Create a new user
+                </span>
+              if (customerId === CUSTOMER_OPTION_CASUAL_USER)
+                return <span className="select-option-icon">
+                    <FontAwesomeIcon className="fa-icons" icon={faHome} />
+                    Casual User 
+                  </span>
               const filteredCustomer = booking.customers.filter(c => c.id === customerId);
               if (filteredCustomer.length > 0)
-                return filteredCustomer[0].name;
+                return <span className="select-option-icon">
+                    <FontAwesomeIcon className="fa-icons" icon={faUser} />
+                    {filteredCustomer[0].name}
+                  </span>
               else return "";
             }}
             searchEnabled
@@ -262,6 +289,10 @@ const BookingForm = props => {
           }
         </div>
       </Grid>
+      {
+        (booking.customerId === CUSTOMER_OPTION_CREATE_USER)
+        && <CustomerSection customerData={booking.customerData} dispatch={dispatch}/>
+      }      
 
       <TableSectionHeader title={"Booking Slots"} />
 
@@ -473,6 +504,14 @@ const BookingDetailEdit = props => {
         spaceId: true,
         customerId: true,
         ownerId: true,
+      },
+      customerData: {
+        name: {value: "", validate: true},
+        phone: {value: ""},
+        email: {value: ""},
+        address: {value: ""},
+        vatNumber: {value: ""},
+        note: {value: ""},
       }
     }
   );
@@ -543,7 +582,6 @@ const BookingDetailEdit = props => {
 
   const handleClickSave = () => {
     let isValidate = true;
-
     // check title
     if (state.validateForm.eventName === null || state.validateForm.eventName.length === 0) {
       dispatch({
@@ -588,6 +626,17 @@ const BookingDetailEdit = props => {
       isValidate = false;
     }
     
+    if (state.customerId === CUSTOMER_OPTION_CREATE_USER) {
+      if (state.customerData.name.value.length === 0) {
+        isValidate = false;
+        dispatch({ 
+          type: "select_customer_data",
+          key: 'name',
+          value: {value: "", validate: false,}
+        });        
+      }
+    }    
+
     if (isValidate) {
       onEndEditing(state)
     }
@@ -826,10 +875,23 @@ function singleBookingReducer(state, action) {
     case "select_customer": {
       const newValidateForm = { ...state.validateForm };
       newValidateForm.customerId = (action.customer !== null);
+      let newCustomerData = { ...state.customerData };
+      if (newValidateForm.customerId >= 0) {
+        newCustomerData = {
+          name: {value: "", validate: true},
+          phone: {value: ""},
+          email: {value: ""},
+          address: {value: ""},
+          vatNumber: {value: ""},
+          note: {value: ""},
+        }
+      }
+
       return {
         ...state,
         customerId: action.customer,
         validateForm: { ...newValidateForm },
+        customer: { ...newCustomerData},
       };
     }
     case "select_owner": {
@@ -841,7 +903,14 @@ function singleBookingReducer(state, action) {
         validateForm: { ...newValidateForm }
       };
     }
-
+    case 'select_customer_data': {
+      const newCustomerData = { ...state.customerData};
+      newCustomerData[action.key] = action.value
+      return {
+        ...state,
+        customerData: { ...newCustomerData }
+      }
+    }
     default:
       throw new Error();
   }

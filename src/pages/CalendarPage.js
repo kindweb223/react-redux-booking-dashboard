@@ -24,8 +24,15 @@ import {
   REQUEST_GET_BOOKINGS, REQUEST_GET_CUSTOMERS,
   REQUEST_GET_VENUE,
   REUQEST_GET_BOOKING_SETTINGS,
-  CLEAR_BOOKING_DATA
+  CLEAR_BOOKING_DATA,
+  GET_ADD_CUSTOMER_SUCCESS,
 } from "../reducers/actionType";
+
+import {
+  CUSTOMER_OPTION_CREATE_USER,
+  CUSTOMER_OPTION_CASUAL_USER,
+} from '../constants';
+
 import axios from "axios/index";
 import SpinnerContainer from "../components/layout/Spinner";
 
@@ -141,7 +148,7 @@ const CalendarPage = props => {
   }, [])
 
   const handleClickSave = async (booking) => {
-
+    debugger;
     setShowCreateBookingModal(false);
 
     if (booking === null) return;
@@ -157,13 +164,36 @@ const CalendarPage = props => {
         dispatch({ type: REQUSET_ADD_BOOKING })
         const filteredStatus = state.bookings.bookingStatus.filter(item => item.name === "Enquiry");
 
+        let resCustomer = {};
+        let customerId = booking.customerId;
+
+        if (booking.customerId === CUSTOMER_OPTION_CREATE_USER) {
+          resCustomer = await axios.post(
+            '/customers', 
+            JSON.stringify({
+              name: booking.customerData.name.value,
+              phone: booking.customerData.phone.value,
+              address: booking.customerData.address.value,
+              email: booking.customerData.email.value,
+              note: booking.customerData.note.value,
+              vatNumber: booking.customerData.vatNumber.value,
+            }), 
+            config
+          )
+          dispatch({
+            type: GET_ADD_CUSTOMER_SUCCESS,
+            payload: resCustomer.data.customer,
+          })
+          customerId = resCustomer.data.customer.id;
+        }
+
         const res = await axios.post(
           '/bookings',
           {
             eventName: booking.eventName,
             venueId: booking.venueId,
             spaceId: booking.spaceId,
-            customerId: booking.customerId,
+            customerId: customerId,
             ownerId: booking.ownerId,
             slots: JSON.stringify(booking.slots),
             statusId: filteredStatus[0].id,
@@ -183,13 +213,36 @@ const CalendarPage = props => {
       try {
         dispatch({ type: REQUEST_UPDATE_BOOKING })
 
+        let resCustomer = {};
+        let customerId = booking.customerId;
+
+        if (booking.customerId === CUSTOMER_OPTION_CREATE_USER) {
+          resCustomer = await axios.post(
+            '/customers', 
+            JSON.stringify({
+              name: booking.customerData.name.value,
+              phone: booking.customerData.phone.value,
+              address: booking.customerData.address.value,
+              email: booking.customerData.email.value,
+              note: booking.customerData.note.value,
+              vatNumber: booking.customerData.vatNumber.value,
+            }), 
+            config
+          )
+          dispatch({
+            type: GET_ADD_CUSTOMER_SUCCESS,
+            payload: resCustomer.data.customer,
+          })
+          customerId = resCustomer.data.customer.id;
+        }
+
         const res = await axios.put(
           `/bookings/${booking.id}`,
           {
             eventName: booking.eventName,
             venueId: booking.venueId,
             spaceId: booking.spaceId,
-            customerId: booking.customerId,
+            customerId: customerId,
             ownerId: booking.ownerId,
             statusId: booking.statusId,
             slots: JSON.stringify(booking.slots),
