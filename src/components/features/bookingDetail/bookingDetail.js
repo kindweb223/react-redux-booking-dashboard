@@ -20,8 +20,14 @@ import {
   GET_UPDATE_BOOKING_SUCCESS,
   GET_UPDATE_BOOKIG_ERROR, GET_BOOKING_QUOTE_SUCCESS, GET_BOOKING_INVOICE_SUCCESS, REQUEST_GET_BOOKING_QUOTE,
   GET_BOOKING_INVOICE_ERROR, GET_BOOKING_QUOTE_ERROR, REQUEST_GET_BOOKING_INVOICE,
+  GET_ADD_CUSTOMER_SUCCESS,
 } from "../../../reducers/actionType";
 import SpinnerContainer from "../../layout/Spinner";
+
+import {
+  CUSTOMER_OPTION_CREATE_USER,
+  CUSTOMER_OPTION_CASUAL_USER
+} from '../../../constants';
 
 const TABBAR_ITEM_DETAILS = "Details";
 const TABBAR_ITEM_QUOTES = "Quotes";
@@ -147,13 +153,37 @@ const BookingDetail = props => {
       try {
         dispatch({ type: REQUEST_UPDATE_BOOKING })
 
+        let resCustomer = {};
+        let customerId = updateBooking.customerId;
+
+        debugger;
+        if (updateBooking.customerId === CUSTOMER_OPTION_CREATE_USER) {
+          resCustomer = await axios.post(
+            '/customers', 
+            JSON.stringify({
+              name: updateBooking.customerData.name.value,
+              phone: updateBooking.customerData.phone.value,
+              address: updateBooking.customerData.address.value,
+              email: updateBooking.customerData.email.value,
+              note: updateBooking.customerData.note.value,
+              vatNumber: updateBooking.customerData.vatNumber.value,
+            }), 
+            config
+          )
+          dispatch({
+            type: GET_ADD_CUSTOMER_SUCCESS,
+            payload: resCustomer.data.customer,
+          })
+          customerId = resCustomer.data.customer.id;
+        }
+
         const res = await axios.put(
           `/bookings/${booking.id}`,
           {
             eventName: updateBooking.eventName,
             venueId: updateBooking.venueId,
             spaceId: updateBooking.spaceId,
-            customerId: updateBooking.customerId,
+            customerId: customerId,
             ownerId: updateBooking.ownerId,
             statusId: updateBooking.statusId,
             slots: JSON.stringify(updateBooking.slots),

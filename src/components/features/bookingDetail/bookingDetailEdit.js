@@ -31,6 +31,7 @@ import {
 import Spacer from "../../layout/Spacer";
 import { AppReducerContext } from "../../../contexts/AppReducerContext";
 import SpinnerContainer from "../../layout/Spinner";
+import CustomerSection from "./sections/customer";
 
 import "../../../css/common.css";
 
@@ -47,105 +48,18 @@ import {
   UPDATE_ADD_BOOKINGFORM_VALIDATE,
 } from "../../../reducers/actionType";
 
+import {
+  CUSTOMER_OPTION_CREATE_USER,
+  CUSTOMER_OPTION_CASUAL_USER,
+} from '../../../constants';
+
 const SvgButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-const CustomerForm = props => {
-  return (
-    <React.Fragment>
-      <Grid style={{ width: "100%", marginTop: 10 }}>
-        <TableEditableValue
-          label="Name"
-          // value={customer.name}
-          // onChange={value =>
-          //   handleChangeName(value)
-          // }
-          // style={{ width: "100%" }}
-          // className={(!isNameValidate? "error" : "")}
-        />
-        {/* {
-          !isNameValidate && 
-          <p 
-            className={
-              css`
-                color: #E92579;            
-                margin: 0.2em 0 0 0;
-                padding: 0 0.6em;
-                font-size: 0.8em;
-              `
-            }
-          >
-            Company Name is required.
-          </p>
-        }    */}
-      </Grid>
-
-      <Grid columns="1fr 1fr" style={{ width: "100%", marginTop: 10 }}>
-        <TableEditableValue
-          label="Phone Number"
-          // value={customer.phone}
-          // onChange={value =>
-          //   dispatch({
-          //     type: "set_value",
-          //     key: "phone",
-          //     value: value
-          //   })
-          // }
-        />
-
-        <TableEditableValue
-          label="Email"
-          // value={customer.email}
-          // onChange={value =>
-          //   dispatch({ type: "set_value", key: "email", value: value })
-          // }
-        />
-
-        <TableEditableValue
-          label="Address"
-          // value={customer.address}
-          // onChange={value =>
-          //   dispatch({ type: "set_value", key: "address", value: value })
-          // }
-        />
-
-        <TableEditableValue
-          label="VAT Number"
-          // value={customer.vatNumber}
-          // onChange={value =>
-          //   dispatch({
-          //     type: "set_value",
-          //     key: "vatNumber",
-          //     value: value
-          //   })
-          // }
-        />
-      </Grid>
-
-      <TableEditableValue
-        label="Private Notes"
-        // value={customer.note}
-        longText
-        style={{
-          width: "100%",
-          marginTop: "0.8em",
-        }}
-        longTextHeight = "60px"
-        // onChange={value =>
-        //   dispatch({ type: "set_value", key: "note", value: value })
-        // }
-      />
-    </React.Fragment>
-  )
-}
-
 const BookingForm = props => {
-
-  const CUSTOMER_OPTION_CREATE_USER = -10;
-  const CUSTOMER_OPTION_CASUAL_USER = -11;
 
   const { booking, dispatch } = props;
   const { state } = useContext(AppReducerContext);
@@ -203,7 +117,7 @@ const BookingForm = props => {
           Booking Event Name is required.
         </p>
       }
-      <Grid columns="1fr 1fr" style={{ width: "100%", marginTop: 10 }}>
+      <Grid columns="1fr 1fr" style={{ width: "100%", marginTop: "1.4rem" }}>
         <div>
           <TablePicker
             label="Venue"
@@ -377,7 +291,7 @@ const BookingForm = props => {
       </Grid>
       {
         (booking.customerId === CUSTOMER_OPTION_CREATE_USER)
-        && <CustomerForm />
+        && <CustomerSection customerData={booking.customerData} dispatch={dispatch}/>
       }      
 
       <TableSectionHeader title={"Booking Slots"} />
@@ -590,6 +504,14 @@ const BookingDetailEdit = props => {
         spaceId: true,
         customerId: true,
         ownerId: true,
+      },
+      customerData: {
+        name: {value: "", validate: true},
+        phone: {value: ""},
+        email: {value: ""},
+        address: {value: ""},
+        vatNumber: {value: ""},
+        note: {value: ""},
       }
     }
   );
@@ -660,7 +582,6 @@ const BookingDetailEdit = props => {
 
   const handleClickSave = () => {
     let isValidate = true;
-
     // check title
     if (state.validateForm.eventName === null || state.validateForm.eventName.length === 0) {
       dispatch({
@@ -705,6 +626,17 @@ const BookingDetailEdit = props => {
       isValidate = false;
     }
     
+    if (state.customerId === CUSTOMER_OPTION_CREATE_USER) {
+      if (state.customerData.name.value.length === 0) {
+        isValidate = false;
+        dispatch({ 
+          type: "select_customer_data",
+          key: 'name',
+          value: {value: "", validate: false,}
+        });        
+      }
+    }    
+
     if (isValidate) {
       onEndEditing(state)
     }
@@ -943,10 +875,23 @@ function singleBookingReducer(state, action) {
     case "select_customer": {
       const newValidateForm = { ...state.validateForm };
       newValidateForm.customerId = (action.customer !== null);
+      let newCustomerData = { ...state.customerData };
+      if (newValidateForm.customerId >= 0) {
+        newCustomerData = {
+          name: {value: "", validate: true},
+          phone: {value: ""},
+          email: {value: ""},
+          address: {value: ""},
+          vatNumber: {value: ""},
+          note: {value: ""},
+        }
+      }
+
       return {
         ...state,
         customerId: action.customer,
         validateForm: { ...newValidateForm },
+        customer: { ...newCustomerData},
       };
     }
     case "select_owner": {
@@ -958,7 +903,14 @@ function singleBookingReducer(state, action) {
         validateForm: { ...newValidateForm }
       };
     }
-
+    case 'select_customer_data': {
+      const newCustomerData = { ...state.customerData};
+      newCustomerData[action.key] = action.value
+      return {
+        ...state,
+        customerData: { ...newCustomerData }
+      }
+    }
     default:
       throw new Error();
   }

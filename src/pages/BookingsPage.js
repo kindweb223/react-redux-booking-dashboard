@@ -41,7 +41,13 @@ import {
   REUQEST_GET_BOOKING_SETTINGS,
   GET_BOOKING_SETTINGS_SUCCESS,
   GET_BOOKING_SETTINGS_ERROR,
+  GET_ADD_CUSTOMER_SUCCESS,
 } from "../reducers/actionType";
+
+import {
+  CUSTOMER_OPTION_CREATE_USER,
+  CUSTOMER_OPTION_CASUAL_USER,
+} from '../constants';
 
 const BookingsPage = props => {
   const { state, dispatch } = useContext(AppReducerContext);
@@ -120,7 +126,7 @@ const BookingsPage = props => {
   }, [])
 
   const handleClickSave = async (booking) => {
-
+    debugger;
     setShowCreateBookingModal(false);
 
     if (booking === null) return;
@@ -134,18 +140,42 @@ const BookingsPage = props => {
       try {
 
         dispatch({ type: REQUSET_ADD_BOOKING })
+                
         const filteredStatus = state.bookings.bookingStatus.filter(item => item.name === "Enquiry");
 
+        let customerId = booking.customerId;
+
+        let resCustomer = {};
+        if (booking.customerId === CUSTOMER_OPTION_CREATE_USER) {
+          resCustomer = await axios.post(
+            '/customers', 
+            JSON.stringify({
+              name: booking.customerData.name.value,
+              phone: booking.customerData.phone.value,
+              address: booking.customerData.address.value,
+              email: booking.customerData.email.value,
+              note: booking.customerData.note.value,
+              vatNumber: booking.customerData.vatNumber.value,
+            }), 
+            config
+          )
+          dispatch({
+            type: GET_ADD_CUSTOMER_SUCCESS,
+            payload: resCustomer.data.customer,
+          })
+          customerId = resCustomer.data.customer.id;
+        }
+        
         const res = await axios.post(
           '/bookings',
           {
             eventName: booking.eventName,
             venueId: booking.venueId,
             spaceId: booking.spaceId,
-            customerId: booking.customerId,
+            customerId: customerId,
             ownerId: booking.ownerId,
             slots: JSON.stringify(booking.slots),
-            statusId: filteredStatus[0].id,
+            statusId: filteredStatus[0].id,                        
           },
           config
         );
@@ -162,13 +192,37 @@ const BookingsPage = props => {
       try {
         dispatch({ type: REQUEST_UPDATE_BOOKING })
 
+        let resCustomer = {};
+        let customerId = booking.customerId;
+
+        debugger;
+        if (booking.customerId === CUSTOMER_OPTION_CREATE_USER) {
+          resCustomer = await axios.post(
+            '/customers', 
+            JSON.stringify({
+              name: booking.customerData.name.value,
+              phone: booking.customerData.phone.value,
+              address: booking.customerData.address.value,
+              email: booking.customerData.email.value,
+              note: booking.customerData.note.value,
+              vatNumber: booking.customerData.vatNumber.value,
+            }), 
+            config
+          )
+          dispatch({
+            type: GET_ADD_CUSTOMER_SUCCESS,
+            payload: resCustomer.data.customer,
+          })
+          customerId = resCustomer.data.customer.id;
+        }
+
         const res = await axios.put(
           `/bookings/${booking.id}`,
           {
             eventName: booking.eventName,
             venueId: booking.venueId,
             spaceId: booking.spaceId,
-            customerId: booking.customerId,
+            customerId: customerId,
             ownerId: booking.ownerId,
             statusId: booking.statusId,
             slots: JSON.stringify(booking.slots),

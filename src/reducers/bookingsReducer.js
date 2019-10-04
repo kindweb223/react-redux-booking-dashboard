@@ -229,7 +229,6 @@ function bookingsReducer(state, action) {
         loadingQuotes: true,
       }
     case GET_CREATE_BOOKING_QUOTE_SUCCESS:
-      debugger;
       return {
         ...state,
         loadingQuotes: false,
