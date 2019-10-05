@@ -34,7 +34,7 @@ const App = props => {
       setAuthToken(localStorage.token);
     }
 
-    const getUser = async () => {
+    const getUser = async () => {      
       try {
         const res = await axios.get('/auth/me');
         dispatch({

@@ -63,7 +63,6 @@ const BookingForm = props => {
 
   const { booking, dispatch } = props;
   const { state } = useContext(AppReducerContext);
-  
   const bookingCustomers = [
     {value: CUSTOMER_OPTION_CREATE_USER, label: 'Create a new user'},
     // {value: CUSTOMER_OPTION_CASUAL_USER, label: 'Casual User'},
@@ -255,7 +254,7 @@ const BookingForm = props => {
         <div>
           <TablePicker
             label="Owner"
-            options={booking.owners.map(owner => owner.id)}
+            options={[state.auth.user.id]}
             selectedOption={booking.ownerId}
             onOptionSelected={owner =>
               dispatch({
@@ -266,9 +265,8 @@ const BookingForm = props => {
             style={{ width: "100%" }}
             isValidate={booking.validateForm.ownerId}
             displayTransformer={ownerId => {
-              const filteredOwner = booking.owners.filter(c => c.id === ownerId);
-              if (filteredOwner.length > 0)
-                return filteredOwner[0].firstName + " " + filteredOwner[0].lastName;
+              if (ownerId === state.auth.user.id)
+                return state.auth.user.firstName + " " + state.auth.user.lastName;
               else return "";
             }}
           />
