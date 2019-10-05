@@ -66,7 +66,7 @@ const BookingForm = props => {
   
   const bookingCustomers = [
     {value: CUSTOMER_OPTION_CREATE_USER, label: 'Create a new user'},
-    {value: CUSTOMER_OPTION_CASUAL_USER, label: 'Casual User'},
+    // {value: CUSTOMER_OPTION_CASUAL_USER, label: 'Casual User'},
     ...booking.customers.map(customer => {
         return {value: customer.id, label: customer.name}
     })
