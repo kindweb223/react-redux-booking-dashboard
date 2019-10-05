@@ -126,7 +126,6 @@ const BookingsPage = props => {
   }, [])
 
   const handleClickSave = async (booking) => {
-    debugger;
     setShowCreateBookingModal(false);
 
     if (booking === null) return;

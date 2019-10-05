@@ -45,7 +45,10 @@ import {
   REQUEST_GET_BOOKING_SPACES,
   GET_BOOKING_SPACES_SUCCESS,
   GET_BOOKING_SPACES_ERROR,
-  UPDATE_ADD_BOOKINGFORM_VALIDATE,
+  UPDATE_ADD_BOOKINGFORM_VALIDATE,  
+  REQUEST_GET_BOOKING_OWNERS,
+  GET_BOOKING_OWNERS_SUCCESS,
+  GET_BOOKING_OWNERS_ERROR,
 } from "../../../reducers/actionType";
 
 import {
@@ -254,7 +257,7 @@ const BookingForm = props => {
         <div>
           <TablePicker
             label="Owner"
-            options={[state.auth.user.id]}
+            options={booking.owners.map(item => item.id)}
             selectedOption={booking.ownerId}
             onOptionSelected={owner =>
               dispatch({
@@ -265,8 +268,9 @@ const BookingForm = props => {
             style={{ width: "100%" }}
             isValidate={booking.validateForm.ownerId}
             displayTransformer={ownerId => {
-              if (ownerId === state.auth.user.id)
-                return state.auth.user.firstName + " " + state.auth.user.lastName;
+              const filterOne = booking.owners.filter(item => item.id === ownerId)
+              if (filterOne.length > 0)
+                return filterOne[0].firstName + " " + filterOne[0].lastName;
               else return "";
             }}
           />
@@ -558,7 +562,22 @@ const BookingDetailEdit = props => {
 
     getVenues();
 
+    const getUsers = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_BOOKING_OWNERS })
 
+        const res = await axios.get('/users');
+        dispatch({
+          type: GET_BOOKING_OWNERS_SUCCESS,
+          payload: res.data.users
+        })
+
+      } catch (err) {
+        dispatch({ type: GET_BOOKING_OWNERS_ERROR })
+      }
+    }
+
+    getUsers();
   }, [])
 
   useEffect(() => {
@@ -907,6 +926,25 @@ function singleBookingReducer(state, action) {
       return {
         ...state,
         customerData: { ...newCustomerData }
+      }
+    }    
+    case REQUEST_GET_BOOKING_OWNERS: {
+      return {
+        ...state,
+        loadingBookingDetilas: true,
+      }
+    }
+    case GET_BOOKING_OWNERS_SUCCESS: {
+      return {
+        ...state,
+        loadingBookingDetilas: false,
+        owners: [ ...action.payload ],
+      }
+    }
+    case GET_BOOKING_OWNERS_ERROR: {
+      return {
+        ...state,
+        loadingBookingDetilas: false,
       }
     }
     default:

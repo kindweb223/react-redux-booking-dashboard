@@ -156,7 +156,6 @@ const BookingDetail = props => {
         let resCustomer = {};
         let customerId = updateBooking.customerId;
 
-        debugger;
         if (updateBooking.customerId === CUSTOMER_OPTION_CREATE_USER) {
           resCustomer = await axios.post(
             '/customers', 
