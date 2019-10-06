@@ -67,7 +67,7 @@ const CustomerSection = props => {
             }
           />
   
-          <TableEditableValue
+          {/* <TableEditableValue
             label="Address"
             value={customerData.address.value}
             onChange={value =>
@@ -89,10 +89,10 @@ const CustomerSection = props => {
 					value: {value}
 				})
             }
-          />
+          /> */}
         </Grid>
   
-        <TableEditableValue
+        {/* <TableEditableValue
           label="Private Notes"
           value={customerData.note.value}
           longText
@@ -108,7 +108,7 @@ const CustomerSection = props => {
 				value: {value}
 			})			
           }
-        />
+        /> */}
       </React.Fragment>
     )
   }

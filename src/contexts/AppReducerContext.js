@@ -19,6 +19,7 @@ const initialState = {
     invoices: [],
     defaultVatRate: "",
     currency: "",
+    owners: [],
   },
   settings: {
     companyLoading: false,

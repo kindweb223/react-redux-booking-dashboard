@@ -41,7 +41,7 @@ const CustomerDetailEdit = props => {
       setIsNameValidate(false);
       return;
     }
-    onEndEditing(customer);
+    onEndEditing(customer, true);
   }
 
   return (
@@ -51,7 +51,7 @@ const CustomerDetailEdit = props => {
           <H3 style={{ margin: 0 }}>{customer.name || "New Customer"}</H3>
           <div>
             {isEditing && (
-              <Button style={{ marginRight: 10 }} onClick={onEndEditing}>
+              <Button style={{ marginRight: 10 }} onClick={e => onEndEditing(null, false)}>
                 Cancel
               </Button>
             )}

@@ -62,7 +62,13 @@ const CustomersPage = () => {
     getCustomers();
   }, []);
 
-  const onEditCustomer = async (customer) => {
+  const onEditCustomer = async (customer, bSave) => {
+    debugger;
+    if(!bSave && customer === null) {
+      setShowCreateClientModal(false);
+      return;
+    }
+
     const config = {
       headers: {
         'Content-Type': 'application/json'
@@ -196,7 +202,7 @@ const CustomersPage = () => {
       >
         <CustomerDetail
           customer={state.customers.customers.find(c => c.id === selectedClientId)}
-          onEndEditing={(customer) => {onEditCustomer(customer)}}
+          onEndEditing={onEditCustomer}
         />
       </Modal>
 
@@ -205,9 +211,7 @@ const CustomersPage = () => {
         onClose={() => setShowCreateClientModal(false)}
       >
         <CustomerDetailEdit
-          onEndEditing={customer => {
-            onEditCustomer(customer);
-          }}
+          onEndEditing={onEditCustomer}
         />
       </Modal>
     </>
