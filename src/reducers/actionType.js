@@ -92,9 +92,6 @@ export const REQUEST_GET_BOOKING_BOOKINGSTATUS = "Request get booking booking st
 export const GET_BOOKING_BOOKINGSTATUS_SUCCESS = "Get booking booking status success";
 export const GET_BOOKING_BOOKINGSATTUS_ERROR = "Get booking booking status error";
 export const UPDATE_ADD_BOOKINGFORM_VALIDATE = "Change add booking form validate";
-export const REQUEST_GET_BOOKING_OWNERS = 'Request get booking owners';
-export const GET_BOOKING_OWNERS_SUCCESS = 'Get booking owners success';
-export const GET_BOOKING_OWNERS_ERROR = 'Get booking owners error';
 
 // Booking Quote
 export const REQUEST_GET_BOOKING_QUOTE = "Request get booking quote";

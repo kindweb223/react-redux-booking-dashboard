@@ -63,7 +63,6 @@ const CustomersPage = () => {
   }, []);
 
   const onEditCustomer = async (customer, bSave) => {
-    debugger;
     if(!bSave && customer === null) {
       setShowCreateClientModal(false);
       return;
