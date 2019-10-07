@@ -126,3 +126,8 @@ export const DELETE_BOOKING_INVOICE_SUCCESS = "Delete booking invoice success";
 export const DELETE_BOOKING_INVOICE_ERROR = "Delete booking invoice error";
 
 export const CLEAR_BOOKING_DATA = "CLEAR BOOKING DATA";
+
+// Payment Action Type
+export const REQUEST_SAVE_PAYMENT_INFORMATION = 'Request save user payment information';
+export const SAVE_PAYMENT_INFORMATION_SUCCESS = 'Save user payment information success';
+export const SAVE_PAYMENT_INFORMATION_ERROR = 'Save user payment information error';

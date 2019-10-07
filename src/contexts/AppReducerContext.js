@@ -3,7 +3,6 @@ import bookingsReducer from "../reducers/bookingsReducer";
 import settingsReducer from "../reducers/settingsReducer";
 import customersReducer from "../reducers/customersReducer";
 import authReducer from "../reducers/authReducer";
-// import { customers } from "../models/customers";
 
 const AppReducerContext = React.createContext(null);
 
@@ -45,6 +44,11 @@ const initialState = {
     venueActionLoading: false,
     spacesLoading: false,
     spaceActionLoading: false,
+
+    payment: {      
+      public_key: "",
+      secret_key: "",
+    }
   },
 
   customers: {
@@ -61,6 +65,7 @@ const initialState = {
       password: ""
     },
     token: localStorage.getItem('token'),
+    loadingPayment: false,
   },
 };
 

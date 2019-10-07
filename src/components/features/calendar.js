@@ -14,7 +14,6 @@ const localizer = BigCalendar.momentLocalizer(moment);
 
 const Event = props => {
   const { event } = props;
-
   return (
     <>
       <p
@@ -70,6 +69,7 @@ const Event = props => {
 };
 
 const EventWrapper = props => {
+  debugger;
   const { event, children } = props;
 
   return (
