@@ -6,17 +6,19 @@ import { AppReducerContext } from "../contexts/AppReducerContext";
 import CompanyInfoSettingsSection from "../components/settings/sections/CompanyInfo";
 import BookingStatusesSettingsSection from "../components/settings/sections/BookingStatuses";
 import VenuesAndSpacesPage from "./VenuesAndSpacesPage";
+import OnlinePaymentPage from "./OnlinePaymentPage";
 
 const VENUES_AND_SPACES_SECTION_NAME = "Venues and Spaces";
 const COMPANY_SETTINGS_SECTION_NAME = "Company Settings";
 const BOOKING_STATUS_SECTION_NAME = "Booking Status";
+const ONLINE_PAYMENT_SECTION_NAME = "Online Payments";
 
 const SettingsPage = props => {
   const [currentSection, setCurrentSection] = useState(
     VENUES_AND_SPACES_SECTION_NAME
   );
   const { state: globalState, dispatch } = useContext(AppReducerContext);
-  const state = globalState.settings;
+  const state = globalState.settings;  
 
   return (
     <Grid fullheight columns={`${constants.leftPanelWidth} 1fr`}>
@@ -25,7 +27,8 @@ const SettingsPage = props => {
         items={[
           VENUES_AND_SPACES_SECTION_NAME,
           BOOKING_STATUS_SECTION_NAME,
-          COMPANY_SETTINGS_SECTION_NAME
+          COMPANY_SETTINGS_SECTION_NAME,
+          ONLINE_PAYMENT_SECTION_NAME,
         ]}
         onClick={item => {
           setCurrentSection(item);
@@ -46,6 +49,8 @@ const SettingsPage = props => {
             );
           case VENUES_AND_SPACES_SECTION_NAME:
             return <VenuesAndSpacesPage state={state} dispatch={dispatch} />;
+          case ONLINE_PAYMENT_SECTION_NAME:
+            return <OnlinePaymentPage state={state} dispatch={dispatch} />;
           default:
             throw new Error("unhandled section");
         }

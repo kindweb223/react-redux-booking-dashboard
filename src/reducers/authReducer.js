@@ -1,5 +1,11 @@
 import setAuthToken from "../utils/setAuthToken";
 
+import {
+  REQUEST_SAVE_PAYMENT_INFORMATION,
+  SAVE_PAYMENT_INFORMATION_SUCCESS,
+  SAVE_PAYMENT_INFORMATION_ERROR,
+} from "./actionType";
+
 function authReducer(state, action) {
   switch(action.type) {
     case "request_login_action":            
@@ -58,6 +64,26 @@ function authReducer(state, action) {
       return {
         ...state,
         isAuthenticated: action.payload,
+      }
+    case REQUEST_SAVE_PAYMENT_INFORMATION:
+      return {
+        ...state,
+        loadingPayment: true,
+      }
+    case SAVE_PAYMENT_INFORMATION_SUCCESS:
+      return {
+        ...state,
+        loadingPayment: false,
+        user: {
+          ...state.user,
+          stripe_public_key: action.public_key,
+          stripe_secret_key: action.secret_key,
+        }
+      }
+    case SAVE_PAYMENT_INFORMATION_ERROR:
+      return {
+        ...state,
+        loadingPayment: false,
       }
     default:
       return state;

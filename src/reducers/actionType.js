@@ -92,9 +92,6 @@ export const REQUEST_GET_BOOKING_BOOKINGSTATUS = "Request get booking booking st
 export const GET_BOOKING_BOOKINGSTATUS_SUCCESS = "Get booking booking status success";
 export const GET_BOOKING_BOOKINGSATTUS_ERROR = "Get booking booking status error";
 export const UPDATE_ADD_BOOKINGFORM_VALIDATE = "Change add booking form validate";
-export const REQUEST_GET_BOOKING_OWNERS = 'Request get booking owners';
-export const GET_BOOKING_OWNERS_SUCCESS = 'Get booking owners success';
-export const GET_BOOKING_OWNERS_ERROR = 'Get booking owners error';
 
 // Booking Quote
 export const REQUEST_GET_BOOKING_QUOTE = "Request get booking quote";
@@ -129,3 +126,8 @@ export const DELETE_BOOKING_INVOICE_SUCCESS = "Delete booking invoice success";
 export const DELETE_BOOKING_INVOICE_ERROR = "Delete booking invoice error";
 
 export const CLEAR_BOOKING_DATA = "CLEAR BOOKING DATA";
+
+// Payment Action Type
+export const REQUEST_SAVE_PAYMENT_INFORMATION = 'Request save user payment information';
+export const SAVE_PAYMENT_INFORMATION_SUCCESS = 'Save user payment information success';
+export const SAVE_PAYMENT_INFORMATION_ERROR = 'Save user payment information error';
