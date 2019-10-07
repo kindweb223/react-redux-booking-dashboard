@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from 'axios';
 import styled from "styled-components";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExclamation } from '@fortawesome/free-solid-svg-icons'
 import { TableEditableValue } from "../components/tables/tables";
 import AddGlyph from "../images/Glyphs/AddGlyph";
 import SvgButton from "../components/buttons/SvgButton";
@@ -25,10 +27,37 @@ const OnlinePaymentPage = () => {
 		text-decoration: none;
 	`;
 
+	const StyledInputDiv = styled.div``;
+
 	const StyledBtnContainer = styled.div`
 		display: flex;
 		justify-content: flex-end;
 		margin-top: 1em;
+	`;
+
+	const StyledLabel = styled.label`
+		font-size: 0.82em;
+    font-weight: 500;
+    line-height: 1.55;
+    color: #93989F;
+		margin-bottom: 0.3em;
+		display: flex;
+		align-item: center;
+	`;
+
+	const IconSpan = styled.span`
+		width: 16px;
+		height: 16px;
+		justify-content: center;
+		align-items: center;
+		border: 1px solid #93989F;
+		border-radius: 10px;
+		margin-left: 18px;
+		display: flex;
+		cursor: pointer;
+		.fa-icons {
+			font-size: 10px;
+		}
 	`;
 	
   const { state, dispatch } = useContext(AppReducerContext);
@@ -68,8 +97,7 @@ const OnlinePaymentPage = () => {
 				},
 				config
 			)
-			
-			
+						
 			dispatch({
 				type: SAVE_PAYMENT_INFORMATION_SUCCESS,
 				public_key: stripInformation.public_key.value,
@@ -97,48 +125,64 @@ const OnlinePaymentPage = () => {
 				To switch on live payments, enter your Stripe API keys below. We recommend Stripe for taking payments (no merchant account required). If you don't yet have a Stripe account, 
 				<StyledLink href="https://stripe.com">  Sign up here.</StyledLink>
 			</P2>
-			<TableEditableValue
-				label="Publishable Key"                
-				value={stripInformation.public_key.value}
-				onChange={value => {changeStripInformation('public_key', value)}}
-				style={{marginTop: "2em"}}
-			/>
-			{
-				!stripInformation.public_key.validate && 
-				<p
-					className={
-						css`
-							color: #E92579;            
-							margin: 0.2em 0 0 0;
-							padding: 0 0.6em;
-							font-size: 0.8em;
-						`
-					}
-				>
-					Strip Publishable Key is required.
-				</p>
-			}
-			<TableEditableValue
-				label="Secret Key"
-				value={stripInformation.secret_key.value}
-				onChange={value => {changeStripInformation('secret_key', value)}}			
-				style={{marginTop: "1em"}}
-			/>
-			{
-				!stripInformation.secret_key.validate && 
-				<p
-					className={
-						css`
-							color: #E92579;            
-							margin: 0.2em 0 0 0;
-							padding: 0 0.6em;
-							font-size: 0.8em;
-						`
-					}
-				>
-					Strip Secret Key is required.
-				</p>
-			}
+
+			<StyledInputDiv style={{marginTop: "2em"}}>
+				<StyledLabel>
+					PUBLISHABLE KEY
+					<IconSpan>
+						<FontAwesomeIcon className="fa-icons" icon={faExclamation} />
+					</IconSpan>					
+				</StyledLabel>
+				<TableEditableValue
+					label=""                
+					value={stripInformation.public_key.value}
+					onChange={value => {changeStripInformation('public_key', value)}}					
+				/>
+				{
+					!stripInformation.public_key.validate && 
+					<p
+						className={
+							css`
+								color: #E92579;            
+								margin: 0.2em 0 0 0;
+								padding: 0 0.6em;
+								font-size: 0.8em;
+							`
+						}
+					>
+						Strip Publishable Key is required.
+					</p>
+				}
+			</StyledInputDiv>			
+			<StyledInputDiv style={{marginTop: '1.4em'}}>
+				<StyledLabel>
+					SECRET KEY
+					<IconSpan>
+						<FontAwesomeIcon className="fa-icons" icon={faExclamation} />
+					</IconSpan>					
+				</StyledLabel>
+				<TableEditableValue
+					label=""
+					value={stripInformation.secret_key.value}
+					onChange={value => {changeStripInformation('secret_key', value)}}			
+				/>
+				{
+					!stripInformation.secret_key.validate && 
+					<p
+						className={
+							css`
+								color: #E92579;            
+								margin: 0.2em 0 0 0;
+								padding: 0 0.6em;
+								font-size: 0.8em;
+							`
+						}
+					>
+						Strip Secret Key is required.
+					</p>
+				}
+			</StyledInputDiv>
+
 			<StyledBtnContainer>
 				<Button 
 					primary 
