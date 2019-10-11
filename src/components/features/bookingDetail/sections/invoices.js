@@ -1,5 +1,5 @@
 import React, {useState, useContext, useReducer, useEffect} from "react";
-import axios from "axios/index";
+import axios from "axios";
 import { Table, TableValue, TableEditableValue } from "../../../tables/tables";
 import { formatEventDate } from "../../../../utils/dateFormatting";
 import { formatCurrency } from "../../../../utils/numbers";
@@ -39,6 +39,8 @@ const InvoicesSection = props => {
 
   const { booking } = props;
   const { state, dispatch } = useContext(AppReducerContext);
+  const rootState = state;
+
   const [invoiceStatuses, setInvoiceStatuses] = useState({});
 
   const [selectedInvoiceCoordinates, setSelectedInvoiceCoordinates] = useState(
@@ -50,6 +52,8 @@ const InvoicesSection = props => {
   const [invoiceState, setInvoiceState] = useState(null);
 
   const [paid, setPaid]=useState(false);
+  
+  const [selectedChargeData, setSelectedChargeData] = useState({});
 
   useEffect(() => {
     const getInvoice = async () => {
@@ -85,6 +89,10 @@ const InvoicesSection = props => {
         setInvoiceState(saveOne);
 
         if (saveOne.paymentMethod === 'Credit Card') {
+          setSelectedChargeData({
+            amount: saveOne.amount,
+            currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
+          })
           setShowCreditCardInfoModal(true);
         } else if (saveOne.paymentMethod === 'Online Payment') {
         } else {
@@ -132,6 +140,10 @@ const InvoicesSection = props => {
       };
 
       if (invoice.paymentMethod === 'Credit Card') {
+        setSelectedChargeData({
+          amount: invoice.sub_total * 1000,
+          currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
+        })
         setShowCreditCardInfoModal(true);
       } else if (invoice.paymentMethod === 'Online Payment') {
       } else {
@@ -149,7 +161,7 @@ const InvoicesSection = props => {
           payment_method: invoice.paymentMethod,
           discount: invoice.discount,
           customerId: booking.customerId,
-          sub_total: invoice.amount,
+          sub_total: invoice.sub_total,
           // tax: saveOne.amount,
           grand_total: invoice.grand_total,
           status: invoice.status,
@@ -304,6 +316,7 @@ const InvoicesSection = props => {
           }}
         />
       </Modal>
+      
       <Modal
         isOpen={showCreditCardInfoModal}
         onClose={() => setShowCreditCardInfoModal(false)}
@@ -323,10 +336,11 @@ const InvoicesSection = props => {
 
           </ModalTopSection>
           <ModalBottomSection>
-            <StripeApp />
+            <StripeApp chargeData={selectedChargeData}/>
           </ModalBottomSection>
         </ModalContainer>
       </Modal>
+            
     </>
   );
 };

@@ -8,6 +8,7 @@ import {
   injectStripe,
 } from 'react-stripe-elements';
 import styled from "styled-components";
+import axios from "axios";
 
 const handleBlur = () => {
   console.log('[blur]');
@@ -122,15 +123,30 @@ const StyledButton = styled.button`
 `;
 
 class _SplitForm extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   handleSubmit = (ev) => {
     ev.preventDefault();
+    let vm = this;
     if (this.props.stripe) {
       this.props.stripe
         .createToken()
-        .then((payload) => 
+        .then((res) => 
           {
-            debugger;
-            console.log('[token]', payload)
+            let payload = {};
+            payload.stripeToken = res.token;
+            payload.amount = parseInt(vm.props.chargeData.amount);
+            payload.currency = vm.props.chargeData.currency;
+            
+            axios.post('/stripe/transferCardFunds', payload).then(
+              resCharge => {
+                const resOne = resCharge;
+              }
+            )
+
+            console.log('[token]', res)
           }
         );
     } else {
@@ -180,8 +196,8 @@ class _SplitForm extends React.Component {
 const SplitForm = injectStripe(_SplitForm);
 
 class Checkout extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       elementFontSize: window.innerWidth < 450 ? '14px' : '18px',
     };
@@ -202,17 +218,17 @@ class Checkout extends React.Component {
     return (
       <div className="Checkout" style={{width: '100%'}}>
         <Elements>
-          <SplitForm fontSize={elementFontSize} />
+          <SplitForm fontSize={elementFontSize} chargeData={this.props.chargeData}/>
         </Elements>
       </div>
     );
   }
 }
 
-const StripeApp = () => {
+const StripeApp = ({chargeData}) => {
   return (
-    <StripeProvider apiKey="pk_test_6pRNASCoBOKtIshFeQd4XMUh">
-      <Checkout />
+    <StripeProvider apiKey="pk_test_WzBWalkASwZyPFaA0dJhOZ1p00bXlkON04">
+      <Checkout chargeData={chargeData}/>
     </StripeProvider>
   );
 };
