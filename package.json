@@ -24,6 +24,7 @@
     "react-modal": "^3.10.1",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1",
+    "react-stripe-elements": "^5.0.1",
     "styled-components": "^5.0.0-beta.8-groupsizefix",
     "yup": "^0.27.0"
   },

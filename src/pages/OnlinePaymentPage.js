@@ -21,7 +21,7 @@ import {
 } from "../reducers/actionType";
 
 const OnlinePaymentPage = () => {
-	
+
 	const StyledLink = styled.a`
 		color: ${colors.accent_pink};
 		text-decoration: none;
@@ -59,87 +59,111 @@ const OnlinePaymentPage = () => {
 			font-size: 10px;
 		}
 	`;
-	
-  const { state, dispatch } = useContext(AppReducerContext);
-	const [ stripInformation, setStripInformation ] = useState({
-		public_key: {value: "", validate: true},
-		secret_key: {value: "", validate: true},
+
+	const { state, dispatch } = useContext(AppReducerContext);
+	const [stripInformation, setStripInformation] = useState({
+		public_key: { value: "", validate: true },
+		secret_key: { value: "", validate: true },
 	})
 
 	useEffect(() => {
 		setStripInformation({
 			public_key: {
-				value: (state.auth.user.stripe_public_key) ? state.auth.user.stripe_public_key: "", 
+				value: (state.auth.user.stripe_public_key) ? state.auth.user.stripe_public_key : "",
 				validate: (!state.auth.user.stripe_public_key || state.auth.user.stripe_public_key.length === 0) ? false : true,
 			},
 			secret_key: {
-				value: state.auth.user.stripe_secret_key ? state.auth.user.stripe_secret_key :  "", 
+				value: state.auth.user.stripe_secret_key ? state.auth.user.stripe_secret_key : "",
 				validate: (!state.auth.user.stripe_secret_key || state.auth.user.stripe_secret_key.length === 0) ? false : true,
 			},
 		})
 	}, [state.auth.user.stripe_public_key, state.auth.user.stripe_secret_key])
 
-  const savePaymentInformation = async () => {
-    try {
+	const savePaymentInformation = async () => {
+		try {
 			dispatch({ type: REQUEST_SAVE_PAYMENT_INFORMATION });
 
 			const config = {
-					headers: {
-						'Content-Type': 'application/json'
-					}
+				headers: {
+					'Content-Type': 'application/json'
+				}
 			};
 
 			const res = await axios.put(
-				'/users', 
+				'/users',
 				{
-					stripe_public_key: stripInformation.public_key.value, 
+					stripe_public_key: stripInformation.public_key.value,
 					stripe_secret_key: stripInformation.secret_key.value,
 				},
 				config
 			)
-						
+
 			dispatch({
 				type: SAVE_PAYMENT_INFORMATION_SUCCESS,
 				public_key: stripInformation.public_key.value,
 				secret_key: stripInformation.secret_key.value,
 			})
-    } catch (err) {
+		} catch (err) {
 			dispatch({ type: SAVE_PAYMENT_INFORMATION_ERROR })
-    }
-  }
+		}
+	}
 
-  const changeStripInformation = (keyName, value) => {
+	const testCreatePaymentInformation = async () => {
+		try {
+			dispatch({ type: REQUEST_SAVE_PAYMENT_INFORMATION });
+			const config = {
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			};
+			const res = await axios.post(
+				'/bookings/getCreateStripeAccountLink',
+			).then(function (res) {
+				console.log(res.data.url);
+				window.location.href = res.data.url;
+			});
+			dispatch({
+				type: SAVE_PAYMENT_INFORMATION_SUCCESS,
+				public_key: stripInformation.public_key.value,
+				secret_key: stripInformation.secret_key.value,
+			})
+		} catch (err) {
+			dispatch({ type: SAVE_PAYMENT_INFORMATION_ERROR })
+		}
+	}
+
+	const changeStripInformation = (keyName, value) => {
 		const newInfo = { ...stripInformation };
 		newInfo[keyName].value = value;
 		newInfo[keyName].validate = (value.length > 0)
 		setStripInformation({
 			...newInfo,
 		})
-  }
+	}
 
-  return (
-    <div>      			
+	return (
+		<div>
 			<SpinnerContainer loading={(state.auth.loading || state.auth.loadingPayment).toString()} />
 			<P2>
 				Use our live gateway with real payments
-				To switch on live payments, enter your Stripe API keys below. We recommend Stripe for taking payments (no merchant account required). If you don't yet have a Stripe account, 
+				To switch on live payments, enter your Stripe API keys below. We recommend Stripe for taking payments (no merchant account required). If you don't yet have a Stripe account,
 				<StyledLink href="https://stripe.com">  Sign up here.</StyledLink>
 			</P2>
 
-			<StyledInputDiv style={{marginTop: "2em"}}>
+			<StyledInputDiv style={{ marginTop: "2em" }}>
 				<StyledLabel>
 					PUBLISHABLE KEY
 					<IconSpan>
 						<FontAwesomeIcon className="fa-icons" icon={faExclamation} />
-					</IconSpan>					
+					</IconSpan>
 				</StyledLabel>
 				<TableEditableValue
-					label=""                
+					label=""
 					value={stripInformation.public_key.value}
-					onChange={value => {changeStripInformation('public_key', value)}}					
+					onChange={value => { changeStripInformation('public_key', value) }}
 				/>
 				{
-					!stripInformation.public_key.validate && 
+					!stripInformation.public_key.validate &&
 					<p
 						className={
 							css`
@@ -153,21 +177,21 @@ const OnlinePaymentPage = () => {
 						Strip Publishable Key is required.
 					</p>
 				}
-			</StyledInputDiv>			
-			<StyledInputDiv style={{marginTop: '1.4em'}}>
+			</StyledInputDiv>
+			<StyledInputDiv style={{ marginTop: '1.4em' }}>
 				<StyledLabel>
 					SECRET KEY
 					<IconSpan>
 						<FontAwesomeIcon className="fa-icons" icon={faExclamation} />
-					</IconSpan>					
+					</IconSpan>
 				</StyledLabel>
 				<TableEditableValue
 					label=""
 					value={stripInformation.secret_key.value}
-					onChange={value => {changeStripInformation('secret_key', value)}}			
+					onChange={value => { changeStripInformation('secret_key', value) }}
 				/>
 				{
-					!stripInformation.secret_key.validate && 
+					!stripInformation.secret_key.validate &&
 					<p
 						className={
 							css`
@@ -184,15 +208,23 @@ const OnlinePaymentPage = () => {
 			</StyledInputDiv>
 
 			<StyledBtnContainer>
-				<Button 
-					primary 
+				<Button
+					primary
+					onClick={testCreatePaymentInformation}
+					style={{marginRight: '20px'}}
+				>
+					Create
+				</Button>
+				<Button
+					primary
 					onClick={savePaymentInformation}
 				>
 					Save
 				</Button>
+
 			</StyledBtnContainer>
-    </div>
-  );
+		</div >
+	);
 };
 
 export default OnlinePaymentPage;

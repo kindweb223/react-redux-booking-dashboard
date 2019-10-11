@@ -1,6 +1,6 @@
 import React, {useState, useContext, useReducer, useEffect} from "react";
-import axios from "axios/index";
-import { Table, TableValue } from "../../../tables/tables";
+import axios from "axios";
+import { Table, TableValue, TableEditableValue } from "../../../tables/tables";
 import { formatEventDate } from "../../../../utils/dateFormatting";
 import { formatCurrency } from "../../../../utils/numbers";
 import OutlinedButton from "../../../buttons/OutlinedButton";
@@ -26,13 +26,21 @@ import {
   UPDATE_BOOKING_INVOICE_SUCCESS,
 } from "../../../../reducers/actionType";
 import SpinnerContainer from "../../../layout/Spinner";
+import { ModalContainer, ModalTopSection, ModalBottomSection, ModalTitleAndButtons } from "../../../modals/containers";
+import H3 from "../../../typography/H3";
+import Button from "../../../buttons/Button";
+import CONFIG from '../../../../config';
+import StripeApp from "../../../stripe/stripeApp";
 
 const INVOICE_STATUSES = ["Unpaid", "Paid"];
 
 const InvoicesSection = props => {
 
+
   const { booking } = props;
   const { state, dispatch } = useContext(AppReducerContext);
+  const rootState = state;
+
   const [invoiceStatuses, setInvoiceStatuses] = useState({});
 
   const [selectedInvoiceCoordinates, setSelectedInvoiceCoordinates] = useState(
@@ -40,6 +48,12 @@ const InvoicesSection = props => {
   );
 
   const [showCreateInvoiceModal, setshowCreateInvoiceModal] = useState(false);
+  const [showCreditCardInfoModal, setShowCreditCardInfoModal] = useState(false);
+  const [invoiceState, setInvoiceState] = useState(null);
+
+  const [paid, setPaid]=useState(false);
+  
+  const [selectedChargeData, setSelectedChargeData] = useState({});
 
   useEffect(() => {
     const getInvoice = async () => {
@@ -72,6 +86,27 @@ const InvoicesSection = props => {
 
         const saveOne = {...invoice};
 
+        setInvoiceState(saveOne);
+
+        if (saveOne.paymentMethod === 'Credit Card') {
+          setSelectedChargeData({
+            amount: saveOne.amount,
+            currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
+          })
+          setShowCreditCardInfoModal(true);
+        } else if (saveOne.paymentMethod === 'Online Payment') {
+          const res = await axios.post(
+            '/bookings/transferFunds',
+            {
+              amount: invoice.sub_total * 100,
+              currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",        
+            }
+          ).then(function (res) {
+          });
+        } else {
+
+        }
+
         dispatch({ type: REQUEST_CREATE_BOOKING_INVOICE })
 
         const res = await axios.post(
@@ -103,14 +138,33 @@ const InvoicesSection = props => {
     }
     setshowCreateInvoiceModal(false);
   }
-  const handleUpdate = async (invoice, shouldSave) => {
 
+  const handleUpdate = async (invoice, shouldSave) => {
     try {
       const config = {
         headers: {
           'Content-Type': 'application/json'
         }
       };
+
+      if (invoice.paymentMethod === 'Credit Card') {
+        setSelectedChargeData({
+          amount: invoice.sub_total * 100,
+          currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
+        })
+        setShowCreditCardInfoModal(true);
+      } else if (invoice.paymentMethod === 'Online Payment') {
+        const res = await axios.post(
+          '/bookings/transferFunds',
+          {
+            amount: invoice.sub_total * 100,
+            currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",        
+          }
+        ).then(function (res) {
+        });
+      } else {
+
+      }
 
       dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
 
@@ -123,22 +177,61 @@ const InvoicesSection = props => {
           payment_method: invoice.paymentMethod,
           discount: invoice.discount,
           customerId: booking.customerId,
-          sub_total: invoice.amount,
+          sub_total: invoice.sub_total,
           // tax: saveOne.amount,
           grand_total: invoice.grand_total,
           status: invoice.status,
         },
         config
       )
-
       dispatch({
         type: UPDATE_BOOKING_INVOICE_SUCCESS,
-        payload: res.data.invoice
+        payload: res.data.invoice          
       })
 
     } catch (err) {
       dispatch({ type: UPDATE_BOOKING_INVOICE_ERROR });
     }
+  }
+
+  const payWithCreditCard = async (invoice) => {
+    debugger;
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      // const card = {
+      //   number: cardNumber,
+      //   exp_month: expMonth,
+      //   exp_year: expYear,
+      //   cvc: cvc
+      // };
+
+      // let {token} = await this.props.stripe.createToken(card);
+
+      // console.log(token);
+
+      // let response = await axios.post(
+      //   `/bookings/${booking.id}/invoices/${invoice.id}/charge`,
+      //   {
+      //     method: "POST",
+      //     headers: {"Content-Type": "text/plain"},
+      //     body: {
+      //       source: token.id,
+      //       amount: invoice.grand_total,
+      //       currency: state.bookings.currency
+      //     }
+      //   },
+      //   config
+      // );
+      // if (response.ok) console.log("Purchase Complete!")
+    } catch(error) {
+      console.log('Purchase Error');
+    }
+
+    setShowCreditCardInfoModal(false);
   }
 
   const handleDelete = async (invoiceId) => {
@@ -154,6 +247,11 @@ const InvoicesSection = props => {
     } catch (err) {
       dispatch({ type: DELETE_BOOKING_INVOICE_ERROR })
     }
+  }
+
+  const hideCreditModal = () => {
+    debugger;
+    setShowCreditCardInfoModal(false)
   }
 
   return (
@@ -239,6 +337,31 @@ const InvoicesSection = props => {
           }}
         />
       </Modal>
+      
+      <Modal
+        isOpen={showCreditCardInfoModal}
+        onClose={() => setShowCreditCardInfoModal(false)}
+      >
+        <ModalContainer>
+          <ModalTopSection>
+            <ModalTitleAndButtons>
+              <H3>Credit Card Info</H3>
+              <Button
+                primary
+                style={{ marginRight: 10 }}
+                onClick={() => setShowCreditCardInfoModal(false)}
+              >
+                Close
+              </Button>
+            </ModalTitleAndButtons>
+
+          </ModalTopSection>
+          <ModalBottomSection>
+            <StripeApp chargeData={selectedChargeData} closeModal={hideCreditModal} />
+          </ModalBottomSection>
+        </ModalContainer>
+      </Modal>
+            
     </>
   );
 };
