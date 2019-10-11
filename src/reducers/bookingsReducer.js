@@ -739,16 +739,17 @@ function bookingsReducer(state, action) {
         ...state,
         loadingInvoice: true,
       }
-    case UPDATE_BOOKING_INVOICE_SUCCESS:
+    case UPDATE_BOOKING_INVOICE_SUCCESS:  
       return {
         ...state,
         loadingInvoice: false,
         invoices: state.invoices.map(item => {
-          if( item.id === action.payload.id )
+          if( item.id === action.payload.id ) {
             item = action.payload;
-            item.slots = action.payload.slots && JSON.parse(action.payload.slots);
-            item.costItems = action.payload.cost_items && JSON.parse(action.payload.cost_items);
-            return item;
+            item.slots = action.payload.slots ? JSON.parse(action.payload.slots) : [];
+            item.costItems = action.payload.cost_items ? JSON.parse(action.payload.cost_items) : [];
+          }
+          return item;
         })
       }
 
