@@ -233,6 +233,11 @@ const InvoicesSection = props => {
     }
   }
 
+  const hideCreditModal = () => {
+    debugger;
+    setShowCreditCardInfoModal(false)
+  }
+
   return (
     <>
       <SpinnerContainer loading={state.bookings.loadingInvoice.toString()} />
@@ -336,7 +341,7 @@ const InvoicesSection = props => {
 
           </ModalTopSection>
           <ModalBottomSection>
-            <StripeApp chargeData={selectedChargeData}/>
+            <StripeApp chargeData={selectedChargeData} closeModal={hideCreditModal} />
           </ModalBottomSection>
         </ModalContainer>
       </Modal>

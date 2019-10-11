@@ -142,7 +142,7 @@ class _SplitForm extends React.Component {
             
             axios.post('/stripe/transferCardFunds', payload).then(
               resCharge => {
-                const resOne = resCharge;
+                this.props.closeModal();
               }
             )
 
@@ -218,17 +218,21 @@ class Checkout extends React.Component {
     return (
       <div className="Checkout" style={{width: '100%'}}>
         <Elements>
-          <SplitForm fontSize={elementFontSize} chargeData={this.props.chargeData}/>
+          <SplitForm 
+            fontSize={elementFontSize} 
+            chargeData={this.props.chargeData}
+            closeModal={this.props.closeModal}
+          />
         </Elements>
       </div>
     );
   }
 }
 
-const StripeApp = ({chargeData}) => {
+const StripeApp = ({chargeData, closeModal}) => {
   return (
     <StripeProvider apiKey="pk_test_WzBWalkASwZyPFaA0dJhOZ1p00bXlkON04">
-      <Checkout chargeData={chargeData}/>
+      <Checkout chargeData={chargeData} closeModal={closeModal}/>
     </StripeProvider>
   );
 };
