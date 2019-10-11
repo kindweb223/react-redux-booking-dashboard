@@ -7,6 +7,7 @@ import CustomersPage from "../pages/CustomersPage";
 import SettingsPage from "../pages/SettingsPage";
 import InvoicesPage from "../pages/InvoicesPage";
 import CalendarPage from "../pages/CalendarPage";
+import CreateStripeAccount from "../pages/CreateStripeAccount";
 
 const Routes = () => {
 
@@ -17,6 +18,7 @@ const Routes = () => {
       <PrivateRoute path="/customers" exact component={CustomersPage} />
       <PrivateRoute path="/invoices" exact component={InvoicesPage} />
       <PrivateRoute path="/settings" exact component={SettingsPage} />
+      <PrivateRoute path="/create-stripe-account" exact component={CreateStripeAccount} />
     </Switch>
   );
 };

@@ -95,6 +95,14 @@ const InvoicesSection = props => {
           })
           setShowCreditCardInfoModal(true);
         } else if (saveOne.paymentMethod === 'Online Payment') {
+          const res = await axios.post(
+            '/bookings/transferFunds',
+            {
+              amount: invoice.sub_total * 100,
+              currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",        
+            }
+          ).then(function (res) {
+          });
         } else {
 
         }
@@ -141,11 +149,19 @@ const InvoicesSection = props => {
 
       if (invoice.paymentMethod === 'Credit Card') {
         setSelectedChargeData({
-          amount: invoice.sub_total * 1000,
+          amount: invoice.sub_total * 100,
           currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
         })
         setShowCreditCardInfoModal(true);
       } else if (invoice.paymentMethod === 'Online Payment') {
+        const res = await axios.post(
+          '/bookings/transferFunds',
+          {
+            amount: invoice.sub_total * 100,
+            currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",        
+          }
+        ).then(function (res) {
+        });
       } else {
 
       }
