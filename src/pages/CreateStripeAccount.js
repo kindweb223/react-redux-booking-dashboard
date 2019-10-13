@@ -18,7 +18,7 @@ export default class CreateStripeAccount extends React.Component {
                 '/bookings/setStripeAccountInfo', req
             ).then(function (res) {
                 console.log(res);
-                window.location.href = 'http://localhost:3000/settings';
+                window.location.href = 'https://app.heyagenda.com/settings';
             });
         }
     }
