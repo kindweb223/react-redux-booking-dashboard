@@ -1,14 +1,15 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
+import { AppReducerContext } from '../contexts/AppReducerContext';
+import CONFIG from './../config';
+import { STRIPE_CONNECTION_SUCCESS } from '../reducers/actionType';
 
+const CreateStripeAccount = (props) => {
 
-export default class CreateStripeAccount extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+    const { state, dispatch } = useContext(AppReducerContext);
 
-    componentDidMount() {
-        let locQueryObj = this.props.location.search;
+    useEffect(() => {
+        let locQueryObj = props.location.search;
         let code = locQueryObj.substring(6);
         if (code) {
             let req = {
@@ -18,16 +19,21 @@ export default class CreateStripeAccount extends React.Component {
                 '/bookings/setStripeAccountInfo', req
             ).then(function (res) {
                 console.log(res);
-                window.location.href = 'https://app.heyagenda.com/settings';
+                dispatch({
+                    type: STRIPE_CONNECTION_SUCCESS,
+                    payload: 1,
+                })
+                window.location.href = CONFIG.STRIPE_CONNECT_CALLBACK_URL;
             });
         }
-    }
+    }, [])
 
-    render() {
-        return (
-            <div className="job-search-card under-construction">
-                <div className="text-center"></div>
-            </div>
-        );
-    }
+    return (
+        <div className="job-search-card under-construction">
+            <div className="text-center"></div>
+        </div>
+    )
 }
+
+export default CreateStripeAccount;
+

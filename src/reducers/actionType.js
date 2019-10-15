@@ -131,3 +131,4 @@ export const CLEAR_BOOKING_DATA = "CLEAR BOOKING DATA";
 export const REQUEST_SAVE_PAYMENT_INFORMATION = 'Request save user payment information';
 export const SAVE_PAYMENT_INFORMATION_SUCCESS = 'Save user payment information success';
 export const SAVE_PAYMENT_INFORMATION_ERROR = 'Save user payment information error';
+export const STRIPE_CONNECTION_SUCCESS = 'Set User Stripe connection status';
