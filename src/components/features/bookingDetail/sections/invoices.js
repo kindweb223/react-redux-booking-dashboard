@@ -88,13 +88,13 @@ const InvoicesSection = props => {
 
         setInvoiceState(saveOne);
 
-        if (saveOne.paymentMethod === 'Credit Card') {
+        if (saveOne.payment_method === 'Credit Card') {
           setSelectedChargeData({
             amount: Number(saveOne.amount.toFixed(2)) * 100,
             currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
           })
           setShowCreditCardInfoModal(true);
-        } else if (saveOne.paymentMethod === 'Online Payment') {
+        } else if (saveOne.payment_method === 'Online Payment') {
           const res = await axios.post(
             '/bookings/transferFunds',
             {
@@ -115,7 +115,7 @@ const InvoicesSection = props => {
             slots: JSON.stringify(saveOne.slots),
             cost_items: JSON.stringify(saveOne.costItems),
             value: saveOne.value,
-            payment_method: saveOne.paymentMethod,
+            payment_method: saveOne.payment_method,
             discount: saveOne.discount,
             customerId: booking.customerId,
             createdAt: saveOne.createdAtAt,
@@ -147,13 +147,13 @@ const InvoicesSection = props => {
         }
       };
 
-      if (invoice.paymentMethod === 'Credit Card') {
+      if (invoice.payment_method === 'Credit Card') {
         setSelectedChargeData({
           amount: Number(invoice.sub_total.toFixed(2)) * 100,
           currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
         })
         setShowCreditCardInfoModal(true);
-      } else if (invoice.paymentMethod === 'Online Payment') {
+      } else if (invoice.payment_method === 'Online Payment') {
         const res = await axios.post(
           '/bookings/transferFunds',
           {
@@ -174,7 +174,7 @@ const InvoicesSection = props => {
           slots: JSON.stringify(invoice.slots),
           cost_items: JSON.stringify(invoice.costItems),
           value: invoice.value,
-          payment_method: invoice.paymentMethod,
+          payment_method: invoice.payment_method,
           discount: invoice.discount,
           customerId: booking.customerId,
           sub_total: invoice.sub_total,
