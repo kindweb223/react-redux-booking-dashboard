@@ -288,7 +288,7 @@ const InvoicesSection = props => {
       >
         <NewInvoice
           invoiceNumber={
-            state.bookings.invoices && state.bookings.invoices.length + 1
+            state.bookings.invoices ? state.bookings.invoices.length + 1 : 1
           }
           booking={booking}
           onEndEditing={(invoice, data) => {
