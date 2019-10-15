@@ -4,6 +4,7 @@ import {
   REQUEST_SAVE_PAYMENT_INFORMATION,
   SAVE_PAYMENT_INFORMATION_SUCCESS,
   SAVE_PAYMENT_INFORMATION_ERROR,
+  STRIPE_CONNECTION_SUCCESS,
 } from "./actionType";
 
 function authReducer(state, action) {
@@ -85,6 +86,15 @@ function authReducer(state, action) {
         ...state,
         loadingPayment: false,
       }
+    case STRIPE_CONNECTION_SUCCESS: {
+      return  {
+        ...state,
+        user: {
+          ...state.user,
+          stripe_status: action.payload,
+        }
+      }
+    }
     default:
       return state;
   }

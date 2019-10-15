@@ -1,4 +1,4 @@
-import React, {useState, useContext, useReducer, useEffect} from "react";
+import React, { useState, useContext, useReducer, useEffect } from "react";
 import axios from "axios";
 import { Table, TableValue, TableEditableValue } from "../../../tables/tables";
 import { formatEventDate } from "../../../../utils/dateFormatting";
@@ -6,7 +6,7 @@ import { formatCurrency } from "../../../../utils/numbers";
 import OutlinedButton from "../../../buttons/OutlinedButton";
 import addGlyph from "../../../../images/Glyphs/add.svg";
 import PickerButton from "../../../buttons/PickerButton";
-import {AppReducerContext, initialState, reducer} from "../../../../contexts/AppReducerContext";
+import { AppReducerContext, initialState, reducer } from "../../../../contexts/AppReducerContext";
 import DropdownMenu from "../../../buttons/DropdownMenu";
 import colors from "../../../style/colors";
 import SvgButton from "../../../buttons/SvgButton";
@@ -51,8 +51,8 @@ const InvoicesSection = props => {
   const [showCreditCardInfoModal, setShowCreditCardInfoModal] = useState(false);
   const [invoiceState, setInvoiceState] = useState(null);
 
-  const [paid, setPaid]=useState(false);
-  
+  const [paid, setPaid] = useState(false);
+
   const [selectedChargeData, setSelectedChargeData] = useState({});
 
   useEffect(() => {
@@ -84,22 +84,22 @@ const InvoicesSection = props => {
           }
         };
 
-        const saveOne = {...invoice};
+        const saveOne = { ...invoice };
 
         setInvoiceState(saveOne);
 
-        if (saveOne.paymentMethod === 'Credit Card') {
+        if (saveOne.payment_method === 'Credit Card') {
           setSelectedChargeData({
-            amount: saveOne.amount,
+            amount: Number(saveOne.amount.toFixed(2)) * 100,
             currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
           })
           setShowCreditCardInfoModal(true);
-        } else if (saveOne.paymentMethod === 'Online Payment') {
+        } else if (saveOne.payment_method === 'Online Payment') {
           const res = await axios.post(
             '/bookings/transferFunds',
             {
-              amount: invoice.sub_total * 100,
-              currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",        
+              amount: Number(saveOne.amount.toFixed(2)) * 100,
+              currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
             }
           ).then(function (res) {
           });
@@ -115,7 +115,7 @@ const InvoicesSection = props => {
             slots: JSON.stringify(saveOne.slots),
             cost_items: JSON.stringify(saveOne.costItems),
             value: saveOne.value,
-            payment_method: saveOne.paymentMethod,
+            payment_method: saveOne.payment_method,
             discount: saveOne.discount,
             customerId: booking.customerId,
             createdAt: saveOne.createdAtAt,
@@ -147,18 +147,18 @@ const InvoicesSection = props => {
         }
       };
 
-      if (invoice.paymentMethod === 'Credit Card') {
+      if (invoice.payment_method === 'Credit Card') {
         setSelectedChargeData({
-          amount: invoice.sub_total * 100,
+          amount: Number(invoice.sub_total.toFixed(2)) * 100,
           currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
         })
         setShowCreditCardInfoModal(true);
-      } else if (invoice.paymentMethod === 'Online Payment') {
+      } else if (invoice.payment_method === 'Online Payment') {
         const res = await axios.post(
           '/bookings/transferFunds',
           {
-            amount: invoice.sub_total * 100,
-            currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",        
+            amount: Number(invoice.sub_total.toFixed(2)) * 100,
+            currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
           }
         ).then(function (res) {
         });
@@ -174,7 +174,7 @@ const InvoicesSection = props => {
           slots: JSON.stringify(invoice.slots),
           cost_items: JSON.stringify(invoice.costItems),
           value: invoice.value,
-          payment_method: invoice.paymentMethod,
+          payment_method: invoice.payment_method,
           discount: invoice.discount,
           customerId: booking.customerId,
           sub_total: invoice.sub_total,
@@ -186,52 +186,12 @@ const InvoicesSection = props => {
       )
       dispatch({
         type: UPDATE_BOOKING_INVOICE_SUCCESS,
-        payload: res.data.invoice          
+        payload: res.data.invoice
       })
 
     } catch (err) {
       dispatch({ type: UPDATE_BOOKING_INVOICE_ERROR });
     }
-  }
-
-  const payWithCreditCard = async (invoice) => {
-    debugger;
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-      // const card = {
-      //   number: cardNumber,
-      //   exp_month: expMonth,
-      //   exp_year: expYear,
-      //   cvc: cvc
-      // };
-
-      // let {token} = await this.props.stripe.createToken(card);
-
-      // console.log(token);
-
-      // let response = await axios.post(
-      //   `/bookings/${booking.id}/invoices/${invoice.id}/charge`,
-      //   {
-      //     method: "POST",
-      //     headers: {"Content-Type": "text/plain"},
-      //     body: {
-      //       source: token.id,
-      //       amount: invoice.grand_total,
-      //       currency: state.bookings.currency
-      //     }
-      //   },
-      //   config
-      // );
-      // if (response.ok) console.log("Purchase Complete!")
-    } catch(error) {
-      console.log('Purchase Error');
-    }
-
-    setShowCreditCardInfoModal(false);
   }
 
   const handleDelete = async (invoiceId) => {
@@ -250,7 +210,6 @@ const InvoicesSection = props => {
   }
 
   const hideCreditModal = () => {
-    debugger;
     setShowCreditCardInfoModal(false)
   }
 
@@ -317,7 +276,7 @@ const InvoicesSection = props => {
       >
         <InvoiceDetail
           invoice={selectedInvoiceCoordinates}
-          handleUpdate={(invoice, invoiceId)=> {
+          handleUpdate={(invoice, invoiceId) => {
             handleUpdate(invoice, invoiceId)
           }}
         />
@@ -337,31 +296,39 @@ const InvoicesSection = props => {
           }}
         />
       </Modal>
-      
-      <Modal
-        isOpen={showCreditCardInfoModal}
-        onClose={() => setShowCreditCardInfoModal(false)}
-      >
-        <ModalContainer>
-          <ModalTopSection>
-            <ModalTitleAndButtons>
-              <H3>Credit Card Info</H3>
-              <Button
-                primary
-                style={{ marginRight: 10 }}
-                onClick={() => setShowCreditCardInfoModal(false)}
-              >
-                Close
-              </Button>
-            </ModalTitleAndButtons>
 
-          </ModalTopSection>
-          <ModalBottomSection>
-            <StripeApp chargeData={selectedChargeData} closeModal={hideCreditModal} />
-          </ModalBottomSection>
-        </ModalContainer>
-      </Modal>
-            
+      {
+        (rootState.auth.user.stripe_public_key || rootState.auth.user.stripe_public_key.length > 0) && (
+          <Modal
+            isOpen={showCreditCardInfoModal}
+            onClose={() => setShowCreditCardInfoModal(false)}
+          >
+            <ModalContainer>
+              <ModalTopSection>
+                <ModalTitleAndButtons>
+                  <H3>Credit Card Info</H3>
+                  <Button
+                    primary
+                    style={{ marginRight: 10 }}
+                    onClick={() => setShowCreditCardInfoModal(false)}
+                  >
+                    Close
+                  </Button>
+                </ModalTitleAndButtons>
+
+              </ModalTopSection>
+
+              <ModalBottomSection>
+                <StripeApp
+                  stripe_pk_key={rootState.auth.user.stripe_public_key}
+                  chargeData={selectedChargeData}
+                  closeModal={hideCreditModal}
+                />
+              </ModalBottomSection>
+            </ModalContainer>
+          </Modal>
+        )
+      }
     </>
   );
 };

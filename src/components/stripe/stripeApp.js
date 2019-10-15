@@ -229,9 +229,9 @@ class Checkout extends React.Component {
   }
 }
 
-const StripeApp = ({chargeData, closeModal}) => {
+const StripeApp = ({stripe_pk_key, chargeData, closeModal}) => {
   return (
-    <StripeProvider apiKey="pk_test_WzBWalkASwZyPFaA0dJhOZ1p00bXlkON04">
+    <StripeProvider apiKey={stripe_pk_key}>
       <Checkout chargeData={chargeData} closeModal={closeModal}/>
     </StripeProvider>
   );

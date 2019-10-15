@@ -13,12 +13,12 @@ const PaymentInfoForm = props => {
   const [expDay, setExpDay] = useState(0);
   const [cvc, setCVC] = useState('');
 
-  const { paymentMethod } = props;
+  const { payment_method } = props;
 
   return (
       <div className="payment">
         {
-          paymentMethod && paymentMethod === 'Credit Card' ?
+          payment_method && payment_method === 'Credit Card' ?
           <div className="payment-form">
               <TableSectionHeader title={"Payment Info"} />
               <Table>

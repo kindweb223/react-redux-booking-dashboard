@@ -3,7 +3,10 @@ import axios from 'axios';
 import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExclamation } from '@fortawesome/free-solid-svg-icons'
-import { TableEditableValue } from "../components/tables/tables";
+import { 
+	TableEditableValue,
+	TableDivider,
+} from "../components/tables/tables";
 import AddGlyph from "../images/Glyphs/AddGlyph";
 import SvgButton from "../components/buttons/SvgButton";
 import colors from "../components/style/colors";
@@ -31,7 +34,7 @@ const OnlinePaymentPage = () => {
 
 	const StyledBtnContainer = styled.div`
 		display: flex;
-		justify-content: flex-end;
+		justify-content: flex-start;
 		margin-top: 1em;
 	`;
 
@@ -206,22 +209,39 @@ const OnlinePaymentPage = () => {
 					</p>
 				}
 			</StyledInputDiv>
-
+			
 			<StyledBtnContainer>
-				<Button
-					primary
-					onClick={testCreatePaymentInformation}
-					style={{marginRight: '20px'}}
-				>
-					Create
-				</Button>
 				<Button
 					primary
 					onClick={savePaymentInformation}
 				>
 					Save
 				</Button>
+			</StyledBtnContainer>
 
+			<TableDivider />
+			
+			{state.auth.user.stripe_status === 0 ? (
+					<P2>
+						If you have a Stripe Account, please connect your Stripe Account to the Server.
+						After Stripe Account connection, You can pay your invoice to the server with Online Payment Methond.
+					</P2>
+				) : (
+					<P2>
+						Your Stripe Account has been already connected to the Server.
+						You can pay your invoice to the Server with Online Payment Method.
+					</P2>
+				)
+			}			
+
+			<StyledBtnContainer>
+				<Button
+					primary
+					onClick={testCreatePaymentInformation}					
+					disabled={state.auth.user.stripe_status != 0}
+				>
+					Connect Your Stripe
+				</Button>
 			</StyledBtnContainer>
 		</div >
 	);

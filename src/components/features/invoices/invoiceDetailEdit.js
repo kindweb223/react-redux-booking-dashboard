@@ -43,6 +43,8 @@ const InvoiceDetailEdit = props => {
   const { invoice: invoiceBeingEdited, onEndEditing } = props;
   const { state } = useContext(AppReducerContext);
 
+  debugger;
+  
   const [invoice, dispatch] = useReducer(
     invoiceDetailEditReducer,
     invoiceBeingEdited
@@ -105,11 +107,11 @@ const InvoiceDetailEdit = props => {
           <TablePicker
             label="Payment Method"
             options={invoicePaymentMethods}
-            selectedOption={invoice.paymentMethod}
+            selectedOption={invoice.payment_method}
             onOptionSelected={value => {
               dispatch({
                 type: "update_value",
-                key: "paymentMethod",
+                key: "payment_method",
                 value: value
               });
             }}
