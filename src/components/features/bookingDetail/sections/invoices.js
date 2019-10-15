@@ -288,7 +288,7 @@ const InvoicesSection = props => {
       >
         <NewInvoice
           invoiceNumber={
-            state.bookings.invoices ? state.bookings.invoices.length + 1 : 1
+            state.bookings.invoices && state.bookings.invoices.length + 1
           }
           booking={booking}
           onEndEditing={(invoice, data) => {
@@ -298,7 +298,7 @@ const InvoicesSection = props => {
       </Modal>
 
       {
-        (rootState.auth.user.stripe_public_key || rootState.auth.user.stripe_public_key.length > 0) && (
+        (rootState.auth.user.stripe_public_key && rootState.auth.user.stripe_public_key.length > 0) && (
           <Modal
             isOpen={showCreditCardInfoModal}
             onClose={() => setShowCreditCardInfoModal(false)}
