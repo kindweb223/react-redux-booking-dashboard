@@ -90,12 +90,6 @@ const InvoicesSection = props => {
 
         dispatch({ type: REQUEST_CREATE_BOOKING_INVOICE })
 
-        let statusOne = "Unpaid";
-        if (saveOne.payment_method === 'Credit Card' && rootState.auth.user.stripe_public_key && rootState.auth.user.stripe_public_key.length)
-          statusOne = "Pending"
-        if (saveOne.payment_method === 'Online Payment' && rootState.auth.user.stripe_status !== 0)
-          statusOne = "Pending"
-
         const res = await axios.post(
           `/bookings/${booking.id}/invoices`,
           {
@@ -109,7 +103,7 @@ const InvoicesSection = props => {
             sub_total: saveOne.amount,
             // tax: saveOne.amount,
             grand_total: saveOne.grand_total,
-            status: statusOne,
+            status: "Unpaid",
           },
           config
         )
