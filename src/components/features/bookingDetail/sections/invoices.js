@@ -112,7 +112,6 @@ const InvoicesSection = props => {
           type: GET_CREATE_BOOKING_INVOICE_SUCCESS,
           payload: res.data.invoice
         })
-        debugger;
         if (saveOne.payment_method === 'Credit Card' && rootState.auth.user.stripe_public_key && rootState.auth.user.stripe_public_key.length) {
           setSelectedChargeData({
             amount: Number(saveOne.amount.toFixed(2)) * 100,
@@ -258,7 +257,21 @@ const InvoicesSection = props => {
     }
   }
 
-  const hideCreditModal = () => {
+  const hideCreditModal = async () => {
+    dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
+    try {
+      const res = await axios.put(
+        `/bookings/${booking.id}/invoices/${selectedChargeData.id}`,
+        {status: "Paid"}
+      )
+        
+      dispatch({ 
+        type: UPDATE_BOOKING_INVOICE_SUCCESS,
+        payload: res.data.invoice,
+      })
+    } catch (err) {
+      dispatch({ type: UPDATE_BOOKING_INVOICE_ERROR })
+    }
     setShowCreditCardInfoModal(false)
   }
 
