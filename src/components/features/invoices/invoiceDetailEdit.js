@@ -42,8 +42,6 @@ const SvgButtonWrapper = styled.div`
 const InvoiceDetailEdit = props => {
   const { invoice: invoiceBeingEdited, onEndEditing } = props;
   const { state } = useContext(AppReducerContext);
-
-  debugger;
   
   const [invoice, dispatch] = useReducer(
     invoiceDetailEditReducer,

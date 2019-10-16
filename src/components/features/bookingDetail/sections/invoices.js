@@ -90,11 +90,11 @@ const InvoicesSection = props => {
 
         dispatch({ type: REQUEST_CREATE_BOOKING_INVOICE })
 
-        let payment_method = "Unpaid";
+        let statusOne = "Unpaid";
         if (saveOne.payment_method === 'Credit Card' && rootState.auth.user.stripe_public_key && rootState.auth.user.stripe_public_key.length)
-          payment_method = "Pending"
+          statusOne = "Pending"
         if (saveOne.payment_method === 'Online Payment' && rootState.auth.user.stripe_status !== 0)
-          payment_method = "Paid"
+          statusOne = "Pending"
 
         const res = await axios.post(
           `/bookings/${booking.id}/invoices`,
@@ -109,7 +109,7 @@ const InvoicesSection = props => {
             sub_total: saveOne.amount,
             // tax: saveOne.amount,
             grand_total: saveOne.grand_total,
-            status: saveOne.status,
+            status: statusOne,
           },
           config
         )
@@ -118,7 +118,7 @@ const InvoicesSection = props => {
           type: GET_CREATE_BOOKING_INVOICE_SUCCESS,
           payload: res.data.invoice
         })
-
+        debugger;
         if (saveOne.payment_method === 'Credit Card' && rootState.auth.user.stripe_public_key && rootState.auth.user.stripe_public_key.length) {
           setSelectedChargeData({
             amount: Number(saveOne.amount.toFixed(2)) * 100,
@@ -127,15 +127,41 @@ const InvoicesSection = props => {
           })
           setShowCreditCardInfoModal(true);
         } else if (saveOne.payment_method === 'Online Payment' && rootState.auth.user.stripe_status !== 0) {
-          const res = await axios.post(
+          const resPay = await axios.post(
             '/bookings/transferFunds',
             {
               amount: Number(saveOne.amount.toFixed(2)) * 100,
               currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
               id: res.data.invoice.id,
             }
-          ).then(function (res) {
-          });
+          )
+           
+          if (resPay.data.success) {              
+            dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
+
+            const resOne = await axios.put(
+              `/bookings/${booking.id}/invoices/${res.data.invoice.id}`,
+              {                
+                slots: JSON.stringify(saveOne.slots),
+                cost_items: JSON.stringify(saveOne.costItems),
+                value: saveOne.value,
+                payment_method: saveOne.payment_method,
+                discount: saveOne.discount,
+                customerId: booking.customerId,
+                createdAt: saveOne.createdAtAt,
+                sub_total: saveOne.amount,
+                // tax: saveOne.amount,
+                grand_total: saveOne.grand_total,
+                status: 'Paid',
+              },
+              config
+            )
+
+            dispatch({
+              type: UPDATE_BOOKING_INVOICE_SUCCESS,
+              payload: resOne.data.invoice
+            })
+          }
         } 
 
       } catch (err) {
@@ -161,13 +187,13 @@ const InvoicesSection = props => {
           slots: JSON.stringify(invoice.slots),
           cost_items: JSON.stringify(invoice.costItems),
           value: invoice.value,
-          payment_method: "Pending",
+          payment_method: invoice.payment_method,
           discount: invoice.discount,
           customerId: booking.customerId,
           sub_total: invoice.sub_total,
           // tax: saveOne.amount,
           grand_total: invoice.grand_total,
-          status: invoice.status,
+          status: "Pending",
         },
         config
       )
@@ -191,7 +217,31 @@ const InvoicesSection = props => {
             currency: rootState.settings.companyInfo.currency.length ? rootState.settings.companyInfo.currency : "USD",
             id: invoice.id,
           }
-        ).then(function (res) {
+        ).then(async (res) => {
+          if (res.data.success) {
+            dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
+
+            const resOne = await axios.put(
+              `/bookings/${booking.id}/invoices/${invoice.id}`,
+              {
+                slots: JSON.stringify(invoice.slots),
+                cost_items: JSON.stringify(invoice.costItems),
+                value: invoice.value,
+                payment_method: invoice.payment_method,
+                discount: invoice.discount,
+                customerId: booking.customerId,
+                sub_total: invoice.sub_total,
+                // tax: saveOne.amount,
+                grand_total: invoice.grand_total,
+                status: "Paid",
+              },
+              config
+            )
+            dispatch({
+              type: UPDATE_BOOKING_INVOICE_SUCCESS,
+              payload: resOne.data.invoice
+            })  
+          }
         });
       }
     } catch (err) {
@@ -237,9 +287,7 @@ const InvoicesSection = props => {
                 <TableValue>{invoice.payment_method || "N/A"}</TableValue>
                 <PickerButton
                   options={INVOICE_STATUSES}
-                  selectedOption={
-                    invoiceStatuses[index] ? invoiceStatuses[index] : "Unpaid"
-                  }
+                  selectedOption={invoice.status ? invoice.status : "Unpaid"}
                   onOptionSelected={status =>
                     setInvoiceStatuses({ ...invoiceStatuses, [index]: status })
                   }
