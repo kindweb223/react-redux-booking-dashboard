@@ -139,14 +139,12 @@ class _SplitForm extends React.Component {
             payload.stripeToken = res.token;
             payload.amount = parseInt(vm.props.chargeData.amount);
             payload.currency = vm.props.chargeData.currency;
-            
+            payload.id = vm.props.chargeData.id;
             axios.post('/stripe/transferCardFunds', payload).then(
               resCharge => {
                 this.props.closeModal();
               }
-            )
-
-            console.log('[token]', res)
+            )            
           }
         );
     } else {
