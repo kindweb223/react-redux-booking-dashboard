@@ -66,7 +66,6 @@ const OnlinePaymentPage = () => {
 	const { state, dispatch } = useContext(AppReducerContext);
 	const [stripInformation, setStripInformation] = useState({
 		public_key: { value: "", validate: true },
-		secret_key: { value: "", validate: true },
 	})
 
 	useEffect(() => {
@@ -75,12 +74,8 @@ const OnlinePaymentPage = () => {
 				value: (state.auth.user.stripe_public_key) ? state.auth.user.stripe_public_key : "",
 				validate: (!state.auth.user.stripe_public_key || state.auth.user.stripe_public_key.length === 0) ? false : true,
 			},
-			secret_key: {
-				value: state.auth.user.stripe_secret_key ? state.auth.user.stripe_secret_key : "",
-				validate: (!state.auth.user.stripe_secret_key || state.auth.user.stripe_secret_key.length === 0) ? false : true,
-			},
 		})
-	}, [state.auth.user.stripe_public_key, state.auth.user.stripe_secret_key])
+	}, [state.auth.user.stripe_public_key])
 
 	const savePaymentInformation = async () => {
 		try {
@@ -96,7 +91,6 @@ const OnlinePaymentPage = () => {
 				'/users',
 				{
 					stripe_public_key: stripInformation.public_key.value,
-					stripe_secret_key: stripInformation.secret_key.value,
 				},
 				config
 			)
@@ -104,7 +98,6 @@ const OnlinePaymentPage = () => {
 			dispatch({
 				type: SAVE_PAYMENT_INFORMATION_SUCCESS,
 				public_key: stripInformation.public_key.value,
-				secret_key: stripInformation.secret_key.value,
 			})
 		} catch (err) {
 			dispatch({ type: SAVE_PAYMENT_INFORMATION_ERROR })
@@ -128,7 +121,6 @@ const OnlinePaymentPage = () => {
 			dispatch({
 				type: SAVE_PAYMENT_INFORMATION_SUCCESS,
 				public_key: stripInformation.public_key.value,
-				secret_key: stripInformation.secret_key.value,
 			})
 		} catch (err) {
 			dispatch({ type: SAVE_PAYMENT_INFORMATION_ERROR })
@@ -161,6 +153,7 @@ const OnlinePaymentPage = () => {
 					</IconSpan>
 				</StyledLabel>
 				<TableEditableValue
+					autoFocus
 					label=""
 					value={stripInformation.public_key.value}
 					onChange={value => { changeStripInformation('public_key', value) }}
@@ -178,34 +171,6 @@ const OnlinePaymentPage = () => {
 						}
 					>
 						Strip Publishable Key is required.
-					</p>
-				}
-			</StyledInputDiv>
-			<StyledInputDiv style={{ marginTop: '1.4em' }}>
-				<StyledLabel>
-					SECRET KEY
-					<IconSpan>
-						<FontAwesomeIcon className="fa-icons" icon={faExclamation} />
-					</IconSpan>
-				</StyledLabel>
-				<TableEditableValue
-					label=""
-					value={stripInformation.secret_key.value}
-					onChange={value => { changeStripInformation('secret_key', value) }}
-				/>
-				{
-					!stripInformation.secret_key.validate &&
-					<p
-						className={
-							css`
-								color: #E92579;            
-								margin: 0.2em 0 0 0;
-								padding: 0 0.6em;
-								font-size: 0.8em;
-							`
-						}
-					>
-						Strip Secret Key is required.
 					</p>
 				}
 			</StyledInputDiv>
