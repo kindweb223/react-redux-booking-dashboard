@@ -47,7 +47,6 @@ const initialState = {
 
     payment: {      
       public_key: "",
-      secret_key: "",
     }
   },
 

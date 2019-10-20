@@ -78,7 +78,6 @@ function authReducer(state, action) {
         user: {
           ...state.user,
           stripe_public_key: action.public_key,
-          stripe_secret_key: action.secret_key,
         }
       }
     case SAVE_PAYMENT_INFORMATION_ERROR:
