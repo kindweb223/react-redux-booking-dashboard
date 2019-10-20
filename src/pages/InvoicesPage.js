@@ -1,5 +1,12 @@
 import React, {useState, useContext, useEffect} from "react";
 import Modal from "../components/modals/modal";
+import { 
+  ModalContainer, 
+  ModalTopSection, 
+  ModalBottomSection, 
+  ModalTitleAndButtons 
+} from "../components/modals/containers";
+
 import { Table, TableValue } from "../components/tables/tables";
 import AddGlyph from "../images/Glyphs/AddGlyph";
 import SvgButton from "../components/buttons/SvgButton";
@@ -20,6 +27,9 @@ import { css } from "emotion";
 import SelectBookingModal from "../components/features/invoices/selectBooking";
 import NewInvoice from "../components/features/invoices/newInvoice";
 import SpinnerContainer from "../components/layout/Spinner";
+import H3 from "../components/typography/H3";
+import StripeApp from "../components/stripe/stripeApp";
+
 import {
   DELETE_BOOKING_INVOICE_ERROR, DELETE_BOOKING_INVOICE_SUCCESS,
   GET_BOOKING_BOOKINGSATTUS_ERROR,
@@ -55,6 +65,10 @@ const InvoicesPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [loading, setLoading] = useState(true);
+
+  const [showCreditCardInfoModal, setShowCreditCardInfoModal] = useState(false);
+  const [selectedChargeData, setSelectedChargeData] = useState({});
+
   useEffect(() => {
 
     setLoading(true);
@@ -121,6 +135,50 @@ const InvoicesPage = () => {
           payload: res.data.invoice
         })
 
+        if (invoice.payment_method === 'Credit Card' && state.auth.user.stripe_public_key && state.auth.user.stripe_public_key.length) {
+          setSelectedChargeData({
+            amount: Number(invoice.sub_total.toFixed(2)) * 100,
+            currency: state.settings.companyInfo.currency.length ? state.settings.companyInfo.currency : "USD",
+            id: invoice.id,
+            bookingId: invoice.BookingId,
+          })
+          setShowCreditCardInfoModal(true);
+        } else if (invoice.payment_method === 'Online Payment') {
+          const res = await axios.post(
+            '/bookings/transferFunds',
+            {
+              amount: Number(invoice.sub_total.toFixed(2)) * 100,
+              currency: state.settings.companyInfo.currency.length ? state.settings.companyInfo.currency : "USD",
+              id: invoice.id,
+            }
+          ).then(async (res) => {
+            if (res.data.success) {
+              dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
+  
+              const resOne = await axios.put(
+                `/bookings/${invoice.BookingId}/invoices/${invoice.id}`,
+                {
+                  slots: JSON.stringify(invoice.slots),
+                  cost_items: JSON.stringify(invoice.costItems),
+                  value: invoice.value,
+                  payment_method: invoice.payment_method,
+                  discount: invoice.discount,
+                  customerId: invoice.customerId? invoice.customerId : invoice.booking.customerId,
+                  sub_total: invoice.sub_total,
+                  // tax: saveOne.amount,
+                  grand_total: invoice.grand_total,
+                  status: "Paid",
+                },
+                config
+              )
+              dispatch({
+                type: UPDATE_BOOKING_INVOICE_SUCCESS,
+                payload: resOne.data.invoice
+              })  
+            }
+          });
+        }
+
       } catch (err) {
         dispatch({ type: UPDATE_BOOKING_INVOICE_ERROR });
       }
@@ -130,6 +188,7 @@ const InvoicesPage = () => {
   }
 
   const handleCreate = async(isSave, invoice) => {
+    debugger;
     try {
       const config = {
         headers: {
@@ -163,6 +222,56 @@ const InvoicesPage = () => {
         type: GET_CREATE_BOOKING_INVOICE_SUCCESS,
         payload: res.data.invoice
       })
+
+      if (invoice.payment_method === 'Credit Card' && 
+        state.auth.user.stripe_public_key &&
+        state.auth.user.stripe_public_key.length > 0
+      ) {
+        setSelectedChargeData({
+          amount: Number(saveOne.amount.toFixed(2)) * 100,
+          currency: state.settings.companyInfo.currency.length ? state.settings.companyInfo.currency : "USD",
+          id: res.data.invoice.id,
+          bookingId: saveOne.booking.id,
+        })
+        setShowCreditCardInfoModal(true);
+      } else if (saveOne.payment_method === 'Online Payment' && state.auth.user.stripe_status !== 0) {
+        const resPay = await axios.post(
+          '/bookings/transferFunds',
+          {
+            amount: Number(saveOne.amount.toFixed(2)) * 100,
+            currency: state.settings.companyInfo.currency.length ? state.settings.companyInfo.currency : "USD",
+            id: res.data.invoice.id,
+            bookingId: saveOne.booking.id,
+          }
+        )
+         
+        if (resPay.data.success) {              
+          dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
+
+          const resOne = await axios.put(
+            `/bookings/${saveOne.booking.id}/invoices/${res.data.invoice.id}`,
+            {                
+              slots: JSON.stringify(saveOne.slots),
+              cost_items: JSON.stringify(saveOne.costItems),
+              value: saveOne.value,
+              payment_method: saveOne.payment_method,
+              discount: saveOne.discount,
+              customerId: saveOne.booking.customerId,
+              createdAt: saveOne.createdAtAt,
+              sub_total: saveOne.amount,
+              // tax: saveOne.amount,
+              grand_total: saveOne.grand_total,
+              status: 'Paid',
+            },
+            config
+          )
+
+          dispatch({
+            type: UPDATE_BOOKING_INVOICE_SUCCESS,
+            payload: resOne.data.invoice
+          })
+        }
+      }
 
     } catch (err) {
       dispatch({ type: GET_CREATE_BOOKING_INVOICE_ERROR });
@@ -218,6 +327,24 @@ const InvoicesPage = () => {
       .sort((inv1, inv2) => (inv1.created > inv2.created ? -1 : 1));
       setInvoices([...newInvoices]);
   }, [state.bookings.invoices, searchQuery, selectedFilter])
+
+  const hideCreditModal = async () => {
+    dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
+    try {
+      const res = await axios.put(
+        `/bookings/${selectedChargeData.bookingId}/invoices/${selectedChargeData.id}`,
+        {status: "Paid"}
+      )
+        
+      dispatch({ 
+        type: UPDATE_BOOKING_INVOICE_SUCCESS,
+        payload: res.data.invoice,
+      })
+    } catch (err) {
+      dispatch({ type: UPDATE_BOOKING_INVOICE_ERROR })
+    }
+    setShowCreditCardInfoModal(false)
+  }
 
   return (
     <>
@@ -399,6 +526,39 @@ const InvoicesPage = () => {
           onEndEditing={handleCreate}
         />
       </Modal>
+
+      {
+        (state.auth.user.stripe_public_key && state.auth.user.stripe_public_key.length > 0) && (
+          <Modal
+            isOpen={showCreditCardInfoModal}
+            onClose={() => setShowCreditCardInfoModal(false)}
+          >
+            <ModalContainer>
+              <ModalTopSection>
+                <ModalTitleAndButtons>
+                  <H3>Credit Card Info</H3>
+                  <Button
+                    primary
+                    style={{ marginRight: 10 }}
+                    onClick={() => setShowCreditCardInfoModal(false)}
+                  >
+                    Close
+                  </Button>
+                </ModalTitleAndButtons>
+
+              </ModalTopSection>
+
+              <ModalBottomSection>
+                <StripeApp
+                  stripe_pk_key={state.auth.user.stripe_public_key}
+                  chargeData={selectedChargeData}
+                  closeModal={hideCreditModal}
+                />
+              </ModalBottomSection>
+            </ModalContainer>
+          </Modal>
+        )
+      }
     </>
   );
 };
