@@ -139,7 +139,7 @@ const OnlinePaymentPage = () => {
 	return (
 		<div>
 			<SpinnerContainer loading={(state.auth.loading || state.auth.loadingPayment).toString()} />
-			<P2>
+			{/* <P2>
 				Use our live gateway with real payments
 				To switch on live payments, enter your Stripe API keys below. We recommend Stripe for taking payments (no merchant account required). If you don't yet have a Stripe account,
 				<StyledLink href="https://stripe.com">  Sign up here.</StyledLink>
@@ -182,9 +182,9 @@ const OnlinePaymentPage = () => {
 				>
 					Save
 				</Button>
-			</StyledBtnContainer>
+			</StyledBtnContainer> 
 
-			<TableDivider />
+			<TableDivider />*/}
 			
 			{state.auth.user.stripe_status === 0 ? (
 					<P2>

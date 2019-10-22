@@ -4,7 +4,7 @@ const invoicePaymentMethods = [
   "Cash",
   "Check",
   "Online Payment",
-  "Credit Card"
+  // "Credit Card"
 ];
 
 export { invoiceStates, invoiceStatesColors, invoicePaymentMethods };
