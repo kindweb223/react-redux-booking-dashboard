@@ -76,7 +76,7 @@ const InvoicesPage = () => {
       axios.get('/customers'),
       axios.get('/statuses'),
       axios.get('/bookings'),
-      axios.get(`/bookings/invoices/all`)
+      axios.get(`/bookings/${state.auth.user.id}/invoices`)
     ]).then(axios.spread(function (customers, statuses, bookings, invoices) {
       dispatch({
         type: GET_CUSTOMERS_SUCCESS,
@@ -100,7 +100,7 @@ const InvoicesPage = () => {
       setLoading(false);
     }))
     .catch(error => console.log(error));
-  }, [])
+  }, [state.auth.user.id])
 
   const handleUpdate = async (invoice, isSave,statusValue) => {
     if (isSave) {
