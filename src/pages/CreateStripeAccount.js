@@ -24,6 +24,9 @@ const CreateStripeAccount = (props) => {
                     payload: 1,
                 })
                 debugger;
+                console.log("***********");
+                console.log(CONFIG.REACT_APP_API_URL);
+                console.log(CONFIG.STRIPE_CONNECT_CALLBACK_URL);
                 window.location.href = CONFIG.STRIPE_CONNECT_CALLBACK_URL;
             });
         }
