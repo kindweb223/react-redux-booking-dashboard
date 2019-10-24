@@ -23,6 +23,7 @@ const CreateStripeAccount = (props) => {
                     type: STRIPE_CONNECTION_SUCCESS,
                     payload: 1,
                 })
+                debugger;
                 window.location.href = CONFIG.STRIPE_CONNECT_CALLBACK_URL;
             });
         }
