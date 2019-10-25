@@ -380,7 +380,11 @@ const BookingsPage = props => {
                     (booking.customer && booking.customer.name)? booking.customer.name : ""
                   }
                 </TableValue>
-                <TableValue>{booking.owner.lastName + " " + booking.owner.firstName}</TableValue>
+                <TableValue>
+                  {            
+                    booking.owner ? (booking.owner.lastName ? booking.owner.lastName : "") + " " + (booking.owner.firstName ? booking.owner.firstName : "") : "-"
+                  }
+                </TableValue>
                 <PickerButton
                   options={state.bookings.bookingStatus.map(item => item.name)}
                   colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
