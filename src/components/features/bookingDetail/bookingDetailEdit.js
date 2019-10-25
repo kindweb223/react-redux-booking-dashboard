@@ -266,7 +266,7 @@ const BookingForm = props => {
             isValidate={booking.validateForm.ownerId}
             displayTransformer={ownerId => {
               if (ownerId === state.auth.user.id)
-                return state.auth.user.firstName + " " + state.auth.user.lastName;
+                return state.auth.user.lastName + " " + state.auth.user.firstName;
               else return "";
             }}
           />
