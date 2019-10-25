@@ -69,7 +69,6 @@ const Event = props => {
 };
 
 const EventWrapper = props => {
-  debugger;
   const { event, children } = props;
 
   return (
