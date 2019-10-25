@@ -188,7 +188,6 @@ const InvoicesPage = () => {
   }
 
   const handleCreate = async(isSave, invoice) => {
-    debugger;
     try {
       const config = {
         headers: {

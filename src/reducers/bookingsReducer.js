@@ -132,7 +132,7 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadBookingAction: false,
-        bookings: state.bookings.filter(item => item.id === action.payload)
+        bookings: state.bookings.filter(item => item.id !== action.payload)
       }
     case GET_DELETE_BOOKING_ERROR:
       return {
