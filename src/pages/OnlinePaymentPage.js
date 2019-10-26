@@ -105,6 +105,8 @@ const OnlinePaymentPage = () => {
 	}
 
 	const testCreatePaymentInformation = async () => {
+		if (state.auth.user.stripe_status != 0)
+			return;
 		try {
 			dispatch({ type: REQUEST_SAVE_PAYMENT_INFORMATION });
 			const config = {
