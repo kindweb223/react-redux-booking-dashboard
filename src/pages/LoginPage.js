@@ -2,13 +2,10 @@ import React, { useContext, useEffect } from "react";
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import jsonwebtoken from 'jsonwebtoken';
-
 import SpinnerContainer from '../components/layout/Spinner';
-
-
 import styled from "styled-components";
-
 import "../css/validate.css";
+import CONFIG from "../config";
 
 import {
   AppReducerContext,
@@ -69,16 +66,16 @@ const LoginPage = props => {
               type: 'get_login_error',
               payload: {...values},
             })
-            window.location.replace("https://heyagenda.com/");
+            window.location.replace(CONFIG.BASE_URL);
           }
         }
 
         loginOutSeta();
       }else {
-        window.location.replace("https://heyagenda.com/");
+        window.location.replace(CONFIG.BASE_URL);
       }
     } else {
-      window.location.replace("https://heyagenda.com/");
+      window.location.replace(CONFIG.BASE_URL);
     }
 
   }, [])
