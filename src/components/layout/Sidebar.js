@@ -11,6 +11,7 @@ import CustomersSvg from "../../images/sidebar/customers.svg";
 import SettingsSvg from "../../images/sidebar/settings.svg";
 import LogOutSvg from "../../images/sidebar/logout.svg";
 import constants from "./constants";
+import CONFIG from "../../config";
 
 import setAuthToken from "../../utils/setAuthToken";
 import { AppReducerContext } from "../../contexts/AppReducerContext";
@@ -97,7 +98,7 @@ const Sidebar = props => {
     setAuthToken("");
     dispatch({type: 'set_logout'});
     setTimeout(() => {
-      window.location.replace("https://heyagenda.com/");
+      window.location.replace(CONFIG.BASE_URL);
     }, 100)    
   }
 

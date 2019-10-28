@@ -20,13 +20,12 @@ import LoginPage from "./pages/LoginPage";
 
 import CONFIG from './config';
 
-Sentry.init({dsn: "https://69570983298040b2ace658559035bace@sentry.io/1796095"});
-axios.defaults.baseURL = CONFIG.REACT_APP_API_URL;
+Sentry.init({dsn: CONFIG.SENTRY_DSN});
+axios.defaults.baseURL = CONFIG.API_URL;
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
-
 
 const App = props => {
   const [calendarExpanded, setCalendarExpanded] = useState(false);
