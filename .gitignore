@@ -5,3 +5,5 @@ package-lock.json
 #System Files
 .DS_Store
 .vscode
+
+.env
