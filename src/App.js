@@ -1,4 +1,6 @@
 import React, { useState, useReducer, useEffect } from "react";
+import * as Sentry from '@sentry/browser';
+
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios from 'axios';
 
@@ -18,11 +20,13 @@ import LoginPage from "./pages/LoginPage";
 
 import CONFIG from './config';
 
+Sentry.init({dsn: "https://69570983298040b2ace658559035bace@sentry.io/1796095"});
 axios.defaults.baseURL = CONFIG.REACT_APP_API_URL;
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
+
 
 const App = props => {
   const [calendarExpanded, setCalendarExpanded] = useState(false);
