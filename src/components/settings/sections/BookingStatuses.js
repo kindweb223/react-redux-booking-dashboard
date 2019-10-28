@@ -239,7 +239,7 @@ const BookingStatusesSettingsSection = props => {
   }, []);
 
   const onDragEnd = async (result) => {
-    if (!result.destination || result.destination.index == 0) {
+    if (!result.destination || result.destination.index === 0) {
       return;
     }
 
@@ -413,7 +413,7 @@ const BookingStatusesSettingsSection = props => {
         dispatch({ type: REQUEST_DELETE_BOOKING_STATUS })
         
         const id = state.bookingStatuses[index].id;
-        const res = await axios.delete(`/statuses/${id}`);
+        await axios.delete(`/statuses/${id}`);
 
         dispatch({ 
           type: GET_DELETE_BOOKING_STATUS_SUCCESS,

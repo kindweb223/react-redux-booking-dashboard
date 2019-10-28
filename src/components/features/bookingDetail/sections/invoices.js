@@ -1,4 +1,4 @@
-import React, { useState, useContext, useReducer, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { Table, TableValue, TableEditableValue } from "../../../tables/tables";
 import { formatEventDate } from "../../../../utils/dateFormatting";

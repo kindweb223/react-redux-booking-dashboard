@@ -22,11 +22,11 @@ import {
   GET_BOOKING_INVOICE_ERROR, GET_BOOKING_QUOTE_ERROR, REQUEST_GET_BOOKING_INVOICE,
   GET_ADD_CUSTOMER_SUCCESS,
 } from "../../../reducers/actionType";
-import SpinnerContainer from "../../layout/Spinner";
+// import SpinnerContainer from "../../layout/Spinner"; 
 
 import {
   CUSTOMER_OPTION_CREATE_USER,
-  CUSTOMER_OPTION_CASUAL_USER
+  // CUSTOMER_OPTION_CASUAL_USER,
 } from '../../../constants';
 
 const TABBAR_ITEM_DETAILS = "Details";

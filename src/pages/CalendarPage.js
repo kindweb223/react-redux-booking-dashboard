@@ -30,7 +30,7 @@ import {
 
 import {
   CUSTOMER_OPTION_CREATE_USER,
-  CUSTOMER_OPTION_CASUAL_USER,
+  // CUSTOMER_OPTION_CASUAL_USER,
 } from '../constants';
 
 import axios from "axios/index";

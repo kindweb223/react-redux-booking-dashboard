@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import Grid from "../../../layout/Grid";
 import {
   TableItem,
@@ -10,11 +10,11 @@ import {
   formatEventDate,
   formatSlotStartEndTime
 } from "../../../../utils/dateFormatting";
-import { AppReducerContext, getStatuColor } from "../../../../contexts/AppReducerContext";
+import { getStatuColor } from "../../../../contexts/AppReducerContext";
 
 const DetailsSection = props => {
   const { booking } = props;
-  const { state } = useContext(AppReducerContext);
+  // const { state } = useContext(AppReducerContext);
 
   const getBookingStatusColor = (selectedBooking) => {
     if (selectedBooking.status && selectedBooking.status.name)

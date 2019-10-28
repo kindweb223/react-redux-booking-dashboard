@@ -138,6 +138,7 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadBookingAction: false,
+        bookings: []
       }
     case REQUEST_GET_BOOKING_BOOKINGSTATUS:
       return {

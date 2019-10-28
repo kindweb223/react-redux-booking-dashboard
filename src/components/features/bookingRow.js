@@ -1,16 +1,16 @@
-import React, { useContext } from "react";
+import React from "react";
 import styled from "styled-components";
 import colors from "../style/colors";
 import moment from "moment";
 import P2 from "../typography/P2";
-import { AppReducerContext } from "../../contexts/AppReducerContext";
+// import { AppReducerContext } from "../../contexts/AppReducerContext";
 
 const BookingRow = props => {
   const { booking, onClick } = props;
 
-  const { state } = useContext(AppReducerContext);
+  // const { state } = useContext(AppReducerContext);
 
-  const venue = state.settings.venues.find(v => v.id === booking.venue);
+  // const venue = state.settings.venues.find(v => v.id === booking.venue);
   // const space = venue.spaces.find(space => space.id === booking.space);
 
   const Container = styled.div`

@@ -16,7 +16,7 @@ function authReducer(state, action) {
         user: {...action.user},
         showInvalidMsg: false,
       };    
-    case "get_login_success":            
+    case "get_login_success":
       localStorage.setItem('token', action.payload.token);
       setAuthToken(localStorage.token);
       return {

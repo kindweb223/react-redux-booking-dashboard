@@ -32,15 +32,12 @@ import StripeApp from "../components/stripe/stripeApp";
 
 import {
   DELETE_BOOKING_INVOICE_ERROR, DELETE_BOOKING_INVOICE_SUCCESS,
-  GET_BOOKING_BOOKINGSATTUS_ERROR,
   GET_BOOKING_BOOKINGSTATUS_SUCCESS,
-  GET_BOOKING_INVOICE_ERROR, GET_BOOKING_INVOICE_SUCCESS, GET_BOOKING_SETTINGS_ERROR, GET_BOOKING_SETTINGS_SUCCESS,
-  GET_BOOKINGS_ERROR,
+  GET_BOOKING_INVOICE_SUCCESS,
   GET_BOOKINGS_SUCCESS,
-  GET_CUSTOMERS_ERROR,
-  GET_CUSTOMERS_SUCCESS, REQUEST_DELETE_BOOKING_INVOICE, REQUEST_GET_BOOKING_BOOKINGSTATUS,
-  REQUEST_GET_BOOKING_INVOICE, REQUEST_GET_BOOKINGS, REQUEST_GET_CUSTOMERS, REQUEST_UPDATE_BOOKING_INVOICE,
-  REUQEST_GET_BOOKING_SETTINGS, UPDATE_BOOKING_INVOICE_ERROR, UPDATE_BOOKING_INVOICE_SUCCESS,
+  GET_CUSTOMERS_SUCCESS, REQUEST_DELETE_BOOKING_INVOICE, 
+  REQUEST_UPDATE_BOOKING_INVOICE,
+  UPDATE_BOOKING_INVOICE_ERROR, UPDATE_BOOKING_INVOICE_SUCCESS,
   REQUEST_CREATE_BOOKING_INVOICE, GET_CREATE_BOOKING_INVOICE_SUCCESS, GET_CREATE_BOOKING_INVOICE_ERROR
 } from "../reducers/actionType";
 import axios from "axios/index";
@@ -144,7 +141,7 @@ const InvoicesPage = () => {
           })
           setShowCreditCardInfoModal(true);
         } else if (invoice.payment_method === 'Online Payment') {
-          const res = await axios.post(
+          await axios.post(
             '/bookings/transferFunds',
             {
               amount: Number(invoice.sub_total.toFixed(2)) * 100,
@@ -284,7 +281,7 @@ const InvoicesPage = () => {
     try {
       dispatch({ type: REQUEST_DELETE_BOOKING_INVOICE });
 
-      const res = await axios.delete(`/bookings/${invoice.BookingId}/invoices/${invoice.id}`);
+      await axios.delete(`/bookings/${invoice.BookingId}/invoices/${invoice.id}`);
 
       dispatch({
         type: DELETE_BOOKING_INVOICE_SUCCESS,
@@ -315,7 +312,7 @@ const InvoicesPage = () => {
         return (
           (invoice.status === selectedFilter || selectedFilter === "All") && // apply filters
           (!searchQuery ||
-            invoice.number && invoice.number.toString() === searchQuery ||
+            (invoice.number && invoice.number.toString() === searchQuery) ||
             customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
             bookingName.toLowerCase().includes(searchQuery.toLowerCase()) ||
             invoice.booking && invoice.booking.title
