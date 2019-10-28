@@ -11,7 +11,7 @@ import colors from "../../../style/colors";
 import { css } from "emotion";
 import Modal from "../../../modals/modal";
 import EditQuote from "./editQuote";
-import SpinnerContainer from "../../../layout/Spinner";
+// import SpinnerContainer from "../../../layout/Spinner";
 
 import {
   REQUEST_GET_BOOKING_QUOTE,

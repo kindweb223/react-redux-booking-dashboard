@@ -16,9 +16,9 @@ const handleBlur = () => {
 const handleChange = (change) => {
   console.log('[change]', change);
 };
-const handleClick = () => {
-  console.log('[click]');
-};
+// const handleClick = () => {
+//   console.log('[click]');
+// };
 const handleFocus = () => {
   console.log('[focus]');
 };

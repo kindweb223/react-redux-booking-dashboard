@@ -20,10 +20,10 @@ const LoginPage = props => {
     display: flex;
     align-items: center;
     justify-content: center;
-  `;  
+  `;
   
   useEffect(() => {
-    const indexStr = 'access_token=';      
+    const indexStr = 'access_token=';
     const href = window.location.href;
     const nIndex = href.indexOf(indexStr);
     if( nIndex >= 0) {
@@ -41,7 +41,6 @@ const LoginPage = props => {
         };
 
         const loginOutSeta = async () => {
-
           const config = {
             headers: {
               'Content-Type': 'application/json'
