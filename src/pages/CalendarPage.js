@@ -44,7 +44,7 @@ const CalendarPage = props => {
   const { calendarExpanded } = useContext(CalendarContext);
   const { state, dispatch } = useContext(AppReducerContext);
   const venues = state.settings.venues;
-  const events = state.bookings.bookings && state.bookings.bookings.map(b => bookingToEvents(b, venues)).flat();
+  let events = [];
 
   useEffect(() => {
 
@@ -146,6 +146,11 @@ const CalendarPage = props => {
     getBookingStatus();
 
   }, [])
+
+  useEffect(() => {
+    if (state.bookings && state.bookings.bookings && state.bookings.bookings.length > 0)
+      events = state.bookings.bookings && state.bookings.bookings.map(b => bookingToEvents(b, venues)).flat();
+  }, [state.bookings.bookings])
 
   const handleClickSave = async (booking) => {
     setShowCreateBookingModal(false);
@@ -271,7 +276,7 @@ const CalendarPage = props => {
     })
     setSelectedBookingID(event.bookingID);
   };
-  console.log("state", state)
+
   return (
     <>
       <SpinnerContainer loading={ (events && events.length <= 0) && (state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
