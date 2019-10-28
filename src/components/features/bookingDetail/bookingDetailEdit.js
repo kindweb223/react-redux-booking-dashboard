@@ -60,7 +60,6 @@ const SvgButtonWrapper = styled.div`
 `;
 
 const BookingForm = props => {
-
   const { booking, dispatch } = props;
   const { state } = useContext(AppReducerContext);
   const bookingCustomers = [
@@ -70,6 +69,12 @@ const BookingForm = props => {
         return {value: customer.id, label: customer.name}
     })
   ]
+
+  if (booking.ownerId === null ) 
+    dispatch({
+      type: "select_owner",
+      value: state.auth.user.id
+    })
   
   useEffect(() => {
     if(booking.venueId === null)
@@ -491,11 +496,7 @@ const BookingDetailEdit = props => {
       customers: [],
       venues: [],
       spaces: [],
-      owners: [{
-        "id": 1,
-        "firstName": "Test",
-        "lastName": "123",
-      }],
+      owners: [],
       validateForm: {
         eventName: true,
         venueId: true,
