@@ -41,12 +41,6 @@ const LoginPage = props => {
           firstName: decoded.family_name,
           lastName: decoded.given_name,
         };
-        // const values = {
-        //   outseta_id: "111222333",
-        //   email: "test1026@test.com",
-        //   firstName: "Test1026",
-        //   lastName: "Test1026",
-        // };
 
         const loginOutSeta = async () => {
           const config = {
