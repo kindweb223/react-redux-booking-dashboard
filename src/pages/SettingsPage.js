@@ -5,13 +5,15 @@ import Grid from "../components/layout/Grid";
 import { AppReducerContext } from "../contexts/AppReducerContext";
 import CompanyInfoSettingsSection from "../components/settings/sections/CompanyInfo";
 import BookingStatusesSettingsSection from "../components/settings/sections/BookingStatuses";
+import CustomBookingColorSection from "../components/settings/sections/CustomBookingColor";
 import VenuesAndSpacesPage from "./VenuesAndSpacesPage";
 import OnlinePaymentPage from "./OnlinePaymentPage";
 
-const VENUES_AND_SPACES_SECTION_NAME = "Venues and Spaces";
-const COMPANY_SETTINGS_SECTION_NAME = "Company Settings";
-const BOOKING_STATUS_SECTION_NAME = "Booking Status";
-const ONLINE_PAYMENT_SECTION_NAME = "Online Payments";
+const VENUES_AND_SPACES_SECTION_NAME  = "Venues and Spaces";
+const COMPANY_SETTINGS_SECTION_NAME   = "Company Settings";
+const BOOKING_STATUS_SECTION_NAME     = "Booking Status";
+const ONLINE_PAYMENT_SECTION_NAME     = "Online Payments";
+const CUSTOM_BOOKING_COLOR_NAME       = "Custom Booking Colour";
 
 const SettingsPage = props => {
   const [currentSection, setCurrentSection] = useState(
@@ -29,6 +31,7 @@ const SettingsPage = props => {
           BOOKING_STATUS_SECTION_NAME,
           COMPANY_SETTINGS_SECTION_NAME,
           ONLINE_PAYMENT_SECTION_NAME,
+          CUSTOM_BOOKING_COLOR_NAME,
         ]}
         onClick={item => {
           setCurrentSection(item);
@@ -51,6 +54,8 @@ const SettingsPage = props => {
             return <VenuesAndSpacesPage state={state} dispatch={dispatch} />;
           case ONLINE_PAYMENT_SECTION_NAME:
             return <OnlinePaymentPage state={state} dispatch={dispatch} />;
+          case CUSTOM_BOOKING_COLOR_NAME:
+            return <CustomBookingColorSection />
           default:
             throw new Error("unhandled section");
         }

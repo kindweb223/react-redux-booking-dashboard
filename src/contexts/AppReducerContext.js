@@ -3,6 +3,7 @@ import bookingsReducer from "../reducers/bookingsReducer";
 import settingsReducer from "../reducers/settingsReducer";
 import customersReducer from "../reducers/customersReducer";
 import authReducer from "../reducers/authReducer";
+import customBookingColorReducer from "../reducers/customBookingColorReducer";
 
 const AppReducerContext = React.createContext(null);
 
@@ -47,7 +48,7 @@ const initialState = {
 
     payment: {      
       public_key: "",
-    }
+    },
   },
 
   customers: {
@@ -66,6 +67,12 @@ const initialState = {
     token: localStorage.getItem('token'),
     loadingPayment: false,
   },
+
+  customBookingColor: {
+    loading: true,
+    settings: [],
+  }
+
 };
 
 const reducer = combineReducers({
@@ -73,6 +80,7 @@ const reducer = combineReducers({
   bookings: bookingsReducer,
   customers: customersReducer,
   auth: authReducer,
+  customBookingColor: customBookingColorReducer,
 });
 
 function combineReducers(reducers) {
