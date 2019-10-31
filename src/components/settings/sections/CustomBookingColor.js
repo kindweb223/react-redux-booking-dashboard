@@ -24,6 +24,7 @@ const ConditionContainer = styled.div`
   padding: 1em;
   background-color: rgb(241, 243, 245);
   margin-bottom: 1em;
+  flex-direction: column;
 `;
 
 const Row = styled.div`
@@ -40,6 +41,10 @@ const ConditionItemDiv = styled.div`
   display: flex;
   width: 28%;
   padding-right: 1em;
+`;
+
+const StyledOutlineButton = styled(Button)`  
+  margin-right: 1em;
 `;
 
 const CustomBookingColorSection = () => {
@@ -78,8 +83,23 @@ const CustomBookingColorSection = () => {
     // getCustomBookingColorInfo();
   }, [])
 
-  const addCondition = () => {
-
+  const addCondition = () => {    
+    setConditionSettings([
+      ...conditionSettings,
+      [
+        {
+          color: '#6389ea',
+          value: 'and',
+          content: [
+            {
+              condition_key: BOOKING_COLOR_CONDITION_KEYS[0].condition_key.value, 
+              condition_type: BOOKING_COLOR_CONDITION_KEYS[0].condition_types[0].value,
+              condition_value: ""
+            }
+          ]
+        }
+      ]
+    ])
   }
 
   const getInitialConditionType = (condition_key) => {
@@ -173,6 +193,20 @@ const CustomBookingColorSection = () => {
     setConditionSettings([ ...newOne ])
   }
 
+  const handleClickAdd = (nKey, nKeyTwo) => {
+    const newOne = [...conditionSettings]
+    newOne[nKey][nKeyTwo].content.push({
+      condition_key: BOOKING_COLOR_CONDITION_KEYS[0].condition_key.value, 
+      condition_type: BOOKING_COLOR_CONDITION_KEYS[0].condition_types[0].value,
+      condition_value: ""
+    })
+    setConditionSettings([ ...newOne ])
+  }
+
+  const handleClickOR = (nKey) => {
+    debugger;
+  }
+
   return (
     <div>
       {/* <SpinnerContainer loading={state.customBookingColor.loading.toString()} /> */}
@@ -181,63 +215,87 @@ const CustomBookingColorSection = () => {
         conditionSettings.map((itemOne, nKey) => {
           return <ConditionContainer key={nKey}>
             {
-              itemOne.map((itemTwo, nKeyTwo) => {
-                return itemTwo.content.map((item, nIndex) => {
-                  return <Row key={nIndex}>
-                    <ConditionItemDiv>
-                      <TablePicker 
-                        label=""
-                        options={getConditionKeyValues()}
-                        style={{width: '100%'}}
-                        selectedOption={item.condition_key}                
-                        displayTransformer={
-                          option => { return getConditionKeyLabel(option) }
+              <React.Fragment>
+                {
+                  itemOne.map((itemTwo, nKeyTwo) => {
+                    return <React.Fragment key={nKeyTwo}>
+                        {
+                          itemTwo.content.map((item, nIndex) => {
+                            return <Row key={nIndex}>
+                              <ConditionItemDiv>
+                                <TablePicker 
+                                  label=""
+                                  options={getConditionKeyValues()}
+                                  style={{width: '100%'}}
+                                  selectedOption={item.condition_key}                
+                                  displayTransformer={
+                                    option => { return getConditionKeyLabel(option) }
+                                  }
+                                  onOptionSelected={condition_key => {handleChangeContionKey(condition_key, nKey, nKeyTwo, nIndex)}}
+                                />
+                              </ConditionItemDiv>
+                              <ConditionItemDiv>
+                                <TablePicker 
+                                  label=""
+                                  options={getConditionTypeValues(item.condition_key)}
+                                  style={{width: '100%'}}
+                                  selectedOption={item.condition_type}                
+                                  displayTransformer={
+                                    option => { return getConditionTypeLabel(item.condition_key, option) }
+                                  }
+                                  onOptionSelected={condition_type => {handleChangeConditionTypes(condition_type, nKey, nKeyTwo, nIndex)}}
+                                />
+                              </ConditionItemDiv>
+                              <ConditionItemDiv>
+                                {
+                                  item.condition_key === 'title' && (
+                                    <TableEditableValue 
+                                      label=""
+                                      value={item.condition_value}
+                                      style={{width: '100%'}}
+                                      onChange={value => handleChnageConditionValue(value, nKey, nKeyTwo, nIndex)}
+                                    />
+                                  )
+                                }
+                                {
+                                  item.condition_key === 'payment_status' && (
+                                    <TablePicker
+                                      label=""
+                                      options={getConditionValuesValue(item.condition_key)}
+                                      displayTransformer={
+                                        option => { return getConditionValueLabel(item.condition_key, option)}
+                                      }
+                                      selectedOption={item.condition_value}
+                                      style={{width: '100%'}}
+                                      onOptionSelected={value => handleChnageConditionValue(value, nKey, nKeyTwo, nIndex)}
+                                    />
+                                  )
+                                }
+                              </ConditionItemDiv>
+                            </Row>
+                          })
                         }
-                        onOptionSelected={condition_key => {handleChangeContionKey(condition_key, nKey, nKeyTwo, nIndex)}}
-                      />
-                    </ConditionItemDiv>
-                    <ConditionItemDiv>
-                      <TablePicker 
-                        label=""
-                        options={getConditionTypeValues(item.condition_key)}
-                        style={{width: '100%'}}
-                        selectedOption={item.condition_type}                
-                        displayTransformer={
-                          option => { return getConditionTypeLabel(item.condition_key, option) }
-                        }
-                        onOptionSelected={condition_type => {handleChangeConditionTypes(condition_type, nKey, nKeyTwo, nIndex)}}
-                      />
-                    </ConditionItemDiv>
-                    <ConditionItemDiv>
-                      {
-                        item.condition_key === 'title' && (
-                          <TableEditableValue 
-                            label=""
-                            value={item.condition_value}
-                            style={{width: '100%'}}
-                            onChange={value => handleChnageConditionValue(value, nKey, nKeyTwo, nIndex)}
-                          />
-                        )
-                      }
-                      {
-                        item.condition_key === 'payment_status' && (
-                          <TablePicker
-                            label=""
-                            options={getConditionValuesValue(item.condition_key)}
-                            displayTransformer={
-                              option => { return getConditionValueLabel(item.condition_key, option)}
-                            }
-                            selectedOption={item.condition_value}
-                            style={{width: '100%'}}
-                            onOptionSelected={value => handleChnageConditionValue(value, nKey, nKeyTwo, nIndex)}
-                          />
-                        )
-                      }
-                    </ConditionItemDiv>
-                  </Row>
-                })
-              })
-            }
+                        <Row>
+                          <StyledOutlineButton                
+                            outline
+                            onClick={() => handleClickAdd(nKey, nKeyTwo)}
+                            iconComponent={() => <AddGlyph fill={colors.grey} />}        
+                          >
+                            And
+                          </StyledOutlineButton>
+                          <StyledOutlineButton                
+                            outline
+                            onClick={() => handleClickOR(nKey)}
+                            iconComponent={() => <AddGlyph fill={colors.grey} />}        
+                          >
+                            Or
+                          </StyledOutlineButton>
+                        </Row>
+                      </React.Fragment>                    
+                  })
+                }
+              </React.Fragment>
+            }  
           </ConditionContainer>          
         })
       }
