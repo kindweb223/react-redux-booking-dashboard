@@ -130,5 +130,13 @@ export const CLEAR_BOOKING_DATA = "CLEAR BOOKING DATA";
 // Payment Action Type
 export const REQUEST_SAVE_PAYMENT_INFORMATION = 'Request save user payment information';
 export const SAVE_PAYMENT_INFORMATION_SUCCESS = 'Save user payment information success';
-export const SAVE_PAYMENT_INFORMATION_ERROR = 'Save user payment information error';
-export const STRIPE_CONNECTION_SUCCESS = 'Set User Stripe connection status';
+export const SAVE_PAYMENT_INFORMATION_ERROR   = 'Save user payment information error';
+export const STRIPE_CONNECTION_SUCCESS        = 'Set User Stripe connection status';
+
+// Custom Booking Color Types
+export const REQUEST_GET_CUSTOM_BOOKING_COLOR   = 'Request get custom booking color settings'
+export const GET_CUSTOM_BOOKING_COLOR_SUCCESS   = 'Get custom booking color setting success'
+export const GET_CUSTOM_BOOKING_COLOR_ERROR     = 'Get custom booking color setting error'
+export const REQUEST_SAVE_CUSTOM_BOOKING_COLOR  = 'Request save custom booking color settings'
+export const SAVE_CUSTOM_BOOKING_COLOR_SUCCESS  = 'Save custom booking color settings success'
+export const SAVE_CUSTOM_BOOKING_COLOR_ERROR    = 'Save custom booking color settings error'

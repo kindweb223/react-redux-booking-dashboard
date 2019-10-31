@@ -31,6 +31,12 @@ const CalendarToolbar = props => {
 
   const { calendarExpanded, setCalendarExpanded } = useContext(CalendarContext);
 
+  const handleClickToday = () => {
+    if (currentView !== 'day')
+      onView('day')
+    onNavigate('TODAY')
+  }
+
   return (
     <Container
       style={{
@@ -48,7 +54,7 @@ const CalendarToolbar = props => {
         />
         <Button
           style={{ margin: "0 1em 0 0" }}
-          onClick={() => onNavigate("TODAY")}
+          onClick={handleClickToday}
         >
           Today
         </Button>

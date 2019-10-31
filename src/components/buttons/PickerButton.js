@@ -270,7 +270,7 @@ const PickerButton = props => {
           style={{ transform: opened ? "scaleY(-1)" : "", marginLeft: 5 }}
         />
       </Wrapper>
-      <DropdownContent show={opened}>
+      <DropdownContent className="tablepicker-dropdown-menu" show={opened}>
         {(() => {
           if (searchEnabled) {
             if (filteredOptions) {
