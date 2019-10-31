@@ -47,3 +47,18 @@ export const BOOKING_COLOR_CONDITION_KEYS = [
     ]    
   },
 ]
+
+export const BOOKING_COLORS = [
+  '#6389ea', 
+  '#4a9454', 
+  '#F2D600', 
+  '#FF9317', 
+  '#EB5A46',
+  '#C377E0',
+  '#FF80CE',
+  '#00C2E0',
+  '#4E8EF0',
+  '#51E898',
+  '#4d4d4d',
+  '#a9a9a9',
+]
