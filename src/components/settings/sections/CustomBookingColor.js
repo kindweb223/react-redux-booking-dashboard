@@ -2,15 +2,14 @@ import React, {useState, useContext, useEffect} from "react";
 import axios from 'axios';
 import styled from "styled-components";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-
 import colors from "../../style/colors";
+import AddGlyph from "../../../images/Glyphs/AddGlyph";
+import removeSvg from "../../../images/ui/remove.svg";
 import P2 from "../../typography/P2";
 import Button from "../../buttons/Button";
 import SpinnerContainer from "../../layout/Spinner";
-import AddGlyph from "../../../images/Glyphs/AddGlyph";
 import { TablePicker, TableEditableValue, TableDivider } from "../../tables/tables";
+import SvgButton from "../../buttons/SvgButton";
 
 import {
   AppReducerContext,
@@ -37,6 +36,7 @@ const Row = styled.div`
   flex-direction: row;
   width: 100%;
   margin-bottom: 1em;
+  align-items: center;
   &:last-child {
     margin-bottom: 0;
   }
@@ -44,7 +44,7 @@ const Row = styled.div`
 
 const ConditionItemDiv = styled.div`
   display: flex;
-  width: 28%;
+  width: 30%;
   padding-right: 1em;
 `;
 
@@ -72,7 +72,8 @@ const StyledP2 = styled(P2)`
   line-height: 34px;
 `;
 
-const StyledDeleteButton = styled(Button)`
+const RemoveButton = styled(SvgButton)`
+  margin-left: auto;
 `;
 
 const CustomBookingColorSection = () => {
@@ -252,7 +253,6 @@ const CustomBookingColorSection = () => {
   }
 
   const handleClickDeleteRow = (nKey, nKeyTwo, nIndex) => {
-    debugger;
     const newOne = [ ...conditionSettings ]
     newOne[nKey].content[nKeyTwo].splice(nIndex, 1)
     if (newOne[nKey].content[nKeyTwo].length === 0)
@@ -342,12 +342,11 @@ const CustomBookingColorSection = () => {
                               )
                             }
                           </ConditionItemDiv>
-                          <StyledDeleteButton 
-                            outline
+                          <RemoveButton
+                            size={20}
+                            svg={removeSvg}
                             onClick={() => handleClickDeleteRow(nKey, nKeyTwo, nIndex)}
-                          >
-                            <FontAwesomeIcon className="fa-icons" icon={faTimes} />
-                          </StyledDeleteButton >
+                          />
                         </Row>                  
                     })
                   }
