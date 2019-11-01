@@ -8,17 +8,17 @@ function customBookingColorReducer(state = {}, action) {
     case REQUEST_GET_CUSTOM_BOOKING_COLOR: 
       return {
         ...state,
-        loadingCustomers: true,
+        loading: true,
       }
     case GET_CUSTOM_BOOKING_COLOR_SUCCESS:
       return {
         ...state,
-        loadingCustomers: false,
+        loading: false,
       }
     case GET_CUSTOM_BOOKING_COLOR_ERROR:
       return {
         ...state,
-        loadingCustomers: false,
+        loading: false,
       }
     default:
       return state;

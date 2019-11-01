@@ -3,9 +3,18 @@ export const CUSTOMER_OPTION_CASUAL_USER = -11;
 
 export const BOOKING_COLOR_CONDITION_KEYS = [
   {
+    condition_key: { value:'slot_type', label: 'Slot Type' },
+    condition_types: [
+      { value: 'equal', label:'Is Equal To' }
+    ],
+    condition_values: [
+      { value: 'single_day', label: 'Single Day' },
+      { value: 'multi_day', label: 'Multi Day'}
+    ]
+  },
+  {
     condition_key: {
-      value: 'title',
-      label: 'Title',
+      value: 'title', label: 'Title',
     },
     condition_types: [
       {value: 'contains', label: 'Contains'},
@@ -14,38 +23,19 @@ export const BOOKING_COLOR_CONDITION_KEYS = [
   },
   {
     condition_key: {
-      value: 'payment_status',
-      label: 'The Payment Status',
+      value: 'payment_status', label: 'The Payment Status',
     },
     condition_types: [
-      {
-        value: 'equal',
-        label: 'Is Equal To',
-      },
-      {
-        value: 'not_equal',
-        label: 'Is Not Equal',
-      }
+      { value: 'equal', label: 'Is Equal To' },
+      { value: 'not_equal', label: 'Is Not Equal' }
     ],
     condition_values: [
-      {
-        value: 'enquiry',
-        label: 'Enquiry',
-      },
-      {
-        value: 'proposal',
-        label: 'Proposal',
-      },
-      {
-        value: 'accepted',
-        label: 'Accepted',
-      },
-      {
-        value: 'paid',
-        label: 'Paid'
-      }
+      { value: 'enquiry', label: 'Enquiry' },
+      { value: 'proposal', label: 'Proposal' },
+      { value: 'accepted', label: 'Accepted' },
+      { value: 'paid', label: 'Paid' }
     ]    
-  },
+  },  
 ]
 
 export const BOOKING_COLORS = [
