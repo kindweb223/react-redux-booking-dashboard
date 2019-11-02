@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   ModalBottomSection,
   ModalTitleAndButtons,
@@ -72,10 +72,15 @@ const SelectBookingModal = props => {
   const { state } = useContext(AppReducerContext);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const bookings = state.bookings.bookings;
-  const filteredBookings = bookings.filter(b =>
-    b.eventName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const bookings = state.bookings.bookings;  
+  const [filteredBookings, setFilteredBookings] = useState([])
+  useEffect(() => {
+    setFilteredBookings(
+      ...bookings.filter(b =>
+        b.eventName.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    )
+  }, [bookings, searchQuery])
 
   return (
     <ModalContainer>
@@ -101,7 +106,7 @@ const SelectBookingModal = props => {
               key={b.id}
               booking={b}
               onSelectBooking={() => onSelectBooking(b.id)}
-            />
+            />          
         })}
       </ModalBottomSection>
     </ModalContainer>

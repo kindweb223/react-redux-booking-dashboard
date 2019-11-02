@@ -92,7 +92,7 @@ const BottomLinks = [
 
 const Sidebar = props => {
   const { history } = props;
-  const { state, dispatch } = useContext(AppReducerContext);
+  const { dispatch } = useContext(AppReducerContext);
 
   const logout = () => {
     setAuthToken("");

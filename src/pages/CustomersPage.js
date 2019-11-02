@@ -60,7 +60,7 @@ const CustomersPage = () => {
       }
     }
     getCustomers();
-  }, []);
+  }, [dispatch]);
 
   const onEditCustomer = async (customer, bSave) => {
     if(!bSave && customer === null) {
@@ -110,7 +110,7 @@ const CustomersPage = () => {
 
     try {
 
-      const res = await axios.delete(`/customers/${id}`);
+      await axios.delete(`/customers/${id}`);
 
       dispatch({
         type: GET_DELETE_CUSTOMER_SUCCESS,

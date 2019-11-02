@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import {loadUserflow} from 'userflow.js'
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 import jsonwebtoken from 'jsonwebtoken';
 import SpinnerContainer from '../components/layout/Spinner';
 import styled from "styled-components";
@@ -24,7 +23,7 @@ const LoginPage = props => {
     justify-content: center;
   `;
   
-  const { state, dispatch } = useContext(AppReducerContext);
+  const { dispatch } = useContext(AppReducerContext);
 
   useEffect(() => {
     const indexStr = 'access_token=';
