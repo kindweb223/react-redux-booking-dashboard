@@ -50,7 +50,7 @@ function isBookingWithDates(booking, startDate, endDate) {
           if (
             // typeof date.getTime === 'function' && startDate.getTime() < date.getTime() &&
             // date.getTime() < endDate.getTime()
-            dateValue != 0 && startDate.getTime() < dateValue && dateValue < endDate.getTime()
+            dateValue !== 0 && startDate.getTime() < dateValue && dateValue < endDate.getTime()
           ) {
             return true;
           }
@@ -63,7 +63,7 @@ function isBookingWithDates(booking, startDate, endDate) {
         if (
           // typeof slot.date.getTime === 'function' && startDate.getTime() < slot.date.getTime() &&
           // slot.date.getTime() < endDate.getTime()
-          dateValue != 0 && startDate.getTime() < dateValue && dateValue < endDate.getTime()
+          dateValue !== 0 && startDate.getTime() < dateValue && dateValue < endDate.getTime()
         ) {
           return true;
         }
