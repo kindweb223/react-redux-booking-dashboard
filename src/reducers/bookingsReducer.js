@@ -68,6 +68,7 @@ function bookingsReducer(state, action) {
         invoices: "",
       }
     case GET_BOOKINGS_SUCCESS:
+      debugger;
       const newBookings = action.payload.map(item => {
         if(item.slots)
           item.slots = JSON.parse(item.slots);
@@ -153,6 +154,7 @@ function bookingsReducer(state, action) {
       }
     case GET_BOOKING_BOOKINGSATTUS_ERROR:
       return {
+        ...state,
         loadBooking: false,
       }
     case "upsert_booking": {
