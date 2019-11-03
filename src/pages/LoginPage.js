@@ -73,8 +73,7 @@ const LoginPage = props => {
                 signedUpAt: res.data.user.createdAt,
               })
               userflow.startFlow('d496295e-ae0c-4c03-83c8-9794fcac74ed')
-            }
-            else props.history.push('/calendar')
+            }else props.history.push('/calendar')
 
           } catch (err) {
             dispatch({

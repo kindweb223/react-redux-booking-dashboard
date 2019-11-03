@@ -26,6 +26,7 @@ import {
   REUQEST_GET_BOOKING_SETTINGS,
   CLEAR_BOOKING_DATA,
   GET_ADD_CUSTOMER_SUCCESS,
+  REQUEST_GET_CUSTOM_BOOKING_COLOR, GET_CUSTOM_BOOKING_COLOR_SUCCESS, GET_CUSTOM_BOOKING_COLOR_ERROR,
 } from "../reducers/actionType";
 
 import {
@@ -43,8 +44,9 @@ const CalendarPage = props => {
 
   const { calendarExpanded } = useContext(CalendarContext);
   const { state, dispatch } = useContext(AppReducerContext);
-  const venues = state.settings.venues;
-  const events = state.bookings.bookings && state.bookings.bookings.map(b => bookingToEvents(b, venues)).flat();
+  // const venues = state.settings.venues;
+  // const events = state.bookings.bookings && state.bookings.bookings.map(b => bookingToEvents(b, venues)).flat();
+    const [events, setEvents] = useState([])
 
   useEffect(() => {
 
@@ -53,7 +55,6 @@ const CalendarPage = props => {
         dispatch({ type: REQUEST_GET_BOOKINGS });
 
         const res = await axios.get('/bookings');
-
         dispatch({
           type: GET_BOOKINGS_SUCCESS,
           payload: res.data.bookings
@@ -106,8 +107,8 @@ const CalendarPage = props => {
       }
     }
 
-    if (!(venues && venues.length > 0))
-    getVenue();
+    if (!state.settings.venues && state.settings.venues.length > 0)
+      getVenue();
 
     const getCompany = async () => {
       try {
@@ -145,7 +146,36 @@ const CalendarPage = props => {
     if(!(state.bookings.bookingStatus && state.bookings.bookingStatus.length > 0))
     getBookingStatus();
 
+    const getBookingColors = async () => {
+      dispatch({ type: REQUEST_GET_CUSTOM_BOOKING_COLOR })
+      try {
+        const res = await axios.get('/bookingcolor')
+        if (res.data.bookingColor) {
+          dispatch({
+            type: GET_CUSTOM_BOOKING_COLOR_SUCCESS,
+            payload: JSON.parse(res.data.bookingColor.color)
+          })
+        } else {
+          dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })  
+        }
+      } catch (err) {
+        dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })
+      }      
+    }
+    getBookingColors();
+
   }, [])
+  
+  useEffect(() => {
+    if (state.customBookingColor.bookingColors && state.bookings.bookings) {      
+      setEvents(
+        state.bookings.bookings && state.bookings.bookings.map(b => bookingToEvents(b, state.customBookingColor.bookingColors)).flat()
+      )
+    }
+  }, [
+    state.bookings.bookings, 
+    state.customBookingColor.bookingColors,    
+  ])
 
   const handleClickSave = async (booking) => {
     setShowCreateBookingModal(false);

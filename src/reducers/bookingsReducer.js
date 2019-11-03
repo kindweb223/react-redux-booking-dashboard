@@ -68,7 +68,6 @@ function bookingsReducer(state, action) {
         invoices: "",
       }
     case GET_BOOKINGS_SUCCESS:
-      debugger;
       const newBookings = action.payload.map(item => {
         if(item.slots)
           item.slots = JSON.parse(item.slots);

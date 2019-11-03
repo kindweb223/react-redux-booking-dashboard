@@ -19,7 +19,6 @@ import {
 import { BOOKING_COLOR_CONDITION_KEYS, BOOKING_COLORS } from '../../../constants';
 import {
   REQUEST_GET_CUSTOM_BOOKING_COLOR, GET_CUSTOM_BOOKING_COLOR_SUCCESS, GET_CUSTOM_BOOKING_COLOR_ERROR,
-  REQUEST_SAVE_CUSTOM_BOOKING_COLOR, SAVE_CUSTOM_BOOKING_COLOR_SUCCESS, SAVE_CUSTOM_BOOKING_COLOR_ERROR,
 } from '../../../reducers/actionType'
 
 import '../../../css/settings.css'
@@ -138,7 +137,7 @@ const CustomBookingColorSection = () => {
   }
 
   const addCondition = () => {
-    setConditionSettings([
+    const newOne = [
       ...conditionSettings,
       {
         color: BOOKING_COLORS[0],
@@ -152,7 +151,9 @@ const CustomBookingColorSection = () => {
           ]          
         ]
       }
-    ])
+    ]
+    setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   const getInitialConditionType = (condition_key) => {
@@ -269,6 +270,7 @@ const CustomBookingColorSection = () => {
       condition_value: BOOKING_COLOR_CONDITION_KEYS[0].condition_values[0].value,
     })
     setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   const handleClickOR = (nKey, nKeyTwo) => {
@@ -283,6 +285,7 @@ const CustomBookingColorSection = () => {
       ]       
     )
     setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   const handleChangeBookingColor = (selColor, nKey) => {
@@ -291,6 +294,7 @@ const CustomBookingColorSection = () => {
       return
       newOne[nKey].color = selColor
     setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   const handleClickDeleteRow = (nKey, nKeyTwo, nIndex) => {
