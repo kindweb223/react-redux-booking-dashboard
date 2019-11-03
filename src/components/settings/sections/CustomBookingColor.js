@@ -305,6 +305,7 @@ const CustomBookingColorSection = () => {
     if (newOne[nKey].content.length === 0)
       newOne.splice(nKey, 1)
     setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   return (
