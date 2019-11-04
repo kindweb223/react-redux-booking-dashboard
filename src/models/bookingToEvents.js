@@ -60,10 +60,10 @@ function getBookingColor(booking, bookignColors) {
         itemOne.map(itemTwo => {          
           if (itemTwo.condition_key === 'title' && itemTwo.condition_value.length > 0) {
             if (itemTwo.condition_type === 'contains') {
-              if (booking.eventName.indexOf(itemTwo.condition_value) >= 0)
+              if (booking.eventName.toLowerCase().indexOf(itemTwo.condition_value.toLowerCase()) >= 0)
                 isOneAddContion = true;
             } else if (itemTwo.condition_type === 'not_contains') {
-              if (booking.eventName.indexOf(itemTwo.condition_value) < 0)
+              if (booking.eventName.toLowerCase().indexOf(itemTwo.condition_value.toLowerCase()) < 0)
                 isOneAddContion = true;
             }
           } else if (itemTwo.condition_key === 'payment_status') {
