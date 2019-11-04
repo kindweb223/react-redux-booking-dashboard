@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import colors from "../../style/colors";
 import AddGlyph from "../../../images/Glyphs/AddGlyph";
+import CircleAddGlyph from "../../../images/Glyphs/CircleAddGlyph";
 import removeSvg from "../../../images/ui/remove.svg";
 import P2 from "../../typography/P2";
 import Button from "../../buttons/Button";
@@ -403,18 +404,18 @@ const CustomBookingColorSection = () => {
                     <StyledOutlineButton                
                       outline
                       onClick={() => handleClickAdd(nKey, nKeyTwo)}
-                      iconComponent={() => <AddGlyph fill={colors.grey} />}        
+                      iconComponent={() => <CircleAddGlyph fill={colors.grey} side={16} />}        
                     >
-                      And
+                      &nbsp;And
                     </StyledOutlineButton>
                     {
                       nKeyTwo === (itemOne.content.length - 1) && (
                         <StyledOutlineButton                
                           outline
                           onClick={() => handleClickOR(nKey)}
-                          iconComponent={() => <AddGlyph fill={colors.grey} />}        
+                          iconComponent={() => <CircleAddGlyph fill={colors.grey} side={16} />}        
                         >
-                          Or
+                          &nbsp;Or
                         </StyledOutlineButton>
                       )
                     }
