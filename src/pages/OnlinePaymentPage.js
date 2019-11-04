@@ -1,19 +1,19 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from 'axios';
 import styled from "styled-components";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExclamation } from '@fortawesome/free-solid-svg-icons'
-import { 
-	TableEditableValue,
-	TableDivider,
-} from "../components/tables/tables";
-import AddGlyph from "../images/Glyphs/AddGlyph";
-import SvgButton from "../components/buttons/SvgButton";
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { faExclamation } from '@fortawesome/free-solid-svg-icons'
+// import { 
+// 	TableEditableValue,
+// 	TableDivider,
+// } from "../components/tables/tables";
+// import AddGlyph from "../images/Glyphs/AddGlyph";
+// import SvgButton from "../components/buttons/SvgButton";
 import colors from "../components/style/colors";
-import Grid from "../components/layout/Grid";
+// import Grid from "../components/layout/Grid";
 import Button from "../components/buttons/Button";
 import { AppReducerContext } from "../contexts/AppReducerContext";
-import { css } from "emotion";
+// import { css } from "emotion";
 import P2 from "../components/typography/P1";
 import SpinnerContainer from "../components/layout/Spinner";
 
@@ -25,12 +25,12 @@ import {
 
 const OnlinePaymentPage = () => {
 
-	const StyledLink = styled.a`
-		color: ${colors.accent_pink};
-		text-decoration: none;
-	`;
+	// const StyledLink = styled.a`
+	// 	color: ${colors.accent_pink};
+	// 	text-decoration: none;
+	// `;
 
-	const StyledInputDiv = styled.div``;
+	// const StyledInputDiv = styled.div``;
 
 	const StyledBtnContainer = styled.div`
 		display: flex;
@@ -38,30 +38,30 @@ const OnlinePaymentPage = () => {
 		margin-top: 1em;
 	`;
 
-	const StyledLabel = styled.label`
-		font-size: 0.82em;
-    font-weight: 500;
-    line-height: 1.55;
-    color: #93989F;
-		margin-bottom: 0.3em;
-		display: flex;
-		align-item: center;
-	`;
+	// const StyledLabel = styled.label`
+	// 	font-size: 0.82em;
+  //   font-weight: 500;
+  //   line-height: 1.55;
+  //   color: #93989F;
+	// 	margin-bottom: 0.3em;
+	// 	display: flex;
+	// 	align-item: center;
+	// `;
 
-	const IconSpan = styled.span`
-		width: 16px;
-		height: 16px;
-		justify-content: center;
-		align-items: center;
-		border: 1px solid #93989F;
-		border-radius: 10px;
-		margin-left: 18px;
-		display: flex;
-		cursor: pointer;
-		.fa-icons {
-			font-size: 10px;
-		}
-	`;
+	// const IconSpan = styled.span`
+	// 	width: 16px;
+	// 	height: 16px;
+	// 	justify-content: center;
+	// 	align-items: center;
+	// 	border: 1px solid #93989F;
+	// 	border-radius: 10px;
+	// 	margin-left: 18px;
+	// 	display: flex;
+	// 	cursor: pointer;
+	// 	.fa-icons {
+	// 		font-size: 10px;
+	// 	}
+	// `;
 
 	const { state, dispatch } = useContext(AppReducerContext);
 	const [stripInformation, setStripInformation] = useState({
@@ -77,32 +77,32 @@ const OnlinePaymentPage = () => {
 		})
 	}, [state.auth.user.stripe_public_key])
 
-	const savePaymentInformation = async () => {
-		try {
-			dispatch({ type: REQUEST_SAVE_PAYMENT_INFORMATION });
+	// const savePaymentInformation = async () => {
+	// 	try {
+	// 		dispatch({ type: REQUEST_SAVE_PAYMENT_INFORMATION });
 
-			const config = {
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			};
+	// 		const config = {
+	// 			headers: {
+	// 				'Content-Type': 'application/json'
+	// 			}
+	// 		};
 
-			const res = await axios.put(
-				'/users',
-				{
-					stripe_public_key: stripInformation.public_key.value,
-				},
-				config
-			)
+	// 		const res = await axios.put(
+	// 			'/users',
+	// 			{
+	// 				stripe_public_key: stripInformation.public_key.value,
+	// 			},
+	// 			config
+	// 		)
 
-			dispatch({
-				type: SAVE_PAYMENT_INFORMATION_SUCCESS,
-				public_key: stripInformation.public_key.value,
-			})
-		} catch (err) {
-			dispatch({ type: SAVE_PAYMENT_INFORMATION_ERROR })
-		}
-	}
+	// 		dispatch({
+	// 			type: SAVE_PAYMENT_INFORMATION_SUCCESS,
+	// 			public_key: stripInformation.public_key.value,
+	// 		})
+	// 	} catch (err) {
+	// 		dispatch({ type: SAVE_PAYMENT_INFORMATION_ERROR })
+	// 	}
+	// }
 
 	const testCreatePaymentInformation = async () => {
 		if (state.auth.user.stripe_status != 0)
@@ -129,14 +129,14 @@ const OnlinePaymentPage = () => {
 		}
 	}
 
-	const changeStripInformation = (keyName, value) => {
-		const newInfo = { ...stripInformation };
-		newInfo[keyName].value = value;
-		newInfo[keyName].validate = (value.length > 0)
-		setStripInformation({
-			...newInfo,
-		})
-	}
+	// const changeStripInformation = (keyName, value) => {
+	// 	const newInfo = { ...stripInformation };
+	// 	newInfo[keyName].value = value;
+	// 	newInfo[keyName].validate = (value.length > 0)
+	// 	setStripInformation({
+	// 		...newInfo,
+	// 	})
+	// }
 
 	return (
 		<div>
@@ -205,7 +205,7 @@ const OnlinePaymentPage = () => {
 				<Button
 					primary
 					onClick={testCreatePaymentInformation}					
-					disabled={state.auth.user.stripe_status != 0}
+					disabled={state.auth.user.stripe_status !== 0}
 				>
 					Connect Your Stripe
 				</Button>

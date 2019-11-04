@@ -108,7 +108,7 @@ const VenuesAndSpacesPage = props => {
     setSelectedVenueIndex(null);
     dispatch({ type: REQUEST_DELETE_VENUE });
     try {
-      const res = await axios.delete(`/venues/${id}`);
+      await axios.delete(`/venues/${id}`);
       dispatch({
         type: GET_DELETE_VENUE_SUCCESS,
         payload: id
@@ -126,7 +126,7 @@ const VenuesAndSpacesPage = props => {
           'Content-Type': 'application/json'
         }
       };
-      const res = await axios.put(`/venues/${id}`, JSON.stringify({ id, name }), config);
+      await axios.put(`/venues/${id}`, JSON.stringify({ id, name }), config);
       dispatch({
         type: GET_EDIT_VENUE_SUCCESS,
         payload: { id, name }
@@ -178,7 +178,7 @@ const VenuesAndSpacesPage = props => {
           'Content-Type': 'application/json'
         }
       };
-      const res = await axios.put(`/spaces/${id}`, JSON.stringify({ id, name }), config);
+       await axios.put(`/spaces/${id}`, JSON.stringify({ id, name }), config);
       dispatch({
         type: GET_EDIT_VENUE_SPACE_SUCCESS,
         payload: { id, name }
@@ -191,7 +191,7 @@ const VenuesAndSpacesPage = props => {
   const deleteSpaceOfVenue = async (id) => {
     dispatch({ type: REQUEST_DELETE_VENUE_SPACE });
     try {
-      const res = await axios.delete(`/spaces/${id}`);
+      await axios.delete(`/spaces/${id}`);
       dispatch({
         type: GET_DELETE_VENUE_SPACE_SUCCESS,
         payload: id
@@ -308,7 +308,7 @@ const VenuesAndSpacesPage = props => {
 
 const ColumnContainer = ({ children = null }) => {
 
-  const { state, dispatch } = useContext(AppReducerContext);
+  const { state } = useContext(AppReducerContext);
   return (
     <div
       className={css`

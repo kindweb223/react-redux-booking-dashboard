@@ -70,7 +70,7 @@ const initialState = {
 
   customBookingColor: {
     loading: true,
-    settings: [],
+    bookingColors: [],
   }
 
 };

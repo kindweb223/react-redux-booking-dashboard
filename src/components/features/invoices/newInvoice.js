@@ -5,7 +5,7 @@ import { AppReducerContext } from "../../../contexts/AppReducerContext";
 
 const NewInvoice = props => {
   const { booking, onEndEditing, invoiceNumber } = props;
-  const { dispatch } = useContext(AppReducerContext);
+  // const { dispatch } = useContext(AppReducerContext);
   const newInvoice = createEmptyInvoice(invoiceNumber, booking);
 
   return (

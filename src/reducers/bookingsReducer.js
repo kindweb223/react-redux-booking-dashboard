@@ -153,6 +153,7 @@ function bookingsReducer(state, action) {
       }
     case GET_BOOKING_BOOKINGSATTUS_ERROR:
       return {
+        ...state,
         loadBooking: false,
       }
     case "upsert_booking": {

@@ -1,16 +1,16 @@
 import React, {useState, useContext, useEffect} from "react";
+import useDebouncedCallback from "use-debounce/lib/useDebouncedCallback";
 import axios from 'axios';
 import styled from "styled-components";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-
 import colors from "../../style/colors";
+import AddGlyph from "../../../images/Glyphs/AddGlyph";
+import removeSvg from "../../../images/ui/remove.svg";
 import P2 from "../../typography/P2";
 import Button from "../../buttons/Button";
 import SpinnerContainer from "../../layout/Spinner";
-import AddGlyph from "../../../images/Glyphs/AddGlyph";
 import { TablePicker, TableEditableValue, TableDivider } from "../../tables/tables";
+import SvgButton from "../../buttons/SvgButton";
 
 import {
   AppReducerContext,
@@ -19,7 +19,6 @@ import {
 import { BOOKING_COLOR_CONDITION_KEYS, BOOKING_COLORS } from '../../../constants';
 import {
   REQUEST_GET_CUSTOM_BOOKING_COLOR, GET_CUSTOM_BOOKING_COLOR_SUCCESS, GET_CUSTOM_BOOKING_COLOR_ERROR,
-  REQUEST_SAVE_CUSTOM_BOOKING_COLOR, SAVE_CUSTOM_BOOKING_COLOR_SUCCESS, SAVE_CUSTOM_BOOKING_COLOR_ERROR,
 } from '../../../reducers/actionType'
 
 import '../../../css/settings.css'
@@ -37,6 +36,7 @@ const Row = styled.div`
   flex-direction: row;
   width: 100%;
   margin-bottom: 1em;
+  align-items: center;
   &:last-child {
     margin-bottom: 0;
   }
@@ -44,7 +44,7 @@ const Row = styled.div`
 
 const ConditionItemDiv = styled.div`
   display: flex;
-  width: 28%;
+  width: 30%;
   padding-right: 1em;
 `;
 
@@ -72,46 +72,72 @@ const StyledP2 = styled(P2)`
   line-height: 34px;
 `;
 
-const StyledDeleteButton = styled(Button)`
+const RemoveButton = styled(SvgButton)`
+  margin-left: auto;
 `;
 
 const CustomBookingColorSection = () => {
 
   const { state, dispatch } = useContext(AppReducerContext);
 
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [conditionSettingId, setConditionSettingId] = useState(-1)
   const [conditionSettings, setConditionSettings] = useState([
-      {        
-        color: BOOKING_COLORS[0],
-        content: [
-          [
-            {
-              condition_key: BOOKING_COLOR_CONDITION_KEYS[0].condition_key.value, 
-              condition_type: BOOKING_COLOR_CONDITION_KEYS[0].condition_types[0].value,
-              condition_value: ""
-            }
-          ]          
-        ]
-      }
+    {        
+      color: BOOKING_COLORS[0],
+      content: [
+        [
+          {
+            condition_key: BOOKING_COLOR_CONDITION_KEYS[0].condition_key.value, 
+            condition_type: BOOKING_COLOR_CONDITION_KEYS[0].condition_types[0].value,
+            condition_value: BOOKING_COLOR_CONDITION_KEYS[0].condition_values[0].value,
+          }
+        ]          
+      ]
+    }
   ])
 
   useEffect(() => {
     const getCustomBookingColorInfo = async () => {
-      try {
-        dispatch({ type: REQUEST_GET_CUSTOM_BOOKING_COLOR })
-        // const res = await axios.get('/custom-booking-color')
-        // dispatch({ 
-        //   type: GET_CUSTOM_BOOKING_COLOR_SUCCESS,
-        //   payload: res.data.custom
-        // })
+      try {        
+        const res = await axios.get('/bookingcolor')
+        if (res.data.bookingColor) {
+          setConditionSettingId(res.data.bookingColor.id)
+          setConditionSettings(JSON.parse(res.data.bookingColor.color))
+        }
+        setLoading(false)
       } catch {
-        dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })
+
+        setLoading(false)
       }
     }
-    // getCustomBookingColorInfo();
+    getCustomBookingColorInfo();
   }, [])
 
-  const addCondition = () => {    
-    setConditionSettings([
+  const saveConditions = async (conditions) => {
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+      setSaving(true);
+      let res;
+      if (conditionSettingId === -1) {
+        res = await axios.post('/bookingcolor', {color: JSON.stringify(conditions)}, config)
+        setConditionSettingId(res.data.bookingColor.id)
+      } else {
+        res = await axios.put(`/bookingcolor/${conditionSettingId}`, {color: JSON.stringify(conditions)}, config)
+      }
+      setSaving(false);
+    } catch (err) {
+      setSaving(false);
+    }
+  }
+
+  const addCondition = () => {
+    const newOne = [
       ...conditionSettings,
       {
         color: BOOKING_COLORS[0],
@@ -120,12 +146,14 @@ const CustomBookingColorSection = () => {
             {
               condition_key: BOOKING_COLOR_CONDITION_KEYS[0].condition_key.value, 
               condition_type: BOOKING_COLOR_CONDITION_KEYS[0].condition_types[0].value,
-              condition_value: ""
+              condition_value: BOOKING_COLOR_CONDITION_KEYS[0].condition_values[0].value,
             }
           ]          
         ]
       }
-    ])
+    ]
+    setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   const getInitialConditionType = (condition_key) => {
@@ -167,6 +195,7 @@ const CustomBookingColorSection = () => {
       newOne[nKey].content[nKeyTwo][nIndex].condition_value = ""
       
     setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   const getConditionTypeValues = (condition_key) => {
@@ -191,6 +220,7 @@ const CustomBookingColorSection = () => {
     const newOne = [ ...conditionSettings];
     newOne[nKey].content[nKeyTwo][nIndex].condition_type = condition_type;
     setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   const getConditionValuesValue = (condition_key) => {
@@ -217,16 +247,30 @@ const CustomBookingColorSection = () => {
       return;
       newOne[nKey].content[nKeyTwo][nIndex].condition_value = value;
     setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
+
+  const handleChangeConditionValueText = (value, nKey, nKeyTwo, nIndex) => {
+    const newOne = [...conditionSettings];
+    if (newOne[nKey].content[nKeyTwo][nIndex].condition_value === value)
+      return;
+    newOne[nKey].content[nKeyTwo][nIndex].condition_value = value;
+    setConditionSettings([ ...newOne ])
+  }
+
+  const [debouncedChangeConditionValue] = useDebouncedCallback((value, nKey, nKeyTwo, nIndex) => {
+    saveConditions(conditionSettings)
+  }, 1000);
 
   const handleClickAdd = (nKey, nKeyTwo) => {
     const newOne = [...conditionSettings]
     newOne[nKey].content[nKeyTwo].push({
       condition_key: BOOKING_COLOR_CONDITION_KEYS[0].condition_key.value, 
       condition_type: BOOKING_COLOR_CONDITION_KEYS[0].condition_types[0].value,
-      condition_value: ""
+      condition_value: BOOKING_COLOR_CONDITION_KEYS[0].condition_values[0].value,
     })
     setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   const handleClickOR = (nKey, nKeyTwo) => {
@@ -236,11 +280,12 @@ const CustomBookingColorSection = () => {
         {
           condition_key: BOOKING_COLOR_CONDITION_KEYS[0].condition_key.value, 
           condition_type: BOOKING_COLOR_CONDITION_KEYS[0].condition_types[0].value,
-          condition_value: ""
+          condition_value: BOOKING_COLOR_CONDITION_KEYS[0].condition_values[0].value,
         }
       ]       
     )
     setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   const handleChangeBookingColor = (selColor, nKey) => {
@@ -249,10 +294,10 @@ const CustomBookingColorSection = () => {
       return
       newOne[nKey].color = selColor
     setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   const handleClickDeleteRow = (nKey, nKeyTwo, nIndex) => {
-    debugger;
     const newOne = [ ...conditionSettings ]
     newOne[nKey].content[nKeyTwo].splice(nIndex, 1)
     if (newOne[nKey].content[nKeyTwo].length === 0)
@@ -260,11 +305,12 @@ const CustomBookingColorSection = () => {
     if (newOne[nKey].content.length === 0)
       newOne.splice(nKey, 1)
     setConditionSettings([ ...newOne ])
+    saveConditions(newOne)
   }
 
   return (
     <div>
-      {/* <SpinnerContainer loading={state.customBookingColor.loading.toString()} /> */}
+      <SpinnerContainer loading={loading.toString()} />
       <P2 color="grey">Add a custom colour to your booking Calendar</P2>
       {
         conditionSettings.map((itemOne, nKey) => {
@@ -323,12 +369,15 @@ const CustomBookingColorSection = () => {
                                   label=""
                                   value={item.condition_value}
                                   style={{width: '100%'}}
-                                  onChange={value => handleChnageConditionValue(value, nKey, nKeyTwo, nIndex)}
+                                  onChange={value => {
+                                    handleChangeConditionValueText(value, nKey, nKeyTwo, nIndex)
+                                    debouncedChangeConditionValue(value, nKey, nKeyTwo, nIndex)
+                                  }}
                                 />
                               )
                             }
                             {
-                              item.condition_key === 'payment_status' && (
+                              (item.condition_key === 'payment_status' || item.condition_key === 'slot_type') && (
                                 <TablePicker
                                   label=""
                                   options={getConditionValuesValue(item.condition_key)}
@@ -340,14 +389,13 @@ const CustomBookingColorSection = () => {
                                   onOptionSelected={value => handleChnageConditionValue(value, nKey, nKeyTwo, nIndex)}
                                 />
                               )
-                            }
+                            }                            
                           </ConditionItemDiv>
-                          <StyledDeleteButton 
-                            outline
+                          <RemoveButton
+                            size={20}
+                            svg={removeSvg}
                             onClick={() => handleClickDeleteRow(nKey, nKeyTwo, nIndex)}
-                          >
-                            <FontAwesomeIcon className="fa-icons" icon={faTimes} />
-                          </StyledDeleteButton >
+                          />
                         </Row>                  
                     })
                   }

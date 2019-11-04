@@ -5,13 +5,13 @@ import { updatedDate } from "../utils/dates";
  * depending on the slots of the booking)
  * @param {Booking} booking
  */
-function bookingToEvents(booking, venues) {
+function bookingToEvents(booking, bookignColors) {
   const res = [];
   // const venue = venues.find(v => v.id === booking.venue);
 
   booking.slots.length && booking.slots.forEach((slot, index) => {
     // const space = venue.spaces.find(space => space.id === booking.space);
-
+    let filteredColor = getBookingColor(booking, bookignColors);
     switch (slot.kind) {
       case "multi-day":
         slot.dateRange.forEach((slotDate, dateIndex) => {
@@ -21,8 +21,8 @@ function bookingToEvents(booking, venues) {
             title: booking.title,
             subtitle: booking.eventName,
             start: updatedDate(slotDate, slot.startHour, slot.startMinute),
-            end: updatedDate(slotDate, slot.endHour, slot.endMinute),
-            accent: "#4a9454"
+            end: updatedDate(slotDate, slot.endHour, slot.endMinute),            
+            accent: filteredColor.length > 0 ? filteredColor : "#4a9454"
           });
         });
 
@@ -36,7 +36,7 @@ function bookingToEvents(booking, venues) {
           subtitle: booking.eventName,
           start: updatedDate(slot.date, slot.startHour, slot.startMinute),
           end: updatedDate(slot.date, slot.endHour, slot.endMinute),
-          accent: "#6389ea"
+          accent: filteredColor.length > 0 ? filteredColor : "#6389ea"          
         });
 
         break;
@@ -47,6 +47,41 @@ function bookingToEvents(booking, venues) {
   });
 
   return res;
+}
+
+function getBookingColor(booking, bookignColors) {
+  let color = '';
+  let isMatched = false;
+  if (bookignColors && bookignColors.length > 0 && Object.keys(booking).length > 0) {
+    debugger;
+    bookignColors.forEach(item => {
+      item.content.forEach(itemOne => {
+        let isOneAddContion = false;
+        itemOne.map(itemTwo => {          
+          if (itemTwo.condition_key === 'title' && itemTwo.condition_value.length > 0) {
+            if (itemTwo.condition_type === 'contains') {
+              if (booking.eventName.indexOf(itemTwo.condition_value) >= 0)
+                isOneAddContion = true;
+            } else if (itemTwo.condition_type === 'not_contains') {
+              if (booking.eventName.indexOf(itemTwo.condition_value) < 0)
+                isOneAddContion = true;
+            }
+          } else if (itemTwo.condition_key === 'payment_status') {
+            if (itemTwo.condition_type === 'equal') {
+              if (booking.status.name.toLowerCase() === itemTwo.condition_value.toLowerCase())
+                isOneAddContion = true;              
+            } else if(itemTwo.condition_type === 'not_equal') {
+              if (booking.status.name.toLowerCase() !== itemTwo.condition_value.toLowerCase())
+                isOneAddContion = true;
+            }
+          }
+        })
+        if (isOneAddContion) color = item.color;
+      })
+    })    
+  }
+  
+  return color;
 }
 
 export { bookingToEvents };

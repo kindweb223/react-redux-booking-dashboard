@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
+import { withRouter } from "react-router-dom";
+import {loadUserflow} from 'userflow.js'
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 import jsonwebtoken from 'jsonwebtoken';
 import SpinnerContainer from '../components/layout/Spinner';
 import styled from "styled-components";
@@ -22,6 +23,8 @@ const LoginPage = props => {
     justify-content: center;
   `;
   
+  const { dispatch } = useContext(AppReducerContext);
+
   useEffect(() => {
     const indexStr = 'access_token=';
     const href = window.location.href;
@@ -52,14 +55,26 @@ const LoginPage = props => {
               '/auth/login',
               JSON.stringify(values),
               config
-            );      
+            );
             
-            if(res.data.success) {
+            if (res.data.success) {
               dispatch({
                 type: 'get_login_success',
                 payload: {...res.data},
               })
             }
+
+            if (res.data.user.is_new) {
+              const userflow = await loadUserflow()
+              userflow.init('ytb6m37wn5drnj2zkxptyvke6i')
+              userflow.identify(res.data.user.id, {
+                name: `${res.data.user.firstName} ${res.data.user.lastName}`,
+                email: res.data.user.email,
+                signedUpAt: res.data.user.createdAt,
+              })
+              userflow.startFlow('d496295e-ae0c-4c03-83c8-9794fcac74ed')
+            }else props.history.push('/calendar')
+
           } catch (err) {
             dispatch({
               type: 'get_login_error',
@@ -77,13 +92,7 @@ const LoginPage = props => {
       window.location.replace(CONFIG.BASE_URL);
     }
 
-  }, [])
-  
-  const { state, dispatch } = useContext(AppReducerContext);
-
-  if(state.auth.isAuthenticated) {
-    return <Redirect to='/calendar' />;
-  }
+  }, [])  
 
   return (
     <Container>
@@ -92,4 +101,4 @@ const LoginPage = props => {
   )
 }
 
-export default LoginPage;
+export default withRouter(LoginPage);

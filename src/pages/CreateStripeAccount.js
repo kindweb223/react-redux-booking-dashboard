@@ -6,7 +6,7 @@ import { STRIPE_CONNECTION_SUCCESS } from '../reducers/actionType';
 
 const CreateStripeAccount = (props) => {
 
-    const { state, dispatch } = useContext(AppReducerContext);
+    const { dispatch } = useContext(AppReducerContext);
 
     useEffect(() => {
         let locQueryObj = props.location.search;

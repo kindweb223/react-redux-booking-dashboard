@@ -4,7 +4,7 @@ import Modal from "../components/modals/modal";
 import BookingDetail from "../components/features/bookingDetail/bookingDetail";
 import { createEmptyBooking } from "../models/bookings";
 import { Table, TableValue } from "../components/tables/tables";
-import { formatEventDate } from "../utils/dateFormatting";
+// import { formatEventDate } from "../utils/dateFormatting";
 import PickerButton from "../components/buttons/PickerButton";
 import BigTabbedFilter from "../components/features/BigTabbedFilter";
 import OutlinedButton from "../components/buttons/OutlinedButton";
