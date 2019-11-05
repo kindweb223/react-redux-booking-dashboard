@@ -18,6 +18,10 @@
   height: 0;
 }
 
+.rbc-time-view .rbc-event {
+  border-left-width: 8px !important;
+}
+
 .rbc-off-range-bg {
   background: #f6f7f9;
 }
@@ -158,4 +162,8 @@
 }
 .rbc-month-row .event-time {
   margin-bottom: 0.2em;
+}
+
+.rbc-day-slot .rbc-events-container {
+  margin-right: 0 !important;
 }

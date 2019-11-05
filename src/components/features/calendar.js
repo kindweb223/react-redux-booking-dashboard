@@ -3,6 +3,9 @@ import { cx, css } from "emotion";
 
 import BigCalendar from "react-big-calendar";
 import moment from "moment";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "../../css/calendar.css";
 import CalendarToolbar from "./calendarToolbar";
@@ -47,6 +50,7 @@ const Event = props => {
           `
         )}
       >
+        <FontAwesomeIcon className="fa-icons" icon={faUser} />&nbsp;&nbsp;&nbsp;
         {event.subtitle}
       </p>
       <p
@@ -85,7 +89,7 @@ const EventWrapper = props => {
             width: 100%;
             background-color: white;
             z-index: -2;
-            border-radius: 5px;
+            border-radius: 2px;
           }
           ::after {
             content: "";
@@ -96,13 +100,17 @@ const EventWrapper = props => {
             width: 100%;
             background-color: ${event.accent}15;
             z-index: -1;
-            border-radius: 5px;
+            border-radius: 2px;
           }
           z-index: 0;
-          border: 1px solid ${event.accent} !important;
+          border: 1px solid ${event.accent} ;
           background-color: ${event.accent}15 !important;
+
           color: black;
-          border-radius: 5px;
+          border-radius: 2px;
+          left: 5px !important;
+          right: 5px !important;
+          width: calc(100% - 10px) !important;
         }
         .rbc-selected {
           background-color: ${event.accent}60 !important;

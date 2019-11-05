@@ -53,7 +53,6 @@ function getBookingColor(booking, bookignColors) {
   let color = '';
   let isMatched = false;
   if (bookignColors && bookignColors.length > 0 && Object.keys(booking).length > 0) {
-    debugger;
     bookignColors.forEach(item => {
       item.content.forEach(itemOne => {
         let isOneAddContion = false;
