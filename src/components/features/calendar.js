@@ -3,6 +3,9 @@ import { cx, css } from "emotion";
 
 import BigCalendar from "react-big-calendar";
 import moment from "moment";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "../../css/calendar.css";
 import CalendarToolbar from "./calendarToolbar";
@@ -47,6 +50,7 @@ const Event = props => {
           `
         )}
       >
+        <FontAwesomeIcon className="fa-icons" icon={faUser} />&nbsp;&nbsp;&nbsp;
         {event.subtitle}
       </p>
       <p
