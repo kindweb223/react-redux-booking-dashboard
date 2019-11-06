@@ -68,18 +68,20 @@ const BookingRow = props => {
 };
 
 const SelectBookingModal = props => {
+  
   const { onSelectBooking } = props;
   const { state } = useContext(AppReducerContext);
   const [searchQuery, setSearchQuery] = useState("");
 
   const bookings = state.bookings.bookings;  
   const [filteredBookings, setFilteredBookings] = useState([])
+
   useEffect(() => {
-    setFilteredBookings(
+    setFilteredBookings([    
       ...bookings.filter(b =>
         b.eventName.toLowerCase().includes(searchQuery.toLowerCase())
       )
-    )
+    ])
   }, [bookings, searchQuery])
 
   return (
@@ -99,7 +101,6 @@ const SelectBookingModal = props => {
           onChange={e => setSearchQuery(e.target.value)}
           style={{ marginBottom: 30 }}
         />
-
         {filteredBookings.map(b => {
           if( b.customer )
             return <BookingRow

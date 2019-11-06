@@ -10,7 +10,7 @@ import removeSvg from "../../../images/ui/remove.svg";
 import P2 from "../../typography/P2";
 import Button from "../../buttons/Button";
 import SpinnerContainer from "../../layout/Spinner";
-import { TablePicker, TableEditableValue, TableDivider } from "../../tables/tables";
+import { TablePicker, TableEditableValue } from "../../tables/tables";
 import SvgButton from "../../buttons/SvgButton";
 
 import {
@@ -18,9 +18,6 @@ import {
 } from "../../../contexts/AppReducerContext";
 
 import { BOOKING_COLOR_CONDITION_KEYS, BOOKING_COLORS } from '../../../constants';
-import {
-  REQUEST_GET_CUSTOM_BOOKING_COLOR, GET_CUSTOM_BOOKING_COLOR_SUCCESS, GET_CUSTOM_BOOKING_COLOR_ERROR,
-} from '../../../reducers/actionType'
 
 import '../../../css/settings.css'
 
@@ -78,8 +75,6 @@ const RemoveButton = styled(SvgButton)`
 `;
 
 const CustomBookingColorSection = () => {
-
-  const { state, dispatch } = useContext(AppReducerContext);
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)

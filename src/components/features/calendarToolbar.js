@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { withRouter } from "react-router-dom";
 import moment from "moment";
 import H3 from "../typography/H3";
 import arrowRight from "../../images/ui/arrowRight.svg";
@@ -17,10 +18,13 @@ import CircleAddGlyph from "../../images/Glyphs/CircleAddGlyph";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
+import Modal from "../modals/modal"
+import CalendarCreateView from "../features/CalendarCreateView"
+import { AppReducerContext } from "../../contexts/AppReducerContext";
+
 const Container = styled.div`
   display: flex;
   align-items: center;
-
   h3 {
     margin: 0;
   }
@@ -52,7 +56,7 @@ const WrapperButton = styled(Button)`
 const ViewDropDown = styled.div`
   position: absolute;
   right: 0;
-  top: 100%;
+  top: calc(100% + 4px);
   display: ${props => (props.isOpen? 'flex' : 'none')};
   background-color: #f9f9f9;
   color: ${colors.grey}
@@ -87,9 +91,12 @@ const ViewTitle = styled.p`
 `;
 
 const CalendarToolbar = props => {
-  const { date, view: currentView, views, onView, onNavigate } = props;
+  const { date, view: currentView, views, onView, onNavigate, history } = props;
 
   const { calendarExpanded, setCalendarExpanded } = useContext(CalendarContext);
+  const { state, dispatch } = useContext(AppReducerContext)
+
+  const [showCreateViewModal, setShowCreateViewModal] = useState(false)
 
   const handleClickToday = () => {
     if (currentView !== 'day')
@@ -100,6 +107,10 @@ const CalendarToolbar = props => {
   const [openViewDropDown, setOpenViewDropDown] = useState(false);
   const handleClickViews = () => {
     setOpenViewDropDown(!openViewDropDown)
+  }
+
+  const handleClickCalendarView = calendarViewId => {
+    console.log(calendarViewId);
   }
 
   return (
@@ -169,19 +180,33 @@ const CalendarToolbar = props => {
         </WrapperButton>
         <ViewDropDown isOpen={openViewDropDown}>
           <ul>
-            <li>
+            <li onClick={() => history.push('/settings')}>
               <CircleAddGlyph side={16} fill={colors.grey} />&nbsp;&nbsp;Create another space
             </li>
             <ViewTitle>Views</ViewTitle>
-            <li>App Spaces</li>
-            <li>
+            <li>All Spaces</li>
+            {state.calendarViews.calendarViews.map((item, nIndex) => {
+              return <li key={item.id} onClick={() => handleClickCalendarView(item.id)}>
+                {item.title}
+              </li>
+            })}
+            <li onClick={() => setShowCreateViewModal(true)}>
               <FontAwesomeIcon className="fa-icons" icon={faPencilAlt} />
               &nbsp;&nbsp;Manage Views
             </li>
           </ul>
         </ViewDropDown>
       </ViewsButton>
-
+      
+      {
+        showCreateViewModal && (
+          <Modal 
+            isOpen={showCreateViewModal} 
+            onClose={() => setShowCreateViewModal(false)}>
+            <CalendarCreateView calendarViewData={state.calendarViews.calendarViewData} />
+          </Modal>
+        )
+      }      
     </Container>
   );
 };
@@ -199,4 +224,4 @@ function formatDate(date, view) {
   }
 }
 
-export default CalendarToolbar;
+export default withRouter(CalendarToolbar);

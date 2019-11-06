@@ -9,7 +9,7 @@ import styled from "styled-components";
 // } from "../components/tables/tables";
 // import AddGlyph from "../images/Glyphs/AddGlyph";
 // import SvgButton from "../components/buttons/SvgButton";
-import colors from "../components/style/colors";
+// import colors from "../components/style/colors";
 // import Grid from "../components/layout/Grid";
 import Button from "../components/buttons/Button";
 import { AppReducerContext } from "../contexts/AppReducerContext";
@@ -105,7 +105,7 @@ const OnlinePaymentPage = () => {
 	// }
 
 	const testCreatePaymentInformation = async () => {
-		if (state.auth.user.stripe_status != 0)
+		if (state.auth.user.stripe_status !== 0)
 			return;
 		try {
 			dispatch({ type: REQUEST_SAVE_PAYMENT_INFORMATION });
@@ -116,10 +116,9 @@ const OnlinePaymentPage = () => {
 			};
 			const res = await axios.post(
 				'/bookings/getCreateStripeAccountLink',
-			).then(function (res) {
-				console.log(res.data.url);
-				window.location.href = res.data.url;
-			});
+			)			
+			window.location.href = res.data.url;			
+			
 			dispatch({
 				type: SAVE_PAYMENT_INFORMATION_SUCCESS,
 				public_key: stripInformation.public_key.value,
