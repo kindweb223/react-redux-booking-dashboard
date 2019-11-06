@@ -20,7 +20,7 @@ import LoginPage from "./pages/LoginPage";
 
 import CONFIG from './config';
 
-Sentry.init({dsn: CONFIG.SENTRY_DSN});
+// Sentry.init({dsn: CONFIG.SENTRY_DSN});
 axios.defaults.baseURL = CONFIG.API_URL;
 
 if (localStorage.token) {

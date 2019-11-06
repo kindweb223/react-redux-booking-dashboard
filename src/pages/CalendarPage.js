@@ -27,6 +27,7 @@ import {
   CLEAR_BOOKING_DATA,
   GET_ADD_CUSTOMER_SUCCESS,
   REQUEST_GET_CUSTOM_BOOKING_COLOR, GET_CUSTOM_BOOKING_COLOR_SUCCESS, GET_CUSTOM_BOOKING_COLOR_ERROR,
+  REQUEST_GET_CALENDAR_CUSTOM_VIEW, GET_CALENDAR_CUSTOM_VIEW_SUCCESS, GET_CALENDAR_CUSTOM_VIEW_ERROR,
 } from "../reducers/actionType";
 
 import {
@@ -44,17 +45,18 @@ const CalendarPage = props => {
 
   const { calendarExpanded } = useContext(CalendarContext);
   const { state, dispatch } = useContext(AppReducerContext);
-  // const venues = state.settings.venues;
-  // const events = state.bookings.bookings && state.bookings.bookings.map(b => bookingToEvents(b, venues)).flat();
-    const [events, setEvents] = useState([])
+  const [events, setEvents] = useState([])
+
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-
+    setLoading(true);
     const getBookings = async () => {
       try {
         dispatch({ type: REQUEST_GET_BOOKINGS });
 
         const res = await axios.get('/bookings');
+        console.log('bookings');
         dispatch({
           type: GET_BOOKINGS_SUCCESS,
           payload: res.data.bookings
@@ -71,7 +73,7 @@ const CalendarPage = props => {
         dispatch({ type: REQUEST_GET_CUSTOMERS });
 
         const res = await axios.get('/customers');
-
+        console.log('customers');
         dispatch({
           type: GET_CUSTOMERS_SUCCESS,
           payload: res.data.customers
@@ -88,6 +90,7 @@ const CalendarPage = props => {
         dispatch({ type: REQUEST_GET_VENUE });
 
         const res = await axios.get('/venues');
+        console.log('venues');
         const venues = res.data.venues;
         venues.map(item => {
           if (!item.spaces) {
@@ -115,6 +118,7 @@ const CalendarPage = props => {
         dispatch({ type: REUQEST_GET_BOOKING_SETTINGS});
 
         const res = await axios.get('/company');
+        console.log('company');
         dispatch({
           type: GET_BOOKING_SETTINGS_SUCCESS,
           payload: {...res.data.company, loadBooking: true},
@@ -133,6 +137,7 @@ const CalendarPage = props => {
         dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
 
         const res = await axios.get('/statuses');
+        console.log('statues');
 
         dispatch({
           type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
@@ -150,6 +155,7 @@ const CalendarPage = props => {
       dispatch({ type: REQUEST_GET_CUSTOM_BOOKING_COLOR })
       try {
         const res = await axios.get('/bookingcolor')
+        console.log('bookingcolor');
         if (res.data.bookingColor) {
           dispatch({
             type: GET_CUSTOM_BOOKING_COLOR_SUCCESS,
@@ -164,6 +170,19 @@ const CalendarPage = props => {
     }
     getBookingColors();
 
+    const getCalendarViews = async () => {
+      try {        
+        const res = await axios.get('/calendarview')
+        
+        dispatch({ 
+          type: GET_CALENDAR_CUSTOM_VIEW_SUCCESS,
+          payload: res.data.calendarView ? res.data.calendarView : {},
+        })
+      } catch (err) {
+        dispatch({ type: GET_CALENDAR_CUSTOM_VIEW_ERROR })
+      }
+    }
+    getCalendarViews();
   }, [])
   
   useEffect(() => {
@@ -304,7 +323,9 @@ const CalendarPage = props => {
 
   return (
     <>
-      <SpinnerContainer loading={ (events && events.length <= 0) && (state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} />
+      <SpinnerContainer 
+        loading={ (events && events.length <= 0) && (state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} 
+      />
       <Grid
         fullheight
         columns={`${!calendarExpanded && constants.leftPanelWidth} 1fr`}
@@ -346,7 +367,7 @@ const CalendarPage = props => {
           selectable
           events={events}
           onSelectEvent={onSelectEvent}
-          onSelectSlot={handleSelectSlot}
+          onSelectSlot={handleSelectSlot}          
         />
       </Grid>
     </>

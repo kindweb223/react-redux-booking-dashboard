@@ -137,3 +137,17 @@ export const STRIPE_CONNECTION_SUCCESS        = 'Set User Stripe connection stat
 export const REQUEST_GET_CUSTOM_BOOKING_COLOR   = 'Request get custom booking color settings'
 export const GET_CUSTOM_BOOKING_COLOR_SUCCESS   = 'Get custom booking color setting success'
 export const GET_CUSTOM_BOOKING_COLOR_ERROR     = 'Get custom booking color setting error'
+
+// Create Views for Calendar
+export const REQUEST_GET_CALENDAR_CUSTOM_VIEW     = 'Request get calendar custom views'
+export const GET_CALENDAR_CUSTOM_VIEW_SUCCESS     = 'Get calendar custom views success'
+export const GET_CALENDAR_CUSTOM_VIEW_ERROR       = 'Get calendar custom views error'
+export const REQUEST_CREATE_CALENDAR_CUSTOM_VIEW  = 'Request create calendar custom view'
+export const CREATE_CALENDAR_CUSTOM_VIEW_SUCCESS  = 'Create calendar custom view success'
+export const CREATE_CALENDAR_CUSTOM_VIEW_ERROR    = 'Create calendar custom view error'
+export const REQUSET_UPDATE_CALENDAR_CUSTOM_VIEW  = 'Request update calendar custom view success'
+export const UPDATE_CALENDAR_CUSTOM_VIEW_SUCCESS  = 'Update calendar custom view success'
+export const UPDATE_CALENDAR_CUSTOM_VIEW_ERROR    = 'Update calendar custom view error'
+export const REQUEST_GET_USERS_ALL_SPACES         = 'Request get all spaces of logged in user'
+export const GET_USERS_ALL_SPACES_SUCCESS         = 'Get all spaces of login user success'
+export const GET_USERS_ALL_SPACES_ERROR           = 'Get all spaces of login user error'
