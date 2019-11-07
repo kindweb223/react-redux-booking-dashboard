@@ -76,8 +76,9 @@ const initialState = {
 
   calendarViews: {
     loading: true,
-    calendarViews: [],
+    calendarViewData: {},
     allSpaces: [],
+    curView: 'spaces',
   }
 };
 

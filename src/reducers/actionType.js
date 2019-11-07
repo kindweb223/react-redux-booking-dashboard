@@ -151,3 +151,4 @@ export const UPDATE_CALENDAR_CUSTOM_VIEW_ERROR    = 'Update calendar custom view
 export const REQUEST_GET_USERS_ALL_SPACES         = 'Request get all spaces of logged in user'
 export const GET_USERS_ALL_SPACES_SUCCESS         = 'Get all spaces of login user success'
 export const GET_USERS_ALL_SPACES_ERROR           = 'Get all spaces of login user error'
+export const SET_CURRENT_CALENDAR_VIEW            = 'Set current calendar view'

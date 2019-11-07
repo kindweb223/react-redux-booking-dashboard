@@ -69,7 +69,10 @@ const ErrorP = styled.p`
   font-size: 0.8em;
 `;
 
-const CalendarCreateView = ({calendarViewData}) => {
+const CalendarCreateView = ({
+  calendarViewData,
+  hideModal,
+}) => {
 
   const { state, dispatch } = useContext(AppReducerContext);
   const [calendarViews, setCalendarViews] = useState([...calendarViewData.views])
@@ -102,8 +105,51 @@ const CalendarCreateView = ({calendarViewData}) => {
     }
   }
 
-  const handleClickSave = () => {
+  const handleClickSave = async () => {
+    let isValidate = true;
+    calendarViews.forEach(item => {
+      if (item.title.length === 0 || item.spaces.length === 0)
+        isValidate = false
+    })
 
+    if (!isValidate)
+      return;
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    if (calendarViewData.id === -1) {
+      try {
+        const res = await axios.post('/calendarview', {views: JSON.stringify(calendarViews)}, config)      
+        dispatch({
+          type: CREATE_CALENDAR_CUSTOM_VIEW_SUCCESS,
+          payload: res.data.calendarView
+        })
+        hideModal()
+      } catch (err) {
+        dispatch({ type: CREATE_CALENDAR_CUSTOM_VIEW_ERROR })
+      }      
+    } else {      
+      try {
+        const res = await axios.put(
+          `/calendarview/${calendarViewData.id}`, 
+          {views: JSON.stringify(calendarViews)}, 
+          config
+        )
+
+        dispatch({
+          type: UPDATE_CALENDAR_CUSTOM_VIEW_SUCCESS,
+          payload: res.data.calendarView
+        })
+
+        hideModal()
+      } catch (err) {
+        dispatch({ type: UPDATE_CALENDAR_CUSTOM_VIEW_ERROR })
+      }
+    }
   }
 
   const handleChangeSpaces = (selected, nIndex) => {

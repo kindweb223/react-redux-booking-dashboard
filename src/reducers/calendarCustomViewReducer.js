@@ -3,6 +3,7 @@ import {
   REQUEST_CREATE_CALENDAR_CUSTOM_VIEW, CREATE_CALENDAR_CUSTOM_VIEW_SUCCESS, CREATE_CALENDAR_CUSTOM_VIEW_ERROR,
   REQUSET_UPDATE_CALENDAR_CUSTOM_VIEW, UPDATE_CALENDAR_CUSTOM_VIEW_SUCCESS, UPDATE_CALENDAR_CUSTOM_VIEW_ERROR,
   REQUEST_GET_USERS_ALL_SPACES, GET_USERS_ALL_SPACES_SUCCESS, GET_USERS_ALL_SPACES_ERROR,
+  SET_CURRENT_CALENDAR_VIEW,
 } from './actionType'
 
 function calendarCustomViewReducer(state = {}, action) {  
@@ -35,7 +36,11 @@ function calendarCustomViewReducer(state = {}, action) {
     case CREATE_CALENDAR_CUSTOM_VIEW_SUCCESS:
       return {
         ...state,
-        loading: false,        
+        loading: false,  
+        calendarViewData: { 
+          id: action.payload.id,
+          views: JSON.parse(action.payload.views)
+         }
       }
     case CREATE_CALENDAR_CUSTOM_VIEW_ERROR:
       return {
@@ -45,9 +50,17 @@ function calendarCustomViewReducer(state = {}, action) {
     case REQUSET_UPDATE_CALENDAR_CUSTOM_VIEW:
       return {
         ...state,
-        loading: true,
+        loading: true,        
       }
     case UPDATE_CALENDAR_CUSTOM_VIEW_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        calendarViewData: {
+          id: action.payload.id,
+          views: JSON.parse(action.payload.views)
+        }
+      }
     case UPDATE_CALENDAR_CUSTOM_VIEW_ERROR:
       return {
         ...state,
@@ -68,6 +81,11 @@ function calendarCustomViewReducer(state = {}, action) {
       return {
         ...state,
         loading: false
+      }
+    case SET_CURRENT_CALENDAR_VIEW:
+      return {
+        ...state,
+        curView: action.payload,
       }
     default:
       return state;
