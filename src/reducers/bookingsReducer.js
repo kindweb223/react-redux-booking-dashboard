@@ -514,7 +514,7 @@ function bookingsReducer(state, action) {
       // quote.slots.splice(action.index, 1);
       // return newState;      
 
-      const newSlot = state.quotes[action.quote].slots.filter((item, nIndex) => nIndex != action.index);
+      const newSlot = state.quotes[action.quote].slots.filter((item, nIndex) => nIndex !== action.index);
 
       return {
         ...state,
@@ -678,7 +678,7 @@ function bookingsReducer(state, action) {
 
     case "update_invoice": {
       const newState = Array.from(state);
-      const booking = newState.find(booking => booking.id === action.booking);
+      // const booking = newState.find(booking => booking.id === action.booking);
       // booking.invoices[action.index] = action.invoice;
       return newState;
     }

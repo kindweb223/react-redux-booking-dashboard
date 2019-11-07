@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react"
 import axios from 'axios'
 import styled from "styled-components";
+import { css } from "emotion";
 import { AppReducerContext } from '../../contexts/AppReducerContext'
 import MultiSelect from "@khanacademy/react-multi-select";
 import {
@@ -25,19 +26,53 @@ import {
 const Row = styled.div`
   display: flex;
   width: 100%;
-  align-items: center;
+  margin-bottom: 1rem;
 
-  .multi-select {
-    width: 40%;
-    margin-left: 1rem;
+  .multi-select {    
+    width: 100%;
+    .select-panel {
+      >label.select-item {
+        display: none !important;        
+      }
+    }
+    .dropdown-heading {      
+      border: 1px solid #e6e8e9 !important;
+    }
+    .dropdown-content {
+      border: 1px solid #e6e8e9 !important;
+    }
+  }
+`;
+
+const CustomeCol = styled.div`
+  display: flex;
+  width: 40%;
+  margin-right: 1rem;
+  flex-direction: column;
+
+  &.error {
+    .dropdown-heading {
+      border: 1px solid #E92579 !important;
+    }
   }
 `;
 
 const RemoveButton = styled(SvgButton)`
   margin-left: auto;
+  margin-top: 8px;
 `;
 
-const CalendarCreateView = ({calendarViewData}) => {
+const ErrorP = styled.p`
+  color: #E92579;            
+  margin: 0.2em 0 0 0;
+  padding: 0 0.6em;
+  font-size: 0.8em;
+`;
+
+const CalendarCreateView = ({
+  calendarViewData,
+  hideModal,
+}) => {
 
   const { state, dispatch } = useContext(AppReducerContext);
   const [calendarViews, setCalendarViews] = useState([...calendarViewData.views])
@@ -70,15 +105,69 @@ const CalendarCreateView = ({calendarViewData}) => {
     }
   }
 
-  const handleClickSave = () => {
+  const handleClickSave = async () => {
+    let isValidate = true;
+    calendarViews.forEach(item => {
+      if (item.title.length === 0 || item.spaces.length === 0)
+        isValidate = false
+    })
 
+    if (!isValidate)
+      return;
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    if (calendarViewData.id === -1) {
+      try {
+        const res = await axios.post('/calendarview', {views: JSON.stringify(calendarViews)}, config)      
+        dispatch({
+          type: CREATE_CALENDAR_CUSTOM_VIEW_SUCCESS,
+          payload: res.data.calendarView
+        })
+        hideModal()
+      } catch (err) {
+        dispatch({ type: CREATE_CALENDAR_CUSTOM_VIEW_ERROR })
+      }      
+    } else {      
+      try {
+        const res = await axios.put(
+          `/calendarview/${calendarViewData.id}`, 
+          {views: JSON.stringify(calendarViews)}, 
+          config
+        )
+
+        dispatch({
+          type: UPDATE_CALENDAR_CUSTOM_VIEW_SUCCESS,
+          payload: res.data.calendarView
+        })
+
+        hideModal()
+      } catch (err) {
+        dispatch({ type: UPDATE_CALENDAR_CUSTOM_VIEW_ERROR })
+      }
+    }
   }
 
   const handleChangeSpaces = (selected, nIndex) => {
-    debugger;
     const newOne = [ ...calendarViews]
     newOne[nIndex].spaces = [ ...getSelectedSpaces(selected) ]
     setCalendarViews([ ...newOne])
+  }
+
+  const handleChangeViewTitle = (value, nIndex) => {
+    const newOne = [ ...calendarViews ]
+    newOne[nIndex].title = value
+    setCalendarViews([ ...newOne ])
+  }
+
+  const handleClickDeleteView = nIndex => {
+    setCalendarViews([
+      ...calendarViews.filter((item, key) => key !== nIndex)
+    ])
   }
 
   const getSelectedSpaces = (selectedIds) => {
@@ -86,6 +175,16 @@ const CalendarCreateView = ({calendarViewData}) => {
     return filterOne.map(item => {
       return { id: item.id, name: item.name }
     })
+  }
+
+  const getSelectedAllString = spaces => {
+    let strAll = "";
+    spaces.forEach((item, nIndex) => {
+      strAll += item.name
+      if (nIndex < spaces.length-1)
+        strAll += ', '
+    })
+    return strAll;
   }
 
   return (
@@ -104,25 +203,44 @@ const CalendarCreateView = ({calendarViewData}) => {
       <ModalBottomSection>
         <P2>Here you can create views over your individual spaces that everyone can use for quick filtering(e.g Level-2 rooms, East-wing studio)</P2>
         { calendarViews.map((item, nIndex)=> {
-          return <Row key={item}>
-            <TableEditableValue 
-              value={item.title} 
-              label=""
-              // onChange={value => {}}
-              style={{width: '40%'}}
-            />
-            <MultiSelect 
-              options={allSpaces.map(item => {
-                return {value: item.id, label: item.name}
-              })}
-              selected={item.spaces.map(itemOne => itemOne.id)}
-              label=""
-              onSelectedChanged={selected => handleChangeSpaces(selected, nIndex)}
-            />
+          return <Row key={nIndex}>
+            <CustomeCol>
+              <TableEditableValue 
+                value={item.title} 
+                label=""
+                onChange={value => {handleChangeViewTitle(value, nIndex)}}
+                style={{width: '100%'}}
+                className={(item.title.length === 0 ? "error" : "")}
+
+              />
+              {
+                item.title.length === 0 && 
+                <ErrorP>Don't forget the name!</ErrorP>
+              }
+            </CustomeCol>
+            <CustomeCol className={(item.spaces.length === 0 ? "error" : "")}>
+              <MultiSelect 
+                options={allSpaces.map(item => {
+                  return {value: item.id, label: item.name}
+                })}
+                selected={item.spaces.map(itemOne => itemOne.id)}
+                label=""
+                onSelectedChanged={selected => handleChangeSpaces(selected, nIndex)}
+                disableSearch={true}
+                overrideStrings={{
+                  allItemsAreSelected: getSelectedAllString(item.spaces),
+                  selectSomeItems: "Select Spaces",
+                }}
+              />
+              {
+                item.spaces.length === 0 && 
+                <ErrorP>Please select at least one space for view</ErrorP>
+              }
+            </CustomeCol>
             <RemoveButton
               size={20}
               svg={removeSvg}
-              // onClick={() => handleClickDeleteRow(nKey, nKeyTwo, nIndex)}
+              onClick={() => handleClickDeleteView(nIndex)}
             />
           </Row>
         })}      
