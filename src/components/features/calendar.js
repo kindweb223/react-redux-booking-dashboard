@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { cx, css } from "emotion";
 
 import BigCalendar from "react-big-calendar";
@@ -8,10 +8,13 @@ import { faUser } from '@fortawesome/free-solid-svg-icons'
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "../../css/calendar.css";
+
 import CalendarToolbar from "./calendarToolbar";
 import CalendarWeekHeader from "./calendarWeekHeader";
 import { formatEventStartEndTime } from "../../utils/dateFormatting";
 import colors from "../style/colors";
+
+import { AppReducerContext } from "../../contexts/AppReducerContext";
 
 const localizer = BigCalendar.momentLocalizer(moment);
 
@@ -130,6 +133,33 @@ const Calendar = props => {
   const today8am = new Date();
   today8am.setHours(8);
   today8am.setMinutes(30);
+  
+  const { state, dispatch } = useContext(AppReducerContext);
+  const [resources, setResources] = useState([])
+  useEffect(() => {
+    if (state.calendarViews.curView === 'spaces')
+      setResources([
+        ...state.calendarViews.allSpaces.map(item => {
+          return {id: item.id, title: item.name}
+        })
+      ])
+    else  {
+      if (
+        state.calendarViews.calendarViewData && 
+        state.calendarViews.calendarViewData.views &&
+        state.calendarViews.curView >= 0
+      ) {
+        const newResources = state.calendarViews.calendarViewData.views[state.calendarViews.curView].spaces.map(item => {
+          return {id: item.id, title: item.name}
+        })
+        setResources([...newResources])
+      }
+    }
+  }, [
+    state.calendarViews.curView, 
+    state.calendarViews.calendarViewData, 
+    state.calendarViews.allSpaces
+  ])
 
   return (
     <BigCalendar
@@ -148,6 +178,7 @@ const Calendar = props => {
         }
       }}
       events={props.events || []}
+      resources={resources}
       {...props}
     />
   );

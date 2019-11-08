@@ -167,3 +167,22 @@
 .rbc-day-slot .rbc-events-container {
   margin-right: 0 !important;
 }
+
+.rbc-time-view-resources .rbc-time-header-content {
+  border: none !important;
+}
+
+.rbc-time-header-content > .rbc-row.rbc-row-resource {
+  border-bottom: none !important;
+}
+
+.rbc-time-view-resources .rbc-header {
+  min-height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rbc-time-view-resources .rbc-day-bg {
+  border-bottom: none !important;
+}

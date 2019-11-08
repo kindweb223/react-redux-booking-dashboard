@@ -22,7 +22,8 @@ function bookingToEvents(booking, bookignColors) {
             subtitle: booking.eventName,
             start: updatedDate(slotDate, slot.startHour, slot.startMinute),
             end: updatedDate(slotDate, slot.endHour, slot.endMinute),            
-            accent: filteredColor.length > 0 ? filteredColor : "#4a9454"
+            accent: filteredColor.length > 0 ? filteredColor : "#4a9454",
+            resourceId: booking.space ? booking.space.id : null,
           });
         });
 
@@ -36,7 +37,8 @@ function bookingToEvents(booking, bookignColors) {
           subtitle: booking.eventName,
           start: updatedDate(slot.date, slot.startHour, slot.startMinute),
           end: updatedDate(slot.date, slot.endHour, slot.endMinute),
-          accent: filteredColor.length > 0 ? filteredColor : "#6389ea"          
+          accent: filteredColor.length > 0 ? filteredColor : "#6389ea",
+          resourceId: booking.space ? booking.space.id : null,
         });
 
         break;

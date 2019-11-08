@@ -73,7 +73,6 @@ const CalendarViewDropDown = ({
   const refOne = useRef(null);
   useEffect(() => {
     const handleDocumentClick = event => {
-      debugger;
       if (refOne.current) {
         if (!ReactDOM.findDOMNode(refOne.current).contains(event.target)) {
           if (openViewDropDown) {
