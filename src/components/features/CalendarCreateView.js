@@ -76,17 +76,6 @@ const CalendarCreateView = ({
 
   const { state, dispatch } = useContext(AppReducerContext);
   const [calendarViews, setCalendarViews] = useState([...calendarViewData.views])
-  const [allSpaces, setAllSpaces] = useState([])
-
-  useEffect(() => {
-    try {
-      axios.get('/userspaces').then(res => {
-        setAllSpaces([ ...res.data.spaces ])
-      })
-    } catch (err) {
-      setAllSpaces([])
-    }
-  }, [])
 
   const handleClickAddView = () => {
 
@@ -94,7 +83,7 @@ const CalendarCreateView = ({
       ...calendarViews,
       {
         title: 'View ' + calendarViews.length,
-        spaces: allSpaces.length > 0 ? [{id: allSpaces[0].id, name: allSpaces[0].name}] : [],
+        spaces: state.calendarViews.allSpaces.length > 0 ? [{id: state.calendarViews.allSpaces[0].id, name: state.calendarViews.allSpaces[0].name}] : [],
       }
     ])
 
@@ -171,7 +160,7 @@ const CalendarCreateView = ({
   }
 
   const getSelectedSpaces = (selectedIds) => {
-    const filterOne = allSpaces.filter(item => selectedIds.includes(item.id))
+    const filterOne = state.calendarViews.allSpaces.filter(item => selectedIds.includes(item.id))
     return filterOne.map(item => {
       return { id: item.id, name: item.name }
     })
@@ -220,7 +209,7 @@ const CalendarCreateView = ({
             </CustomeCol>
             <CustomeCol className={(item.spaces.length === 0 ? "error" : "")}>
               <MultiSelect 
-                options={allSpaces.map(item => {
+                options={state.calendarViews.allSpaces.map(item => {
                   return {value: item.id, label: item.name}
                 })}
                 selected={item.spaces.map(itemOne => itemOne.id)}

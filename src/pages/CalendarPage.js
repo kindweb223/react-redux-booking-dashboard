@@ -28,6 +28,7 @@ import {
   GET_ADD_CUSTOMER_SUCCESS,
   REQUEST_GET_CUSTOM_BOOKING_COLOR, GET_CUSTOM_BOOKING_COLOR_SUCCESS, GET_CUSTOM_BOOKING_COLOR_ERROR,
   REQUEST_GET_CALENDAR_CUSTOM_VIEW, GET_CALENDAR_CUSTOM_VIEW_SUCCESS, GET_CALENDAR_CUSTOM_VIEW_ERROR,
+  GET_USERS_ALL_SPACES_SUCCESS, GET_USERS_ALL_SPACES_ERROR,
 } from "../reducers/actionType";
 
 import {
@@ -183,6 +184,19 @@ const CalendarPage = props => {
       }
     }
     getCalendarViews();
+
+    const getAllSpaces = async() => {
+      try {
+        const res = await axios.get('/userspaces')
+        dispatch({ 
+          type: GET_USERS_ALL_SPACES_SUCCESS,
+          payload: res.data.spaces,
+        })
+      } catch (err) {
+        dispatch({ type: GET_USERS_ALL_SPACES_ERROR })
+      }
+    }
+    getAllSpaces();
   }, [])
   
   useEffect(() => {
@@ -193,9 +207,9 @@ const CalendarPage = props => {
     }
   }, [
     state.bookings.bookings, 
-    state.customBookingColor.bookingColors,    
+    state.customBookingColor.bookingColors,
   ])
-
+  
   const handleClickSave = async (booking) => {
     setShowCreateBookingModal(false);
 
