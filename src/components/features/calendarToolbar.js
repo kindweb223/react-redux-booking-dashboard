@@ -46,10 +46,6 @@ const CalendarToolbar = props => {
     onNavigate('TODAY')
   }
 
-  const handleClickCalendarView = calendarViewId => {
-    console.log(calendarViewId);
-  }
-
   return (
     <Container
       style={{
@@ -129,13 +125,22 @@ const CalendarToolbar = props => {
 function formatDate(date, view) {
   switch (view) {
     case "day":
-      return moment(date).format("MMMM Do");
-    case "week":
-      return moment(date).format("MMMM 'YY");
+      return moment(date).format("dddd, MMMM D, YYYY");
+    case "week": {
+      const firstDayOfWeek = moment(date).startOf('week')
+      const lastDayOfWeek = moment(date).endOf('week')
+      if (firstDayOfWeek.year() !== lastDayOfWeek.year()) {
+        return firstDayOfWeek.format('YYYY MMM D') + " - " + lastDayOfWeek.format('YYYY MMM D')
+      } else if (firstDayOfWeek.month() !== lastDayOfWeek.month()) {
+        return firstDayOfWeek.format('MMMM D') + " - " + lastDayOfWeek.format('MMMM D')
+      } else {
+        return firstDayOfWeek.format('MMMM D') + " - " + lastDayOfWeek.format('D')
+      }
+    }      
     case "month":
-      return moment(date).format("MMMM 'YY");
+      return moment(date).format("MMMM YYYYY");
     default:
-      return moment(date).format("MMMM Do 'YY");
+      return moment(date).format("dddd, MMMM D, YYYY");
   }
 }
 

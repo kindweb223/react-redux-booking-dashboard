@@ -1,4 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
+import moment from 'moment';
 import Grid from "../components/layout/Grid";
 import constants from "../components/layout/constants";
 import Calendar from "../components/features/calendar";
@@ -335,6 +336,7 @@ const CalendarPage = props => {
     setSelectedBookingID(event.bookingID);
   };
 
+  const [selectedDate, setSelectedDate] = useState(moment())
   return (
     <>
       <SpinnerContainer 
@@ -381,7 +383,9 @@ const CalendarPage = props => {
           selectable
           events={events}
           onSelectEvent={onSelectEvent}
-          onSelectSlot={handleSelectSlot}          
+          onSelectSlot={handleSelectSlot}       
+          selectedDate={selectedDate}   
+          setCalendarDate={(date) => {setSelectedDate(date)}}
         />
       </Grid>
     </>

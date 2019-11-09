@@ -168,7 +168,7 @@ const Calendar = props => {
       views={["day", "week", "month"]}
       selectable={false} // prevent drag to create event in calendar
       localizer={localizer}
-      defaultDate={new Date()}
+      date={props.selectedDate}
       components={{
         event: Event,
         eventWrapper: EventWrapper,
@@ -179,7 +179,10 @@ const Calendar = props => {
       }}
       events={props.events || []}
       resources={resources}
-      {...props}
+      onNavigate={date => {
+        props.setCalendarDate(date)
+      }}    
+      {...props}      
     />
   );
 };
