@@ -336,7 +336,6 @@ const CalendarPage = props => {
     setSelectedBookingID(event.bookingID);
   };
 
-  const [selectedDate, setSelectedDate] = useState(moment())
   return (
     <>
       <SpinnerContainer 
@@ -384,8 +383,6 @@ const CalendarPage = props => {
           events={events}
           onSelectEvent={onSelectEvent}
           onSelectSlot={handleSelectSlot}       
-          selectedDate={selectedDate}   
-          setCalendarDate={(date) => {setSelectedDate(date)}}
         />
       </Grid>
     </>

@@ -14,7 +14,6 @@ import {
   reducer,
   initialState
 } from "./contexts/AppReducerContext";
-
 import setAuthToken from './utils/setAuthToken';
 import LoginPage from "./pages/LoginPage";
 
@@ -29,6 +28,7 @@ if (localStorage.token) {
 
 const App = props => {
   const [calendarExpanded, setCalendarExpanded] = useState(false);
+  const [calendarDate, setCalendarDate] = useState(new Date())
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -59,7 +59,10 @@ const App = props => {
     <>
       <AppReducerContext.Provider value={{ state, dispatch }}>
         <CalendarContext.Provider
-          value={{ calendarExpanded, setCalendarExpanded }}
+          value={{ 
+            calendarExpanded, setCalendarExpanded,
+            calendarDate, setCalendarDate,
+          }}
         >
           <Router>
             {state.auth.isAuthenticated && <Sidebar />}
