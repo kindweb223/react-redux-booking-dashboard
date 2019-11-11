@@ -34,7 +34,7 @@ const ViewDropDown = styled.div`
   padding: 5px 10px;
   border: 1px solid #E6E8E9;
   border-radius: 0.25em;
-  z-index: 1;
+  z-index: 9;
 
   ul {
     margin: 0;
@@ -50,6 +50,14 @@ const ViewDropDown = styled.div`
       font-weight: normal;
       cursor: pointer;
       margin: 0.3rem 0;
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    .divide-line {
+      border-bottom: 1px solid #E6E8E9;
+      margin: 0.8rem 0;
     }
   }
 `;
@@ -119,6 +127,7 @@ const CalendarViewDropDown = ({
           <li onClick={() => history.push('/settings')}>
             <CircleAddGlyph side={16} fill={colors.grey} />&nbsp;&nbsp;Create another space
           </li>
+          <div className="divide-line"></div>
           <ViewTitle>Views</ViewTitle>
           <li onClick={() => {setOpenViewDropDown(false); handleClickView('spaces');}}>All Spaces</li>
 
@@ -127,7 +136,7 @@ const CalendarViewDropDown = ({
               {item.title}
             </li>
           })}
-
+          <div className="divide-line"></div>
           <li onClick={() => {setOpenViewDropDown(false); showCreateViewModalFunc(true);}}>
             <FontAwesomeIcon className="fa-icons" icon={faPencilAlt} />
             &nbsp;&nbsp;Manage Views
