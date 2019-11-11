@@ -125,7 +125,7 @@ const CalendarViewDropDown = ({
       <ViewDropDown isOpen={openViewDropDown}>
         <ul>
           <li onClick={() => history.push('/settings')}>
-            <CircleAddGlyph side={16} fill={colors.grey} />&nbsp;&nbsp;Create another space
+            <CircleAddGlyph side={16} fill={colors.grey} />&nbsp;&nbsp;Add another space
           </li>
           <div className="divide-line"></div>
           <ViewTitle>Views</ViewTitle>
