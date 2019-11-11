@@ -1,6 +1,8 @@
 import React, { useContext, useState } from "react";
 import { withRouter } from "react-router-dom";
 import moment from "moment";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import H3 from "../typography/H3";
 import arrowRight from "../../images/ui/arrowRight.svg";
 import arrowLeft from "../../images/ui/arrowLeft.svg";
@@ -10,13 +12,13 @@ import Button from "../buttons/Button";
 import ButtonsRow from "../layout/ButtonsRow";
 import expandGlyph from "../../images/Glyphs/calendarExpand.svg";
 import collapseGlyph from "../../images/Glyphs/calendarCollapse.svg";
-import CalendarContext from "../../contexts/CalendarContext";
 import PickerButton from "../buttons/PickerButton";
 import colors from "../style/colors.js";
 import Modal from "../modals/modal"
 import CalendarViewDropDown from './CalendarViewDropDown'
 import CalendarCreateView from "../features/CalendarCreateView"
 import { AppReducerContext } from "../../contexts/AppReducerContext";
+import CalendarContext from "../../contexts/CalendarContext";
 
 const Container = styled.div`
   display: flex;
@@ -27,15 +29,30 @@ const Container = styled.div`
 `;
 
 const ResponsiveContainer = styled.div`
+  position: relative;
   @media (max-width: 1020px) {
     display: none;
+  }
+
+  .react-datepicker-wrapper {
+    position: absolute;
+    left: 0;    
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
   }
 `;
 
 const CalendarToolbar = props => {
   const { date, view: currentView, views, onView, onNavigate, history } = props;
 
-  const { calendarExpanded, setCalendarExpanded } = useContext(CalendarContext);
+  const { 
+    calendarExpanded, 
+    setCalendarExpanded,
+    calendarDate,
+    setCalendarDate,
+  } = useContext(CalendarContext);
   const { state, dispatch } = useContext(AppReducerContext)
 
   const [showCreateViewModal, setShowCreateViewModal] = useState(false)
@@ -44,10 +61,6 @@ const CalendarToolbar = props => {
     if (currentView !== 'day')
       onView('day')
     onNavigate('TODAY')
-  }
-
-  const handleClickCalendarView = calendarViewId => {
-    console.log(calendarViewId);
   }
 
   return (
@@ -86,6 +99,7 @@ const CalendarToolbar = props => {
         />
         <ResponsiveContainer>
           <H3 style={{ marginLeft: 15 }}>{formatDate(date, currentView)} </H3>{" "}
+          <DatePicker selected={calendarDate} onChange={date => setCalendarDate(date)} />
         </ResponsiveContainer>
       </Container>
 
@@ -129,13 +143,22 @@ const CalendarToolbar = props => {
 function formatDate(date, view) {
   switch (view) {
     case "day":
-      return moment(date).format("MMMM Do");
-    case "week":
-      return moment(date).format("MMMM 'YY");
+      return moment(date).format("dddd, MMMM D, YYYY");
+    case "week": {
+      const firstDayOfWeek = moment(date).startOf('week')
+      const lastDayOfWeek = moment(date).endOf('week')
+      if (firstDayOfWeek.year() !== lastDayOfWeek.year()) {
+        return firstDayOfWeek.format('YYYY MMM D') + " - " + lastDayOfWeek.format('YYYY MMM D')
+      } else if (firstDayOfWeek.month() !== lastDayOfWeek.month()) {
+        return firstDayOfWeek.format('MMMM D') + " - " + lastDayOfWeek.format('MMMM D')
+      } else {
+        return firstDayOfWeek.format('MMMM D') + " - " + lastDayOfWeek.format('D')
+      }
+    }      
     case "month":
-      return moment(date).format("MMMM 'YY");
+      return moment(date).format("MMMM YYYYY");
     default:
-      return moment(date).format("MMMM Do 'YY");
+      return moment(date).format("dddd, MMMM D, YYYY");
   }
 }
 

@@ -15,6 +15,7 @@ import { formatEventStartEndTime } from "../../utils/dateFormatting";
 import colors from "../style/colors";
 
 import { AppReducerContext } from "../../contexts/AppReducerContext";
+import CalendarContext from "../../contexts/CalendarContext";
 
 const localizer = BigCalendar.momentLocalizer(moment);
 
@@ -135,6 +136,8 @@ const Calendar = props => {
   today8am.setMinutes(30);
   
   const { state, dispatch } = useContext(AppReducerContext);
+  const { calendarDate, setCalendarDate } = useContext(CalendarContext);
+
   const [resources, setResources] = useState([])
   useEffect(() => {
     if (state.calendarViews.curView === 'spaces')
@@ -168,7 +171,7 @@ const Calendar = props => {
       views={["day", "week", "month"]}
       selectable={false} // prevent drag to create event in calendar
       localizer={localizer}
-      defaultDate={new Date()}
+      date={calendarDate}
       components={{
         event: Event,
         eventWrapper: EventWrapper,
@@ -179,7 +182,10 @@ const Calendar = props => {
       }}
       events={props.events || []}
       resources={resources}
-      {...props}
+      onNavigate={date => {
+        setCalendarDate(date)
+      }}    
+      {...props}      
     />
   );
 };
