@@ -12,12 +12,8 @@ import { AppReducerContext } from "../contexts/AppReducerContext";
 import BookingDetailEdit from "../components/features/bookingDetail/bookingDetailEdit";
 import { createEmptyBooking } from "../models/bookings";
 import {
-  REQUSET_ADD_BOOKING,
-  GET_ADD_BOOKING_SUCCESS,
-  GET_ADD_BOOKING_ERROR,
-  GET_UPDATE_BOOKING_SUCCESS,
-  GET_UPDATE_BOOKIG_ERROR,
-  REQUEST_UPDATE_BOOKING,
+  REQUSET_ADD_BOOKING, GET_ADD_BOOKING_SUCCESS, GET_ADD_BOOKING_ERROR,
+  REQUEST_UPDATE_BOOKING, GET_UPDATE_BOOKING_SUCCESS, GET_UPDATE_BOOKIG_ERROR,
   GET_BOOKING_BOOKINGSATTUS_ERROR,
   GET_BOOKING_BOOKINGSTATUS_SUCCESS, GET_BOOKING_SETTINGS_ERROR, GET_BOOKING_SETTINGS_SUCCESS, GET_BOOKINGS_ERROR,
   GET_BOOKINGS_SUCCESS, GET_CUSTOMERS_ERROR, GET_CUSTOMERS_SUCCESS, GET_VENUE_ERROR, GET_VENUE_SUCCESS,
@@ -30,6 +26,7 @@ import {
   REQUEST_GET_CUSTOM_BOOKING_COLOR, GET_CUSTOM_BOOKING_COLOR_SUCCESS, GET_CUSTOM_BOOKING_COLOR_ERROR,
   REQUEST_GET_CALENDAR_CUSTOM_VIEW, GET_CALENDAR_CUSTOM_VIEW_SUCCESS, GET_CALENDAR_CUSTOM_VIEW_ERROR,
   GET_USERS_ALL_SPACES_SUCCESS, GET_USERS_ALL_SPACES_ERROR,
+  GET_CALENDAR_SETTING_SUCCESS, GET_CALENDAR_SETTING_ERROR,
 } from "../reducers/actionType";
 
 import {
@@ -45,7 +42,6 @@ const CalendarPage = props => {
   const [showCreateBookingModal, setShowCreateBookingModal] = useState(false);
   const [createBookingModalInfo, setCreateBookingModalInfo] = useState(null);
 
-  const { calendarExpanded } = useContext(CalendarContext);
   const { state, dispatch } = useContext(AppReducerContext);
   const [events, setEvents] = useState([])
 
@@ -53,6 +49,22 @@ const CalendarPage = props => {
 
   useEffect(() => {
     setLoading(true);
+    const getCalendarSetting = async () => {
+      try {
+        const res = await axios.get('/calendarsetting')      
+        dispatch({ 
+          type: GET_CALENDAR_SETTING_SUCCESS,
+          payload: {
+            ...res.data.calendarSetting,
+            selectedDate: new Date(res.data.calendarSetting.selectedDate),
+          }
+        })
+      } catch (err) {
+        dispatch({ type: GET_CALENDAR_SETTING_ERROR })
+      }
+    }
+    getCalendarSetting();
+
     const getBookings = async () => {
       try {
         dispatch({ type: REQUEST_GET_BOOKINGS });
@@ -343,10 +355,10 @@ const CalendarPage = props => {
       />
       <Grid
         fullheight
-        columns={`${!calendarExpanded && constants.leftPanelWidth} 1fr`}
+        columns={`${!state.calendarSettings.viewExpand && constants.leftPanelWidth} 1fr`}
         style={{ height: "100%" }}
       >
-        {!calendarExpanded && (
+        {!state.calendarSettings.viewExpand && (
           <div style={{ overflow: "scroll" }}>
             <TabbedBookingsList
               onSelect={booking => setSelectedBookingID(booking.id)}

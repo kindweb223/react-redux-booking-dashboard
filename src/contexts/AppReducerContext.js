@@ -5,7 +5,7 @@ import customersReducer from "../reducers/customersReducer";
 import authReducer from "../reducers/authReducer";
 import customBookingColorReducer from "../reducers/customBookingColorReducer";
 import calendarViewReducer from "../reducers/calendarCustomViewReducer";
-
+import calendarSettingReducer from "../reducers/calendarSettingReducer";
 const AppReducerContext = React.createContext(null);
 
 const initialState = {
@@ -79,6 +79,12 @@ const initialState = {
     calendarViewData: {},
     allSpaces: [],
     curView: 'spaces',
+  },
+
+  calendarSettings: {    
+    selectedDate: new Date(),
+    viewMode: 'week',
+    viewExpand: true
   }
 };
 
@@ -89,6 +95,7 @@ const reducer = combineReducers({
   auth: authReducer,
   customBookingColor: customBookingColorReducer,
   calendarViews: calendarViewReducer, 
+  calendarSettings: calendarSettingReducer,
 });
 
 function combineReducers(reducers) {
