@@ -27,8 +27,6 @@ if (localStorage.token) {
 }
 
 const App = props => {
-  const [calendarExpanded, setCalendarExpanded] = useState(false);
-  const [calendarDate, setCalendarDate] = useState(new Date())
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -58,24 +56,17 @@ const App = props => {
   return (
     <>
       <AppReducerContext.Provider value={{ state, dispatch }}>
-        <CalendarContext.Provider
-          value={{ 
-            calendarExpanded, setCalendarExpanded,
-            calendarDate, setCalendarDate,
-          }}
-        >
-          <Router>
-            {state.auth.isAuthenticated && <Sidebar />}
-            <LayoutWrapper>
-              <LayoutSection bgColor="lightest" fullWidth>
-                <Switch>
-                  <Route path="/" exact component={LoginPage} />      
-                  <Route component={RoutesTree} />
-                </Switch>
-              </LayoutSection>
-            </LayoutWrapper>
-          </Router>
-        </CalendarContext.Provider>
+        <Router>
+          {state.auth.isAuthenticated && <Sidebar />}
+          <LayoutWrapper>
+            <LayoutSection bgColor="lightest" fullWidth>
+              <Switch>
+                <Route path="/" exact component={LoginPage} />      
+                <Route component={RoutesTree} />
+              </Switch>
+            </LayoutSection>
+          </LayoutWrapper>
+        </Router>
       </AppReducerContext.Provider>
     </>
   );
