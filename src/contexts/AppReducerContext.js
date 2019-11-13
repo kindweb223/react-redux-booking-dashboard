@@ -82,6 +82,7 @@ const initialState = {
   },
 
   calendarSettings: {    
+    loading: false,
     selectedDate: new Date(),
     viewMode: 'week',
     viewExpand: true

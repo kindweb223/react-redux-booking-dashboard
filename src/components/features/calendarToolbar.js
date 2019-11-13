@@ -26,6 +26,7 @@ import {
   UPDATE_CALENDAR_SETTING_SUCCESS, UPDATE_CALENDAR_SETTING_ERROR,
   SET_CALENDAR_SETTING_DATA,
 } from '../../reducers/actionType'
+import { setCalendarSettingAction } from '../../actions/calendar'
 
 const Container = styled.div`
   display: flex;
@@ -59,58 +60,16 @@ const CalendarToolbar = props => {
   const [showCreateViewModal, setShowCreateViewModal] = useState(false)
 
   const handleClickToday = () => {
-    if (currentView !== 'day')
-      onView('day')
-    onNavigate('TODAY')
-  }
-
-  
-  const setCalendarData = async (newCalendarData) => {
-    try {      
-      const config = {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-
+    if (currentView !== 'day') {
       dispatch({
         type: SET_CALENDAR_SETTING_DATA,
-        payload: { ...newCalendarData }
+        payload: {
+          ...state.calendarSettings,
+          viewMode: 'day',
+        }
       })
-
-      if (state.calendarSettings.id) {
-        const res = await axios.put(
-          `/calendarsetting/${state.calendarSettings.id}`, 
-          {            
-            viewExpand: newCalendarData.viewExpand,
-            viewMode: newCalendarData.viewMode,
-            selectedDate: newCalendarData.selectedDate,
-          },
-          config,
-        )        
-      } else {
-        const res = await axios.post(
-          '/calendarsetting', 
-          {
-            viewExpand: newCalendarData.viewExpand,
-            viewMode: newCalendarData.viewMode,
-            selectedDate: newCalendarData.selectedDate
-          }, 
-          config
-        )
-
-        dispatch({
-          type: SET_CALENDAR_SETTING_DATA,
-          payload: {
-            ...newCalendarData,
-            id: res.data.calendarSetting.id
-          }
-        })
-
-      }      
-    } catch (err) {
-      dispatch({ type: CREATE_CALENDAR_SETTING_ERROR })
     }
+    onNavigate('TODAY')
   }
 
   return (
@@ -125,7 +84,7 @@ const CalendarToolbar = props => {
           svg={!state.calendarSettings.viewExpand ? expandGlyph : collapseGlyph}
           width={22}
           height={22}
-          onClick={() => setCalendarData({...state.calendarSettings, viewExpand: !state.calendarSettings.viewExpand})}
+          onClick={() => setCalendarSettingAction(dispatch, {...state.calendarSettings, viewExpand: !state.calendarSettings.viewExpand})}
           style={{ marginRight: 14 }}
         />
         <Button
@@ -149,7 +108,7 @@ const CalendarToolbar = props => {
         />
         <ResponsiveContainer>
           <H3 style={{ marginLeft: 15 }}>{formatDate(date, currentView)} </H3>{" "}
-          <DatePicker selected={state.calendarSettings.selectedDate} onChange={date => setCalendarData({ ...state.calendarSettings, selectedDate: date})} />
+          <DatePicker selected={state.calendarSettings.selectedDate} onChange={date => setCalendarSettingAction(dispatch, { ...state.calendarSettings, selectedDate: date})} />
         </ResponsiveContainer>
       </Container>
 
