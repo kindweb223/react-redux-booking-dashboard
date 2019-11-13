@@ -190,7 +190,10 @@ const CalendarCreateView = ({
         </ModalTitleAndButtons>
       </ModalTopSection>
       <ModalBottomSection>
-        <P2>Here you can create views over your individual spaces that everyone can use for quick filtering(e.g Level-2 rooms, East-wing studio)</P2>
+        <P2>
+          Create custom calendar views of your spaces below, give your view a name and list the spaces associated with that name. 
+          This is so you can find your spaces fast. (E.g Top Floor Spaces, Bar Spaces or Outdoor Spaces)
+        </P2>
         { calendarViews.map((item, nIndex)=> {
           return <Row key={nIndex}>
             <CustomeCol>
