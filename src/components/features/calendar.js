@@ -18,6 +18,7 @@ import { AppReducerContext } from "../../contexts/AppReducerContext";
 import CalendarContext from "../../contexts/CalendarContext";
 import axios from 'axios'
 import { SET_CALENDAR_SETTING_DATA, CREATE_CALENDAR_SETTING_ERROR } from '../../reducers/actionType'
+import { setCalendarSettingAction } from "../../actions/calendar"
 
 const localizer = BigCalendar.momentLocalizer(moment);
 
@@ -165,58 +166,10 @@ const Calendar = props => {
     state.calendarViews.allSpaces
   ])
 
-  const setCalendarData = async (newCalendarData) => {
-    try {      
-      const config = {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-
-      dispatch({
-        type: SET_CALENDAR_SETTING_DATA,
-        payload: { ...newCalendarData }
-      })
-
-      if (state.calendarSettings.id) {
-        const res = await axios.put(
-          `/calendarsetting/${state.calendarSettings.id}`, 
-          {            
-            viewExpand: newCalendarData.viewExpand,
-            viewMode: newCalendarData.viewMode,
-            selectedDate: newCalendarData.selectedDate,
-          },
-          config,
-        )        
-      } else {
-        const res = await axios.post(
-          '/calendarsetting', 
-          {
-            viewExpand: newCalendarData.viewExpand,
-            viewMode: newCalendarData.viewMode,
-            selectedDate: newCalendarData.selectedDate
-          }, 
-          config
-        )
-
-        dispatch({
-          type: SET_CALENDAR_SETTING_DATA,
-          payload: {
-            ...newCalendarData,
-            id: res.data.calendarSetting.id
-          }
-        })
-
-      }      
-    } catch (err) {
-      dispatch({ type: CREATE_CALENDAR_SETTING_ERROR })
-    }
-  }
 
   return (
     <BigCalendar
       scrollToTime={today8am}
-      defaultView="week"
       views={["day", "week", "month"]}
       selectable={false} // prevent drag to create event in calendar
       localizer={localizer}
@@ -233,16 +186,22 @@ const Calendar = props => {
       events={props.events || []}
       resources={resources}
       onNavigate={date => {
-        setCalendarData({
-          ...state.calendarSettings,
-          selectedDate: date,
-        })
+        setCalendarSettingAction(
+          dispatch,
+          {
+            ...state.calendarSettings,
+            selectedDate: date,
+          }
+        )
       }}    
       onView={(view) => {
-        setCalendarData({
-          ...state.calendarSettings,
-          viewMode: view
-        })
+        setCalendarSettingAction(
+          dispatch, 
+          {
+            ...state.calendarSettings,
+            viewMode: view
+          }
+        )
       }}
       {...props}      
     />

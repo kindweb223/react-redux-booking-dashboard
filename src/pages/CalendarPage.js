@@ -1,7 +1,10 @@
 import React, {useState, useContext, useEffect} from "react";
+import { withRouter } from "react-router-dom";
+import axios from "axios";
 import moment from 'moment';
 import Grid from "../components/layout/Grid";
 import constants from "../components/layout/constants";
+import SpinnerContainer from "../components/layout/Spinner";
 import Calendar from "../components/features/calendar";
 import { bookingToEvents } from "../models/bookingToEvents";
 import TabbedBookingsList from "../components/features/tabbedBookingsList";
@@ -26,16 +29,17 @@ import {
   REQUEST_GET_CUSTOM_BOOKING_COLOR, GET_CUSTOM_BOOKING_COLOR_SUCCESS, GET_CUSTOM_BOOKING_COLOR_ERROR,
   REQUEST_GET_CALENDAR_CUSTOM_VIEW, GET_CALENDAR_CUSTOM_VIEW_SUCCESS, GET_CALENDAR_CUSTOM_VIEW_ERROR,
   GET_USERS_ALL_SPACES_SUCCESS, GET_USERS_ALL_SPACES_ERROR,
-  GET_CALENDAR_SETTING_SUCCESS, GET_CALENDAR_SETTING_ERROR,
+  GET_CALENDAR_SETTING_SUCCESS, GET_CALENDAR_SETTING_ERROR, SET_CALENDAR_SETTING_DATA,
 } from "../reducers/actionType";
+import {
+  setCalendarSettingAction,
+} from '../actions/calendar'
 
 import {
   CUSTOMER_OPTION_CREATE_USER,
   // CUSTOMER_OPTION_CASUAL_USER,
 } from '../constants';
 
-import axios from "axios/index";
-import SpinnerContainer from "../components/layout/Spinner";
 
 const CalendarPage = props => {
   const [selectedBookingID, setSelectedBookingID] = useState(null);
@@ -47,16 +51,44 @@ const CalendarPage = props => {
 
   const [loading, setLoading] = useState(true)
 
+  const handleKeyDown = event => {
+
+    const getViewMode = strValue => {
+      if (strValue === 'd')
+        return 'day'
+      else if (strValue === 'w')
+        return 'week'
+      else if (strValue === 'm')
+        return 'month'
+    }
+
+    if (props.history.location.pathname === "/calendar") {      
+      if (state.calendarSettings.viewMode === 'day' && event.key === 'd')
+        return;
+      if (state.calendarSettings.viewMode === 'week' && event.key === 'w')
+        return;
+      if (state.calendarSettings.viewMode === 'month' && event.key === 'm')
+        return;
+
+      setCalendarSettingAction(dispatch, {...state.calendarSettings, viewMode: getViewMode(event.key)})      
+    }
+  }
+
   useEffect(() => {
+
+    document.addEventListener('keydown', handleKeyDown);
+
     setLoading(true);
     const getCalendarSetting = async () => {
       try {
-        const res = await axios.get('/calendarsetting')      
+        const res = await axios.get('/calendarsetting')   
+        debugger;   
         dispatch({ 
-          type: GET_CALENDAR_SETTING_SUCCESS,
-          payload: {
+          type: SET_CALENDAR_SETTING_DATA,
+          payload: {            
             ...res.data.calendarSetting,
             selectedDate: new Date(res.data.calendarSetting.selectedDate),
+            loading: false,
           }
         })
       } catch (err) {
@@ -348,6 +380,15 @@ const CalendarPage = props => {
     setSelectedBookingID(event.bookingID);
   };
 
+  const onKeyPressed = e => {
+    console.log(e.key)
+  }
+
+  const changeViewMode = (event, viewMode) => {
+    event.preventDefault();
+    console.log(viewMode);
+  }
+
   return (
     <>
       <SpinnerContainer 
@@ -356,7 +397,7 @@ const CalendarPage = props => {
       <Grid
         fullheight
         columns={`${!state.calendarSettings.viewExpand && constants.leftPanelWidth} 1fr`}
-        style={{ height: "100%" }}
+        style={{ height: "100%" }}        
       >
         {!state.calendarSettings.viewExpand && (
           <div style={{ overflow: "scroll" }}>
@@ -401,4 +442,4 @@ const CalendarPage = props => {
   );
 };
 
-export default CalendarPage;
+export default withRouter(CalendarPage);
