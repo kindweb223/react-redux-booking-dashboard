@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from "react";
+import React, {useState, useContext, useEffect, useCallback } from "react";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 import moment from 'moment';
@@ -50,9 +50,16 @@ const CalendarPage = props => {
   const [events, setEvents] = useState([])
 
   const [loading, setLoading] = useState(true)
+  
+  const [calendarSettings, setCalendarSettings] = useState({})
+  useEffect(() => {
+    setCalendarSettings({
+      ...state.calendarSettings
+    })
+  }, [state.calendarSettings])
 
-  const handleKeyDown = event => {
-
+  const handleKeyDown = useCallback((event) => {
+    
     const getViewMode = strValue => {
       if (strValue === 'd')
         return 'day'
@@ -60,24 +67,22 @@ const CalendarPage = props => {
         return 'week'
       else if (strValue === 'm')
         return 'month'
+      else return ''
     }
 
     if (props.history.location.pathname === "/calendar") {      
-      if (state.calendarSettings.viewMode === 'day' && event.key === 'd')
+      if (calendarSettings.viewMode === 'day' && event.key === 'd')
         return;
-      if (state.calendarSettings.viewMode === 'week' && event.key === 'w')
+      if (calendarSettings.viewMode === 'week' && event.key === 'w')
         return;
-      if (state.calendarSettings.viewMode === 'month' && event.key === 'm')
+      if (calendarSettings.viewMode === 'month' && event.key === 'm')
         return;
-
-      setCalendarSettingAction(dispatch, {...state.calendarSettings, viewMode: getViewMode(event.key)})      
-    }
-  }
+      setCalendarSettingAction(dispatch, {...calendarSettings, viewMode: getViewMode(event.key)})      
+    }    
+  }, []);
 
   useEffect(() => {
-
-    document.addEventListener('keydown', handleKeyDown);
-
+        
     setLoading(true);
     const getCalendarSetting = async () => {
       try {
@@ -241,6 +246,12 @@ const CalendarPage = props => {
       }
     }
     getAllSpaces();
+
+    document.addEventListener('keydown', handleKeyDown, false);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown, false);
+    };
+  
   }, [])
   
   useEffect(() => {
@@ -378,10 +389,6 @@ const CalendarPage = props => {
     })
     setSelectedBookingID(event.bookingID);
   };
-
-  const onKeyPressed = e => {
-    console.log(e.key)
-  }
 
   const changeViewMode = (event, viewMode) => {
     event.preventDefault();
