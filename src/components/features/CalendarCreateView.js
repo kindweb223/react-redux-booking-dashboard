@@ -121,7 +121,7 @@ const CalendarCreateView = ({
       } catch (err) {
         dispatch({ type: CREATE_CALENDAR_CUSTOM_VIEW_ERROR })
       }      
-    } else {      
+    } else {
       try {
         const res = await axios.put(
           `/calendarview/${calendarViewData.id}`, 

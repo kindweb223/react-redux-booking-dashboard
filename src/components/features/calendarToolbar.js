@@ -53,24 +53,11 @@ const ResponsiveContainer = styled.div`
 `;
 
 const CalendarToolbar = props => {
-  const { date, view: currentView, views, onView, onNavigate, history } = props;
+  const { date, view: currentView, views, onNavigate, history } = props;
 
   const { state, dispatch } = useContext(AppReducerContext)
 
   const [showCreateViewModal, setShowCreateViewModal] = useState(false)
-
-  const handleClickToday = () => {
-    if (currentView !== 'day') {
-      dispatch({
-        type: SET_CALENDAR_SETTING_DATA,
-        payload: {
-          ...state.calendarSettings,
-          viewMode: 'day',
-        }
-      })
-    }
-    onNavigate('TODAY')
-  }
 
   return (
     <Container
@@ -89,7 +76,14 @@ const CalendarToolbar = props => {
         />
         <Button
           style={{ margin: "0 1em 0 0" }}
-          onClick={handleClickToday}
+          onClick={() => setCalendarSettingAction(
+            dispatch,
+            {
+              ...state.calendarSettings,
+              selectedDate: new Date(),
+              viewMode: 'day',
+            }
+          )}
         >
           Today
         </Button>
@@ -118,10 +112,16 @@ const CalendarToolbar = props => {
             return (
               <Button
                 key={view}
-                onClick={() => onView(view)}
+                onClick={() => setCalendarSettingAction(
+                  dispatch, 
+                  {
+                    ...state.calendarSettings, 
+                    viewMode: view,
+                  }
+                )}
                 selected={view === currentView}
               >
-                {view.slice(0, 1).toUpperCase() + view.slice(1, 99)}
+                {view.slice(0, 1).toUpperCase() + view.slice(1, 99)}                
               </Button>
             );
           })}

@@ -82,7 +82,6 @@ const CalendarPage = props => {
     const getCalendarSetting = async () => {
       try {
         const res = await axios.get('/calendarsetting')   
-        debugger;   
         dispatch({ 
           type: SET_CALENDAR_SETTING_DATA,
           payload: {            

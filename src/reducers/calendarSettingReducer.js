@@ -43,7 +43,7 @@ function calendarSettingReducer(state = {}, action) {
         ...action.payload,
       }
     default:
-      return state;
+      return { ...state };
   }
 }
 
