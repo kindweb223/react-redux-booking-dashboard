@@ -174,6 +174,7 @@ const Calendar = props => {
       selectable={false} // prevent drag to create event in calendar
       localizer={localizer}
       date={state.calendarSettings.selectedDate}
+      defaultView='week'
       view={state.calendarSettings.viewMode}
       components={{
         event: Event,
@@ -185,7 +186,7 @@ const Calendar = props => {
       }}
       events={props.events || []}
       resources={resources}
-      onNavigate={date => {
+      onNavigate={date => {        
         setCalendarSettingAction(
           dispatch,
           {
@@ -194,15 +195,6 @@ const Calendar = props => {
           }
         )
       }}    
-      onView={(view) => {
-        setCalendarSettingAction(
-          dispatch, 
-          {
-            ...state.calendarSettings,
-            viewMode: view
-          }
-        )
-      }}
       {...props}      
     />
   );
