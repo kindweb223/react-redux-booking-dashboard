@@ -50,16 +50,12 @@ const CalendarPage = props => {
   const [events, setEvents] = useState([])
 
   const [loading, setLoading] = useState(true)
-  
-  const [calendarSettings, setCalendarSettings] = useState({})
+    
   useEffect(() => {
-    setCalendarSettings({
-      ...state.calendarSettings
-    })
+    localStorage.setItem('calendarsetting', JSON.stringify(state.calendarSettings))
   }, [state.calendarSettings])
 
-  const handleKeyDown = useCallback((event) => {
-    
+  const handleKeyDown = useCallback((event) => {    
     const getViewMode = strValue => {
       if (strValue === 'd')
         return 'day'
@@ -71,12 +67,15 @@ const CalendarPage = props => {
     }
 
     if (props.history.location.pathname === "/calendar") {      
+      let calendarSettings = JSON.parse(localStorage.getItem('calendarsetting'))
+      calendarSettings.selectedDate = new Date(calendarSettings.selectedDate)
+      
       if (calendarSettings.viewMode === 'day' && event.key === 'd')
         return;
       if (calendarSettings.viewMode === 'week' && event.key === 'w')
         return;
       if (calendarSettings.viewMode === 'month' && event.key === 'm')
-        return;
+        return;      
       setCalendarSettingAction(dispatch, {...calendarSettings, viewMode: getViewMode(event.key)})      
     }    
   }, []);
