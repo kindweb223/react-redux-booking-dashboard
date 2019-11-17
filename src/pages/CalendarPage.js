@@ -67,8 +67,8 @@ const CalendarPage = props => {
       else return ''
     }
 
-    if (props.history.location.pathname === "/calendar") {      
-      const calendarSettings = JSON.parse(localStorage.getItem('calendarsetting'))
+    if (props.history.location.pathname === "/calendar") {
+      let calendarSettings = JSON.parse(localStorage.getItem('calendarsetting'))
       calendarSettings.selectedDate = new Date(calendarSettings.selectedDate)
       
       if (calendarSettings.viewMode === 'day' && event.key === 'd')
@@ -76,9 +76,9 @@ const CalendarPage = props => {
       if (calendarSettings.viewMode === 'week' && event.key === 'w')
         return;
       if (calendarSettings.viewMode === 'month' && event.key === 'm')
-        return;      
+        return;
       setCalendarSettingAction(dispatch, {...calendarSettings, viewMode: getViewMode(event.key)})      
-    }    
+    }
   }, []);
 
   useEffect(() => {
@@ -250,7 +250,8 @@ const CalendarPage = props => {
     document.addEventListener('keydown', handleKeyDown, false);
     return () => {
       document.removeEventListener("keydown", handleKeyDown, false);
-      const calendarSettings = JSON.parse(localStorage.getItem('calendarsetting'))
+      let calendarSettings = JSON.parse(localStorage.getItem('calendarsetting'))
+      calendarSettings.selectedDate = new Date(calendarSettings.selectedDate);
       saveCalendarSettingAction( dispatch, calendarSettings )
     };
   
@@ -391,11 +392,6 @@ const CalendarPage = props => {
     })
     setSelectedBookingID(event.bookingID);
   };
-
-  const changeViewMode = (event, viewMode) => {
-    event.preventDefault();
-    console.log(viewMode);
-  }
 
   return (
     <>

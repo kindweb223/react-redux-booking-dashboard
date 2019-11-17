@@ -166,7 +166,6 @@ const Calendar = props => {
     state.calendarViews.allSpaces
   ])
 
-
   return (
     <BigCalendar
       scrollToTime={today8am}
