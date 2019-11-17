@@ -120,8 +120,9 @@ const CalendarToolbar = props => {
                   }
                 )}
                 selected={view === currentView}
-              >
-                {view.slice(0, 1).toUpperCase() + view.slice(1, 99)}                
+                style={{textTransform: 'capitalize'}}
+              >                
+                {view}
               </Button>
             );
           })}

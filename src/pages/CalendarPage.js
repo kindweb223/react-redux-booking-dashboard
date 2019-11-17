@@ -33,6 +33,7 @@ import {
 } from "../reducers/actionType";
 import {
   setCalendarSettingAction,
+  saveCalendarSettingAction,
 } from '../actions/calendar'
 
 import {
@@ -67,7 +68,7 @@ const CalendarPage = props => {
     }
 
     if (props.history.location.pathname === "/calendar") {      
-      let calendarSettings = JSON.parse(localStorage.getItem('calendarsetting'))
+      const calendarSettings = JSON.parse(localStorage.getItem('calendarsetting'))
       calendarSettings.selectedDate = new Date(calendarSettings.selectedDate)
       
       if (calendarSettings.viewMode === 'day' && event.key === 'd')
@@ -249,6 +250,8 @@ const CalendarPage = props => {
     document.addEventListener('keydown', handleKeyDown, false);
     return () => {
       document.removeEventListener("keydown", handleKeyDown, false);
+      const calendarSettings = JSON.parse(localStorage.getItem('calendarsetting'))
+      saveCalendarSettingAction( dispatch, calendarSettings )
     };
   
   }, [])
