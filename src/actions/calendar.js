@@ -7,7 +7,6 @@ import {
 import axios from 'axios'
 
 export const setCalendarSettingAction = (dispatch, calendarSetting) =>  {
-  debugger;
   dispatch({
     type: SET_CALENDAR_SETTING_DATA,
     payload: calendarSetting,
@@ -36,6 +35,7 @@ export const saveCalendarSettingAction = (dispatch, calendarSetting) => {
           type: SET_CALENDAR_SETTING_DATA,
           payload: {
             ...calendarSetting,
+            selectedDate: new Date(calendarSetting.selectedDate),
             loading: false,
           }
         })
@@ -56,6 +56,7 @@ export const saveCalendarSettingAction = (dispatch, calendarSetting) => {
             ...calendarSetting,
             id: res.data.calendarSetting.id,
             loading: false,
+            selectedDate: new Date(calendarSetting.selectedDate),
           }
         })
       })
