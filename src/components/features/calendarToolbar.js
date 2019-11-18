@@ -1,9 +1,6 @@
 import React, { useContext, useState } from "react";
 import { withRouter } from "react-router-dom";
 import moment from "moment";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import H3 from "../typography/H3";
 import arrowRight from "../../images/ui/arrowRight.svg";
 import arrowLeft from "../../images/ui/arrowLeft.svg";
 import styled from "styled-components";
@@ -19,6 +16,8 @@ import CalendarViewDropDown from './CalendarViewDropDown'
 import CalendarCreateView from "../features/CalendarCreateView"
 import { AppReducerContext } from "../../contexts/AppReducerContext";
 import CalendarContext from "../../contexts/CalendarContext";
+import CalendarDatePicker from './CalendarDatePicker';
+
 import axios from 'axios';
 
 import { 
@@ -31,25 +30,6 @@ import { setCalendarSettingAction } from '../../actions/calendar'
 const Container = styled.div`
   display: flex;
   align-items: center;
-  h3 {
-    margin: 0;
-  }
-`;
-
-const ResponsiveContainer = styled.div`
-  position: relative;
-  @media (max-width: 1020px) {
-    display: none;
-  }
-
-  .react-datepicker-wrapper {
-    position: absolute;
-    left: 0;    
-    top: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-  }
 `;
 
 const CalendarToolbar = props => {
@@ -100,10 +80,7 @@ const CalendarToolbar = props => {
           height={20}
           onClick={() => onNavigate("NEXT")}
         />
-        <ResponsiveContainer>
-          <H3 style={{ marginLeft: 15 }}>{formatDate(date, currentView)} </H3>{" "}
-          <DatePicker selected={state.calendarSettings.selectedDate} onChange={date => setCalendarSettingAction(dispatch, { ...state.calendarSettings, selectedDate: date})} />
-        </ResponsiveContainer>
+        <CalendarDatePicker title={formatDate(date, currentView)} />
       </Container>
 
       <Container>

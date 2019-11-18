@@ -71,6 +71,8 @@ const CalendarPage = props => {
       let calendarSettings = JSON.parse(localStorage.getItem('calendarsetting'))
       calendarSettings.selectedDate = new Date(calendarSettings.selectedDate)
       
+      if (getViewMode(event.key) === '')
+        return;
       if (calendarSettings.viewMode === 'day' && event.key === 'd')
         return;
       if (calendarSettings.viewMode === 'week' && event.key === 'w')

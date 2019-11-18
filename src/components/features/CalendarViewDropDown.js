@@ -28,7 +28,7 @@ const ViewDropDown = styled.div`
   right: 0;
   top: calc(100% + 4px);
   display: ${props => (props.isOpen? 'flex' : 'none')};
-  background-color: #f9f9f9;
+  background-color: white;
   color: ${colors.grey}
   box-shadow: 0px 1.5px 1px rgba(0,0,0,0.05);
   padding: 5px 10px;
