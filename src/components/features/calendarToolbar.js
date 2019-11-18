@@ -120,8 +120,9 @@ const CalendarToolbar = props => {
                   }
                 )}
                 selected={view === currentView}
-              >
-                {view.slice(0, 1).toUpperCase() + view.slice(1, 99)}                
+                style={{textTransform: 'capitalize'}}
+              >                
+                {view}
               </Button>
             );
           })}
@@ -152,20 +153,18 @@ const CalendarToolbar = props => {
 function formatDate(date, view) {
   switch (view) {
     case "day":
-      return moment(date).format("dddd, MMMM D, YYYY");
+      return moment(date).format("dddd, Do of MMMM YYYY");
     case "week": {
       const firstDayOfWeek = moment(date).startOf('week')
       const lastDayOfWeek = moment(date).endOf('week')
       if (firstDayOfWeek.year() !== lastDayOfWeek.year()) {
-        return firstDayOfWeek.format('YYYY MMM D') + " - " + lastDayOfWeek.format('YYYY MMM D')
-      } else if (firstDayOfWeek.month() !== lastDayOfWeek.month()) {
-        return firstDayOfWeek.format('MMMM D') + " - " + lastDayOfWeek.format('MMMM D')
+        return firstDayOfWeek.format('Do of MMMM YYYY') + " - " + lastDayOfWeek.format('Do of MMMM YYYY')
       } else {
-        return firstDayOfWeek.format('MMMM D') + " - " + lastDayOfWeek.format('D')
+        return firstDayOfWeek.format('Do of MMMM ') + " - " + lastDayOfWeek.format('Do of MMMM')      
       }
     }      
     case "month":
-      return moment(date).format("MMMM YYYYY");
+      return moment(date).format("MMMM YYYY");
     default:
       return moment(date).format("dddd, MMMM D, YYYY");
   }

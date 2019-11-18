@@ -33,6 +33,7 @@ import {
 } from "../reducers/actionType";
 import {
   setCalendarSettingAction,
+  saveCalendarSettingAction,
 } from '../actions/calendar'
 
 import {
@@ -66,7 +67,7 @@ const CalendarPage = props => {
       else return ''
     }
 
-    if (props.history.location.pathname === "/calendar") {      
+    if (props.history.location.pathname === "/calendar") {
       let calendarSettings = JSON.parse(localStorage.getItem('calendarsetting'))
       calendarSettings.selectedDate = new Date(calendarSettings.selectedDate)
       
@@ -75,9 +76,9 @@ const CalendarPage = props => {
       if (calendarSettings.viewMode === 'week' && event.key === 'w')
         return;
       if (calendarSettings.viewMode === 'month' && event.key === 'm')
-        return;      
+        return;
       setCalendarSettingAction(dispatch, {...calendarSettings, viewMode: getViewMode(event.key)})      
-    }    
+    }
   }, []);
 
   useEffect(() => {
@@ -249,6 +250,9 @@ const CalendarPage = props => {
     document.addEventListener('keydown', handleKeyDown, false);
     return () => {
       document.removeEventListener("keydown", handleKeyDown, false);
+      let calendarSettings = JSON.parse(localStorage.getItem('calendarsetting'))
+      calendarSettings.selectedDate = new Date(calendarSettings.selectedDate);
+      saveCalendarSettingAction( dispatch, calendarSettings )
     };
   
   }, [])
@@ -388,11 +392,6 @@ const CalendarPage = props => {
     })
     setSelectedBookingID(event.bookingID);
   };
-
-  const changeViewMode = (event, viewMode) => {
-    event.preventDefault();
-    console.log(viewMode);
-  }
 
   return (
     <>

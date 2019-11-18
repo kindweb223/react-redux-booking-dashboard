@@ -10,13 +10,10 @@ export const setCalendarSettingAction = (dispatch, calendarSetting) =>  {
   dispatch({
     type: SET_CALENDAR_SETTING_DATA,
     payload: calendarSetting,
-  })  
+  })        
+}
 
-  if (calendarSetting.loading)
-    return;
-
-  dispatch({ type: REQUEST_SAVE_CALENDAR_SETTING })
-
+export const saveCalendarSettingAction = (dispatch, calendarSetting) => {
   const config = {
     headers: {
       'Content-Type': 'application/json'
@@ -65,5 +62,4 @@ export const setCalendarSettingAction = (dispatch, calendarSetting) =>  {
   } catch (err) {
     dispatch({ type: SAVE_CALENDAR_SETTING_ERROR })
   }
-  
 }
