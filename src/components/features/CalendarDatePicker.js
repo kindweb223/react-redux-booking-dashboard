@@ -80,8 +80,9 @@ const CalendarDatePicker = props => {
         selected={state.calendarSettings.selectedDate}
         onChange={date => setCalendarSettingAction(dispatch, { ...state.calendarSettings, selectedDate: date})}
         onClickOutside={() => setOpenViewDropDown(false)}
-        onInputClick={() => setOpenViewDropDown(true)}
+        onInputClick={() => setOpenViewDropDown(!openViewDropDown)}
         onSelect={() => setOpenViewDropDown(false)}
+        open={openViewDropDown}
       />
     </Wrapper>
   )
