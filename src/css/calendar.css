@@ -157,9 +157,9 @@
   color: #3f4548 !important;
 }
 
-.rbc-month-row .event-subtitle {
+/* .rbc-month-row .event-subtitle {
   display: none;
-}
+} */
 .rbc-month-row .event-time {
   margin-bottom: 0.2em;
 }
