@@ -33,6 +33,7 @@ const initialState = {
       phone: "",
       currency: "",
       vatRate: "",
+      logoImg: "",
     },
     bookingStatuses: [],
     enableBookingSection: true,
