@@ -24,6 +24,7 @@ import {
   GET_UPDATE_COMPANYINFO_ERROR,
   CHANGE_COMPANY_INFO,
 } from "../../../reducers/actionType";
+import CONFIG from '../../../config';
 
 const DropzonContainer = styled.div`
   position: relative;
@@ -91,7 +92,7 @@ const CompanyInfoSettingsSection = props => {
 
   const onSaveCompanyInfo = async () => {
     try {        
-      const config = {
+      const axios_config = {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -102,13 +103,13 @@ const CompanyInfoSettingsSection = props => {
         res = await axios.put(
           `/companies/${companyInfo.id}`, 
           JSON.stringify(companyInfo),
-          config
+          axios_config
         );
       } else {
         res = await axios.post(
           `/companies`, 
           JSON.stringify(companyInfo),
-          config
+          axios_config
         );
       }
 
@@ -172,7 +173,7 @@ const CompanyInfoSettingsSection = props => {
         {({getRootProps, getInputProps, isDragActive}) => (
           <DropzonContainer 
             {...getRootProps()}
-            backgroundImage={companyInfo.logoImg}            
+            backgroundImage={companyInfo.logoImg ? CONFIG.API_URL + companyInfo.logoImg : ""}
           >
             <input {...getInputProps()} />
             <DropZoneDescription isVisible={(companyInfo.logoImg && companyInfo.logoImg.length > 0) ? false : true}>
