@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from 'axios';
 import { css } from "emotion";
+import Dropzone from 'react-dropzone'
+import styled from "styled-components";
+
 import P2 from "../../typography/P2";
 import {
   TableEditableValue,
@@ -22,39 +25,72 @@ import {
   CHANGE_COMPANY_INFO,
 } from "../../../reducers/actionType";
 
+const DropzonContainer = styled.div`
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  background-color: white;
+  border-radius: 0.25em;
+  border: 1px solid #e6e8e9;
+  color: #93989F;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% auto;
+  background-image: url("${props => props.backgroundImage}");
+  cursor: pointer;
+  &:hover {
+    p {
+      visibility: visible !important;
+      cursor: pointer;
+    }
+  }
+
+`
+const DropZoneDescription = styled.p`
+  visibility: ${props => props.isVisible ? "visible" : "hidden"};
+`
+
 const CompanyInfoSettingsSection = props => {
   const { state, dispatch } = props;
+  const [ companyInfo, setCompanyInfo] = useState({
+    name: "",
+    vatId: "",
+    street: "",
+    city: "",
+    postCode: "",
+    phone: "",
+    currency: "",
+    vatRate: "",
+    logoImg: "",
+  })
   const [ isNameValidate, setIsNameValidate ] = useState(true);
+  const [ imageUploading, setImageUploading ] = useState(false);
+  const [ companyLoading, setCompanyLoading ] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => {    
+
     const getCompanyInfo = async () => {
-
       try {
-        dispatch({ type: REQUEST_GET_COMPANYINFO });
+        setCompanyLoading(true)        
         const res = await axios.get('/company');
-        
-        if (res.data.company != null) {
-          dispatch({ 
-            type: GET_COMPANYINFO_SUCCESS,
-            payload: res.data.company,
+        if (res.data.company != null) {          
+          setCompanyInfo({
+            ...res.data.company,
           })
-        } else {
-          dispatch({ type: GET_COMPANYINFO_ERROR })  
         }
-        
+        setCompanyLoading(false)    
       } catch (err) {
-        dispatch({ type: GET_COMPANYINFO_ERROR })
+        setCompanyLoading(false)    
       }      
     }
     getCompanyInfo();
   }, []);
 
   const onSaveCompanyInfo = async () => {
-    try {      
-      dispatch({
-        type: REQUEDST_UPDATE_COMPANYINFO
-      })
-  
+    try {        
       const config = {
         headers: {
           'Content-Type': 'application/json'
@@ -62,16 +98,16 @@ const CompanyInfoSettingsSection = props => {
       };
       
       let res = {};
-      if (state.companyInfo.id) {
+      if (companyInfo.id) {
         res = await axios.put(
-          `/companies/${state.companyInfo.id}`, 
-          JSON.stringify(state.companyInfo),
+          `/companies/${companyInfo.id}`, 
+          JSON.stringify(companyInfo),
           config
         );
       } else {
         res = await axios.post(
           `/companies`, 
-          JSON.stringify(state.companyInfo),
+          JSON.stringify(companyInfo),
           config
         );
       }
@@ -83,7 +119,7 @@ const CompanyInfoSettingsSection = props => {
     } catch (err) {
       dispatch({
         type: GET_UPDATE_COMPANYINFO_ERROR,
-        payload: state.companyInfo,
+        payload: companyInfo,
       })
     }    
   }
@@ -107,13 +143,50 @@ const CompanyInfoSettingsSection = props => {
     })
   }
 
+  const onDrop = async (acceptedFiles) => {
+    let imageFormData = new FormData();
+    imageFormData.append('file', acceptedFiles[0])
+
+    setImageUploading(true);
+    const resUpload = await axios.post(
+      '/upload/image',
+      imageFormData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    )
+    setImageUploading(false)
+    setCompanyInfo({
+      ...companyInfo,
+      logoImg: resUpload.data.fileNames[0],
+    })
+  }
+
   return (
     <div>
-      <SpinnerContainer loading={state.companyLoading.toString()} />
+      <SpinnerContainer loading={companyLoading.toString()} />
       <P2 color="grey">These info will be used to generate invoices.</P2>
+      <Dropzone onDrop={onDrop} accept="image/png, image/gif, image/jpg, image/jpeg" multiple={false}>
+        {({getRootProps, getInputProps, isDragActive}) => (
+          <DropzonContainer 
+            {...getRootProps()}
+            backgroundImage={companyInfo.logoImg}            
+          >
+            <input {...getInputProps()} />
+            <DropZoneDescription isVisible={(companyInfo.logoImg && companyInfo.logoImg.length > 0) ? false : true}>
+              {isDragActive ? "Drop it like it's hot!" : 'Click me or drag a file to upload!'}
+            </DropZoneDescription>            
+            {
+              imageUploading && <SpinnerContainer loading={'true'} />
+            }
+          </DropzonContainer>
+        )}
+      </Dropzone>
       <TableEditableValue
         label="Company Name"
-        value={state.companyInfo.name}
+        value={companyInfo.name}
         onChange={value => {changeCompanyName(value)}}          
         style={{ width: "100%", marginTop: 24 }}
         className={!isNameValidate? "error" : ""}
@@ -135,32 +208,32 @@ const CompanyInfoSettingsSection = props => {
       }     
       <TableEditableValue
         label="VAT ID"
-        value={state.companyInfo.vatId}
+        value={companyInfo.vatId}
         onChange={value => {changeCompanyInfo("vatId", value)}}          
         style={{ width: "100%", marginTop: 14 }}
       />
       <Grid columns="1fr 1fr" style={{ width: "100%", marginTop: 14 }}>
         <TableEditableValue
           label="Street"
-          value={state.companyInfo.street}
+          value={companyInfo.street}
           onChange={value => {changeCompanyInfo("street", value)}}
           style={{ width: "100%" }}
         />
         <TableEditableValue
           label="City"
-          value={state.companyInfo.city}
+          value={companyInfo.city}
           onChange={value => {changeCompanyInfo("city", value)}}
           style={{ width: "100%" }}
         />
         <TableEditableValue
           label="Post Code"
-          value={state.companyInfo.postCode}
+          value={companyInfo.postCode}
           onChange={value => {changeCompanyInfo("postCode", value)}}            
           style={{ width: "100%" }}
         />
         <TableEditableValue
           label="Phone Number"
-          value={state.companyInfo.phone}
+          value={companyInfo.phone}
           onChange={value => {changeCompanyInfo("phone", value)}}
           style={{ width: "100%" }}
         />
@@ -174,7 +247,7 @@ const CompanyInfoSettingsSection = props => {
           optionsForSearch={
             Object.keys(currencies).map(item => ({value: item, label: item}))
           }
-          selectedOption={state.companyInfo.currency.toUpperCase()}
+          selectedOption={companyInfo.currency.toUpperCase()}
           displayTransformer={option =>
             `${currencies[option].code} (${currencies[option].symbol})`
           }
@@ -184,7 +257,7 @@ const CompanyInfoSettingsSection = props => {
 
         <TableEditableValue
           label="Default VAT Rate (%)"
-          value={state.companyInfo.vatRate}
+          value={companyInfo.vatRate}
           onChange={value => {changeCompanyInfo("vatRate", value)}}            
           style={{ width: "100%" }}
         />

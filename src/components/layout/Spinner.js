@@ -18,7 +18,8 @@ const Container = styled.div`
     position: relative;
     width: 64px;
     height: 64px;
-    margin-top: 200px;
+    top: 50%;
+    transform: translateY(-50%);
   }
   .lds-ring div {
     box-sizing: border-box;
