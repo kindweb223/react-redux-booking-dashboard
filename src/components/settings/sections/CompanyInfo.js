@@ -14,6 +14,7 @@ import currencies from "../../../models/currencies";
 import Grid from "../../layout/Grid";
 import Button from "../../buttons/Button";
 import SpinnerContainer from "../../layout/Spinner";
+import InputLabel from '../../buttons/InputLabel';
 
 import {
   REQUEST_GET_COMPANYINFO,
@@ -168,23 +169,8 @@ const CompanyInfoSettingsSection = props => {
   return (
     <div>
       <SpinnerContainer loading={companyLoading.toString()} />
-      <P2 color="grey">These info will be used to generate invoices.</P2>
-      <Dropzone onDrop={onDrop} accept="image/png, image/gif, image/jpg, image/jpeg" multiple={false}>
-        {({getRootProps, getInputProps, isDragActive}) => (
-          <DropzonContainer 
-            {...getRootProps()}
-            backgroundImage={companyInfo.logoImg ? CONFIG.API_URL + companyInfo.logoImg : ""}
-          >
-            <input {...getInputProps()} />
-            <DropZoneDescription isVisible={(companyInfo.logoImg && companyInfo.logoImg.length > 0) ? false : true}>
-              {isDragActive ? "Drop it like it's hot!" : 'Click me or drag a file to upload!'}
-            </DropZoneDescription>            
-            {
-              imageUploading && <SpinnerContainer loading={'true'} />
-            }
-          </DropzonContainer>
-        )}
-      </Dropzone>
+      <P2 color="grey">This information below will be used to generate invoices.</P2>
+
       <TableEditableValue
         label="Company Name"
         value={companyInfo.name}
@@ -264,21 +250,38 @@ const CompanyInfoSettingsSection = props => {
         />
       </Grid>
       <TableDivider />
-      <div 
-        className={css`
-          display: flex;
-          justify-content: flex-end;
-        `}
-      >
+      <Grid columns="1fr" style={{ width: "100%", marginTop: 14 }}> 
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+          <InputLabel>Company Logo</InputLabel> 
+          <Dropzone onDrop={onDrop} accept="image/png, image/gif, image/jpg, image/jpeg" multiple={false}>
+            {({getRootProps, getInputProps, isDragActive}) => (
+              <DropzonContainer 
+                {...getRootProps()}
+                backgroundImage={companyInfo.logoImg ? CONFIG.API_URL + companyInfo.logoImg : ""}
+              >
+                <input {...getInputProps()} />
+                <DropZoneDescription isVisible={(companyInfo.logoImg && companyInfo.logoImg.length > 0) ? false : true}>
+                  {isDragActive ? "Drop it like it's hot!" : 'Click me or drag a file to upload!'}
+                </DropZoneDescription>            
+                {
+                  imageUploading && <SpinnerContainer loading={'true'} />
+                }
+              </DropzonContainer>
+            )}
+          </Dropzone>
+        </div>             
+      </Grid>      
+
+      <Grid columns="1fr" style={{ width: "100%", marginTop: 14 }}>      
         <Button 
           primary 
           onClick={onSaveCompanyInfo} 
-          style={{ minWidth: "100px"}}
+          style={{ maxWidth: "100px"}}
           disabled={!isNameValidate}
         >
           Save
         </Button>       
-      </div>
+      </Grid>
     </div>
   );
 };
