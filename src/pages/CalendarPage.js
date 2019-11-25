@@ -18,7 +18,7 @@ import {
   REQUSET_ADD_BOOKING, GET_ADD_BOOKING_SUCCESS, GET_ADD_BOOKING_ERROR,
   REQUEST_UPDATE_BOOKING, GET_UPDATE_BOOKING_SUCCESS, GET_UPDATE_BOOKIG_ERROR,
   GET_BOOKING_BOOKINGSATTUS_ERROR,
-  GET_BOOKING_BOOKINGSTATUS_SUCCESS, GET_BOOKING_SETTINGS_ERROR, GET_BOOKING_SETTINGS_SUCCESS, GET_BOOKINGS_ERROR,
+  GET_BOOKING_BOOKINGSTATUS_SUCCESS, GET_BOOKINGS_ERROR,
   GET_BOOKINGS_SUCCESS, GET_CUSTOMERS_ERROR, GET_CUSTOMERS_SUCCESS, GET_VENUE_ERROR, GET_VENUE_SUCCESS,
   REQUEST_GET_BOOKING_BOOKINGSTATUS,
   REQUEST_GET_BOOKINGS, REQUEST_GET_CUSTOMERS,
@@ -30,6 +30,7 @@ import {
   REQUEST_GET_CALENDAR_CUSTOM_VIEW, GET_CALENDAR_CUSTOM_VIEW_SUCCESS, GET_CALENDAR_CUSTOM_VIEW_ERROR,
   GET_USERS_ALL_SPACES_SUCCESS, GET_USERS_ALL_SPACES_ERROR,
   GET_CALENDAR_SETTING_SUCCESS, GET_CALENDAR_SETTING_ERROR, SET_CALENDAR_SETTING_DATA,
+  GET_COMPANYINFO_SUCCESS, GET_COMPANYINFO_ERROR,
 } from "../reducers/actionType";
 import {
   setCalendarSettingAction,
@@ -167,21 +168,18 @@ const CalendarPage = props => {
 
     const getCompany = async () => {
       try {
-        dispatch({ type: REUQEST_GET_BOOKING_SETTINGS});
-
         const res = await axios.get('/company');
-        console.log('company');
         dispatch({
-          type: GET_BOOKING_SETTINGS_SUCCESS,
-          payload: {...res.data.company, loadBooking: true},
+          type: GET_COMPANYINFO_SUCCESS,
+          payload: {...res.data.company},
         })
       } catch (err) {
-        dispatch({ type: GET_BOOKING_SETTINGS_ERROR });
+        dispatch({ type: GET_COMPANYINFO_ERROR });
       }
     }
-
-    if (!(state.bookings && state.bookings.currency))
-    getCompany();
+    
+    if (!state.setttings.companyInfo.id)
+      getCompany();
 
     const getBookingStatus = async () => {
 

@@ -42,7 +42,6 @@ const SvgButtonWrapper = styled.div`
 const InvoiceDetailEdit = props => {
   const { invoice: invoiceBeingEdited, onEndEditing } = props;
   const { state } = useContext(AppReducerContext);
-  
   const [invoice, dispatch] = useReducer(
     invoiceDetailEditReducer,
     invoiceBeingEdited
@@ -421,7 +420,7 @@ const InvoiceDetailEdit = props => {
                   <TableValue>
                     {formatCurrency(
                       item.unitPrice * item.quantity * (1 + item.vatRate / 100),
-                      state.bookings.currency
+                      state.settings.companyInfo.currency
                     )}
                   </TableValue>
 
@@ -451,7 +450,7 @@ const InvoiceDetailEdit = props => {
           onClick={() => {
             dispatch({
               type: "append_cost_item",
-              vatRate: state.settings.defaultVatRate
+              vatRate: state.settings.companyInfo.vatRate,              
             });
             dispatch({
               type: "update_total"
@@ -472,7 +471,7 @@ const InvoiceDetailEdit = props => {
             Net subtotal
           </TableLabel>
           <TableValue>
-            {formatCurrency(netSubtotal || 0, state.bookings.currency)}
+            {formatCurrency(netSubtotal || 0, state.settings.companyInfo.currency)}
           </TableValue>
 
           <TableLabel tall right>
@@ -500,14 +499,14 @@ const InvoiceDetailEdit = props => {
             Taxes
           </TableLabel>
           <TableValue>
-            {formatCurrency(taxes || 0, state.bookings.currency)}
+            {formatCurrency(taxes || 0, state.settings.companyInfo.currency)}
           </TableValue>
 
           <TableLabel tall right>
             Grand Total
           </TableLabel>
           <TableValue>
-            {formatCurrency(grandTotal || 0, state.bookings.currency)}
+            {formatCurrency(grandTotal || 0, state.settings.companyInfo.currency)}
           </TableValue>
         </Table>
       </ModalBottomSection>

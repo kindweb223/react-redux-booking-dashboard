@@ -289,7 +289,7 @@ const InvoicesSection = props => {
                 <TableValue>{invoice.number || index + 1}</TableValue>
                 <TableValue>{formatEventDate(invoice.created)}</TableValue>
                 <TableValue>
-                  {formatCurrency(invoice.grand_total || 0, state.bookings.currency)}
+                  {formatCurrency(invoice.grand_total || 0, state.settings.companyInfo.currency)}
                 </TableValue>
                 <TableValue>{invoice.payment_method || "N/A"}</TableValue>
                 <PickerButton

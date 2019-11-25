@@ -588,7 +588,7 @@ const EditQuote = props => {
                   <TableValue>
                     {formatCurrency(
                       item.unitPrice * item.quantity * (1 + item.vatRate / 100),
-                      state.bookings.currency
+                      state.settings.companyInfo.currency
                     )}
                   </TableValue>
 
@@ -617,7 +617,7 @@ const EditQuote = props => {
             handleChangeQuote({
               type: "append_cost_item",
               booking: booking.id,
-              vatRate: state.bookings.defaultVatRate
+              vatRate: state.settings.companyInfo.vatRate,
             })
           }
           iconComponent={() => <AddGlyph fill={colors.grey} />}

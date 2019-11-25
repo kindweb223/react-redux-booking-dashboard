@@ -422,7 +422,7 @@ const InvoicesPage = () => {
                 </TableValue>
                 {/* amount */}
                 <TableValue>
-                  {formatCurrency(invoice.grand_total || 0, state.bookings.currency)}
+                  {formatCurrency(invoice.grand_total || 0, state.settings.companyInfo.currency)}
                 </TableValue>
                 {/* status */}
                 <PickerButton

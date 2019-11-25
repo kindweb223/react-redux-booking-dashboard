@@ -84,7 +84,7 @@ const QuotesSection = props => {
                   <TableValue>{index + 1}</TableValue>
                   <TableValue>{formatEventDate(quote.createdAt)}</TableValue>
                   <TableValue>
-                    {formatCurrency(quote.value, state.bookings.currency)}
+                    {formatCurrency(quote.value, state.settings.companyInfo.currency)}
                   </TableValue>
                   <DropdownMenu
                     items={["Edit", "Export", "Convert to Invoice", "Delete"]}

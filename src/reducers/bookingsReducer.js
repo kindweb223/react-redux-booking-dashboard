@@ -25,9 +25,6 @@ import {
   REQUEST_GET_BOOKING_QUOTE,
   GET_BOOKING_QUOTE_SUCCESS,
   GET_BOOKING_QUOTE_ERROR,
-  REUQEST_GET_BOOKING_SETTINGS,
-  GET_BOOKING_SETTINGS_SUCCESS,
-  GET_BOOKING_SETTINGS_ERROR,
   REQUEST_CREATE_BOOKING_QUOTE,
   GET_CREATE_BOOKING_QUOTE_SUCCESS,
   GET_CREATE_BOOKING_QUOTE_ERROR,
@@ -188,23 +185,6 @@ function bookingsReducer(state, action) {
     }
 
     // QUOTES
-    case REUQEST_GET_BOOKING_SETTINGS:
-      return {
-        ...state,
-        loadBooking: true,
-      }
-    case GET_BOOKING_SETTINGS_SUCCESS:
-      return {
-        ...state,
-        defaultVatRate: (action.payload && action.payload.vatRate)? action.payload.vatRate : 0,
-        currency: (action.payload && action.payload.currency) ? action.payload.currency.toUpperCase() : "",
-        loadBooking: false,
-      }
-    case GET_BOOKING_SETTINGS_ERROR:
-      return {
-        ...state,
-        loadBooking: false,
-      }
     case REQUEST_GET_BOOKING_QUOTE:
       return {
         ...state,
