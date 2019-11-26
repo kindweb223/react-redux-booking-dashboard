@@ -15,7 +15,6 @@ import Modal from "../modals/modal"
 import CalendarViewDropDown from './CalendarViewDropDown'
 import CalendarCreateView from "../features/CalendarCreateView"
 import { AppReducerContext } from "../../contexts/AppReducerContext";
-import CalendarContext from "../../contexts/CalendarContext";
 import CalendarDatePicker from './CalendarDatePicker';
 
 import axios from 'axios';

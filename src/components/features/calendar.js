@@ -15,7 +15,6 @@ import { formatEventStartEndTime } from "../../utils/dateFormatting";
 import colors from "../style/colors";
 
 import { AppReducerContext } from "../../contexts/AppReducerContext";
-import CalendarContext from "../../contexts/CalendarContext";
 import axios from 'axios'
 import { SET_CALENDAR_SETTING_DATA, CREATE_CALENDAR_SETTING_ERROR } from '../../reducers/actionType'
 import { setCalendarSettingAction } from "../../actions/calendar"

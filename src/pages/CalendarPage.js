@@ -10,7 +10,6 @@ import { bookingToEvents } from "../models/bookingToEvents";
 import TabbedBookingsList from "../components/features/tabbedBookingsList";
 import BookingDetail from "../components/features/bookingDetail/bookingDetail";
 import Modal from "../components/modals/modal";
-import CalendarContext from "../contexts/CalendarContext";
 import { AppReducerContext } from "../contexts/AppReducerContext";
 import BookingDetailEdit from "../components/features/bookingDetail/bookingDetailEdit";
 import { createEmptyBooking } from "../models/bookings";
@@ -178,7 +177,7 @@ const CalendarPage = props => {
       }
     }
     
-    if (!state.setttings.companyInfo.id)
+    if (!state.settings.companyInfo.id)
       getCompany();
 
     const getBookingStatus = async () => {
