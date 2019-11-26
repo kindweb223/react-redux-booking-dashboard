@@ -8,7 +8,6 @@ import RoutesTree from "./routing/RoutesTree";
 import Sidebar from "./components/layout/Sidebar";
 import LayoutWrapper from "./components/layout/LayoutWrapper";
 import LayoutSection from "./components/layout/LayoutSection";
-import CalendarContext from "./contexts/CalendarContext";
 import {
   AppReducerContext,
   reducer,
