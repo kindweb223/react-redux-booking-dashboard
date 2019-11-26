@@ -18,8 +18,6 @@ const initialState = {
     loadingQuotes: false,
     loadingInvoice: false,
     invoices: [],
-    defaultVatRate: "",
-    currency: "",
     owners: [],
   },
   settings: {

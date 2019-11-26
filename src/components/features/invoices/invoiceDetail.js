@@ -183,7 +183,7 @@ const InvoiceDetail = props => {
                 <TableValue>
                   {formatCurrency(
                     item.unitPrice * item.quantity * (1 + item.vatRate),
-                    state.bookings.currency
+                    state.settings.companyInfo.currency
                   )}
                 </TableValue>
               </React.Fragment>
@@ -202,7 +202,7 @@ const InvoiceDetail = props => {
             Net subtotal
           </TableLabel>
           <TableValue>
-            {formatCurrency(netSubtotal || 0, state.bookings.currency)}
+            {formatCurrency(netSubtotal || 0, state.settings.companyInfo.currency)}
           </TableValue>
 
           <span>&nbsp;</span>
@@ -216,7 +216,7 @@ const InvoiceDetail = props => {
             Taxes
           </TableLabel>
           <TableValue>
-            {formatCurrency(taxes || 0, state.bookings.currency)}
+            {formatCurrency(taxes || 0, state.settings.companyInfo.currency)}
           </TableValue>
 
           <span>&nbsp;</span>
@@ -224,7 +224,7 @@ const InvoiceDetail = props => {
             Grand Total
           </TableLabel>
           <TableValue>
-            {formatCurrency(grandTotal || 0, state.bookings.currency)}
+            {formatCurrency(grandTotal || 0, state.settings.companyInfo.currency)}
           </TableValue>
         </Table>
       </ModalBottomSection>
