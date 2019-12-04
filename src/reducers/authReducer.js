@@ -9,13 +9,7 @@ import {
 
 function authReducer(state, action) {
   switch(action.type) {
-    case "request_login_action":            
-      return {
-        ...state,
-        loading: true,
-        user: {...action.user},
-        showInvalidMsg: false,
-      };    
+    
     case "get_login_success":
       localStorage.setItem('token', action.payload.token);
       setAuthToken(localStorage.token);
@@ -24,7 +18,6 @@ function authReducer(state, action) {
         loading: false,
         isAuthenticated: true,
         user: {...action.payload.user},
-        showInvalidMsg: false,
       };
     case "get_login_error":
       return {
@@ -32,7 +25,6 @@ function authReducer(state, action) {
         loading: false,
         isAuthenticated: false,
         user: {...action.payload},
-        showInvalidMsg: true
       }
     case "user_load_success":
       return {
@@ -48,7 +40,6 @@ function authReducer(state, action) {
         ...state,
         loading: false,
         isAuthenticated: false,
-        showInvalidMsg: false,
         user: { email: "", password: ""}
       }
     case "set_logout":
@@ -58,14 +49,8 @@ function authReducer(state, action) {
         ...state,
         loading: false,
         isAuthenticated: false,
-        showInvalidMsg: false,
         user: { email: "", password: ""}
       }    
-    case "set_authenticated":
-      return {
-        ...state,
-        isAuthenticated: action.payload,
-      }
     case REQUEST_SAVE_PAYMENT_INFORMATION:
       return {
         ...state,
