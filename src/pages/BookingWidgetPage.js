@@ -52,9 +52,9 @@ const BookingWidgetPage = () => {
           <TableLabel>Html</TableLabel>
           <div className="widget-content">
             <TableItem           
-              value={`<div id="calendar-widget" width="100%"></div>`}
+              value={`<div id="calendar-widget" width="100%" height="100vh"></div>`}
             />        
-            <CopyToClipboard text={`<div id="calendar-widget" width="100%"></div>`}>
+            <CopyToClipboard text={`<div id="calendar-widget" width="100%" height="100vh"></div>`}>
               <FontAwesomeIcon className="fa-icons" icon={faCopy} />
             </CopyToClipboard>
           </div>
