@@ -10,12 +10,20 @@ const Row = styled.div`
   position: relative;  
   .widget-content {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     .fa-icons {
       margin-left: 1em;
       cursor: pointer;
     }
+    &.multiline {
+      align-items: flex-start;
+      .fa-icons {
+        margin-top: 0.3em;        
+      }
+    }
   }
+  
 `;
 const BookingWidgetPage = () => {
 
@@ -53,13 +61,17 @@ const BookingWidgetPage = () => {
         </Row>
         <Row>
           <TableLabel>Javascript</TableLabel>
-          <div className="widget-content">
+          <div className="widget-content multiline">
             <TableItem 
               value={
-                `<script id="calendar-module" src="./script.js" secret_key="${state.auth.user.outseta_id}"></script>`
+                `<script id="calendar-module"
+                  src="https://calendarwidget.herokuapp.com/calendarwidget.js"
+                  secret_key="${state.auth.user.outseta_id}">
+                </script>`
               }
+              style={{maxWidth: 'calc(100% - 40px)'}}
             />
-            <CopyToClipboard text={`<script id="calendar-module" src="./script.js" secret_key="${state.auth.user.outseta_id}"></script>`}>
+            <CopyToClipboard text={`<script id="calendar-module" src="https://calendarwidget.herokuapp.com/calendarwidget.js" secret_key="${state.auth.user.outseta_id}"></script>`}>
               <FontAwesomeIcon className="fa-icons" icon={faCopy} />
             </CopyToClipboard>
           </div>
