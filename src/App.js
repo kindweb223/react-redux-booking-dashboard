@@ -48,7 +48,8 @@ const App = props => {
       }
     }
     
-    getUser();          
+    if (localStorage.token)
+      getUser();
 
   }, [])
 

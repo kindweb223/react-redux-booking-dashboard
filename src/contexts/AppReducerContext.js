@@ -58,7 +58,6 @@ const initialState = {
 
   auth: {
     isAuthenticated: false,
-    showInvalidMsg: false,
     loading: true,
     user: {
       email: "",

@@ -8,12 +8,14 @@ import BookingStatusesSettingsSection from "../components/settings/sections/Book
 import CustomBookingColorSection from "../components/settings/sections/CustomBookingColor";
 import VenuesAndSpacesPage from "./VenuesAndSpacesPage";
 import OnlinePaymentPage from "./OnlinePaymentPage";
+import BookingWidgetPage from "./BookingWidgetPage";
 
 const VENUES_AND_SPACES_SECTION_NAME  = "Venues and Spaces";
 const COMPANY_SETTINGS_SECTION_NAME   = "Company Settings";
 const BOOKING_STATUS_SECTION_NAME     = "Booking Status";
 const ONLINE_PAYMENT_SECTION_NAME     = "Online Payments";
 const CUSTOM_BOOKING_COLOR_NAME       = "Custom Booking Colour";
+const GET_BOOKING_WIDGET              = "Get Booking Widget"
 
 const SettingsPage = props => {
   const [currentSection, setCurrentSection] = useState(
@@ -32,6 +34,7 @@ const SettingsPage = props => {
           COMPANY_SETTINGS_SECTION_NAME,
           ONLINE_PAYMENT_SECTION_NAME,
           CUSTOM_BOOKING_COLOR_NAME,
+          GET_BOOKING_WIDGET,
         ]}
         onClick={item => {
           setCurrentSection(item);
@@ -56,6 +59,8 @@ const SettingsPage = props => {
             return <OnlinePaymentPage state={state} dispatch={dispatch} />;
           case CUSTOM_BOOKING_COLOR_NAME:
             return <CustomBookingColorSection />
+          case GET_BOOKING_WIDGET:
+            return <BookingWidgetPage />
           default:
             throw new Error("unhandled section");
         }
