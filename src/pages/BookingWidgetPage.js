@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -6,9 +6,12 @@ import { faCopy, faCode, faExternalLinkAlt } from '@fortawesome/free-solid-svg-i
 import { AppReducerContext } from "../contexts/AppReducerContext";
 import { Table, TableItem, TableLabel, TableEditableValue } from "../components/tables/tables";
 import InputField from "../components/buttons/InputField";
-
+import Modal from "../components/modals/modal";
+import { ModalContainer, ModalTopSection, ModalBottomSection, ModalTitleAndButtons } from '../components/modals/containers'
 import colors from "../components/style/colors"
-import Button from "../components/buttons/Button";
+import Button from "../components/buttons/Button"
+import H3 from "../components/typography/H3"
+import Grid from "../components/layout/Grid"
 
 const Row = styled.div`
   position: relative;  
@@ -38,10 +41,21 @@ const WidgetContent = styled.div`
   margin-top: 3em;
 `
 
+const CodeContent = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`
+const ClipBoardIcon = styled(FontAwesomeIcon)`
+  margin-left: 0.3em;
+  color: white;  
+`
+
 const BookingWidgetPage = () => {
 
   const { state } = useContext(AppReducerContext)
-  
+  const [ showInstModal, setShowInstModal ] = useState(false)
+
   return (
     <div>
       <Table>
@@ -59,46 +73,95 @@ const BookingWidgetPage = () => {
             <CopyToClipboard text={state.auth.user.outseta_id}>
               <Button primary style={{marginLeft: '1em'}}>
                 Copy
-                <FontAwesomeIcon className="fa-icons" icon={faCopy} style={{marginLeft:'0.3em'}}/>
+                <ClipBoardIcon className="fa-icons" icon={faCopy} />
               </Button>
             </CopyToClipboard>
           </Row>
           <Row>
             <TableLabel style={{minWidth: '100px'}}>Widget</TableLabel>
-            <Button primary>
+            <Button primary onClick={() => setShowInstModal(true)}>
               <FontAwesomeIcon className="fa-icons" icon={faExternalLinkAlt} style={{marginRight:'0.3em'}}/>
               Booking Widget Setup Instruction
             </Button>
           </Row>
         </WidgetContent>
-        {/* <Row>
-          <TableLabel>Html</TableLabel>
-          <div className="widget-content">
-            <TableItem           
-              value={`<div id="calendar-widget" style="width: 100%; height: 100vh"></div>`}
-            />        
-            <CopyToClipboard text={`<div id="calendar-widget" style="width: 100%; height: 100vh"></div>`}>
-              <FontAwesomeIcon className="fa-icons" icon={faCopy} />
-            </CopyToClipboard>
-          </div>
-        </Row>
-        <Row>
-          <TableLabel>Javascript</TableLabel>
-          <div className="widget-content multiline">
-            <TableItem 
-              value={
-                `<script id="calendar-module"
-                  src="https://calendarwidget.herokuapp.com/calendarwidget.js"
-                  secret_key="${state.auth.user.outseta_id}">
-                </script>`
-              }
-              style={{maxWidth: 'calc(100% - 40px)'}}
-            />
-            <CopyToClipboard text={`<script id="calendar-module" src="https://calendarwidget.herokuapp.com/calendarwidget.js" secret_key="${state.auth.user.outseta_id}"></script>`}>
-              <FontAwesomeIcon className="fa-icons" icon={faCopy} />
-            </CopyToClipboard>
-          </div>
-        </Row>                 */}
+        <Modal
+          isOpen={showInstModal}
+          onClose={() => setShowInstModal(false)}
+        >
+          <ModalContainer>
+            <ModalTopSection>
+              <ModalTitleAndButtons>
+                <H3>Booking Widget Setup Instruction</H3>
+              </ModalTitleAndButtons>              
+            </ModalTopSection>
+            <ModalBottomSection>
+              <TableLabel style={{width: '100%', marginBottom: '1em'}}>
+                1. Copy & Paste the following code above in your page.
+              </TableLabel>
+
+              <CodeContent>
+                <Row>
+                  <TableLabel style={{color: colors.dark}}>
+                    You can add it in the HTML head section.
+                  </TableLabel>
+                </Row>
+                <Row>                
+                  <InputField  
+                    value={`<script src="https://calendarwidget.herokuapp.com/calendarwidget.js"></script>`} 
+                    disabled
+                    style={{flex: 1}}
+                  />
+                  
+                  <CopyToClipboard text={`<script src="https://calendarwidget.herokuapp.com/calendarwidget.js"></script>`}>
+                    <Button primary style={{marginLeft: '1em'}}>
+                      Copy
+                      <ClipBoardIcon className="fa-icons" icon={faCopy} />
+                    </Button>
+                  </CopyToClipboard>
+                </Row>
+              </CodeContent>                                            
+
+              <TableLabel style={{width: '100%', marginTop: '2em', marginBottom: '1em'}}>
+                2. Add following Markup & Script code.
+              </TableLabel>
+              <CodeContent>
+                <Row>
+                  <TableLabel style={{color: colors.dark}}>Add following Markup code where you want to add calendar</TableLabel>
+                </Row>
+                <Row style={{marginBottom: '1em'}}>                  
+                  <InputField 
+                    value={`<div id="calendar-widget" style="width: 100%; height: 100vh"></div>`} 
+                    disabled         
+                    style={{flex: 1}}            
+                  />
+                  <CopyToClipboard text={`<div id="calendar-widget" style="width: 100%; height: 100vh"></div>`}>
+                    <Button primary style={{marginLeft: '1em'}}>
+                      Copy
+                      <ClipBoardIcon className="fa-icons" icon={faCopy} />
+                    </Button>
+                  </CopyToClipboard>
+                </Row>
+                <Row>
+                  <TableLabel style={{color: colors.dark}}>Add following script code to create Calendar</TableLabel>
+                </Row>
+                <Row style={{marginBottom: '1em'}}>
+                  <InputField 
+                    value={`<script>caledarWidget("${state.auth.user.outseta_id}")</script>`} 
+                    disabled         
+                    style={{flex: 1}}            
+                  />
+                  <CopyToClipboard text={`<script>caledarWidget("${state.auth.user.outseta_id}")</script>`}>
+                    <Button primary style={{marginLeft: '1em'}}>
+                      Copy
+                      <ClipBoardIcon className="fa-icons" icon={faCopy} />
+                    </Button>
+                  </CopyToClipboard>
+                </Row>
+              </CodeContent>
+            </ModalBottomSection>
+          </ModalContainer>
+        </Modal>
       </Table>
     </div>
   )
