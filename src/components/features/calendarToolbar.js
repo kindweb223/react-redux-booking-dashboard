@@ -116,7 +116,6 @@ const CalendarToolbar = props => {
             isOpen={showCreateViewModal} 
             onClose={() => setShowCreateViewModal(false)}>
             <CalendarCreateView 
-              calendarViewData={state.calendarViews.calendarViewData} 
               hideModal={() => {setShowCreateViewModal(false)}}
             />
           </Modal>

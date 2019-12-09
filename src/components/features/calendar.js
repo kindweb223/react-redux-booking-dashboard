@@ -139,6 +139,13 @@ const Calendar = props => {
   
   const { state, dispatch } = useContext(AppReducerContext);
 
+  const getSpaceNameWithId = spaceId => {
+    const filterOne = state.calendarViews.allSpaces.filter(item => item.id === spaceId)
+    if (filterOne.length > 0)
+      return filterOne[0].name
+    else return ""
+  }
+  
   const [resources, setResources] = useState([])
   useEffect(() => {
     if (state.calendarViews.curView === 'spaces')
@@ -154,7 +161,7 @@ const Calendar = props => {
         state.calendarViews.curView >= 0
       ) {
         const newResources = state.calendarViews.calendarViewData.views[state.calendarViews.curView].spaces.map(item => {
-          return {id: item.id, title: item.name}
+          return {id: item, title: getSpaceNameWithId(item)}
         })
         setResources([...newResources])
       }

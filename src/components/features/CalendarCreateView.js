@@ -69,13 +69,23 @@ const ErrorP = styled.p`
   font-size: 0.8em;
 `;
 
-const CalendarCreateView = ({
-  calendarViewData,
+const CalendarCreateView = ({  
   hideModal,
 }) => {
 
   const { state, dispatch } = useContext(AppReducerContext);
-  const [calendarViews, setCalendarViews] = useState([...calendarViewData.views])
+  const [calendarViews, setCalendarViews] = useState([])
+
+  const getSpaceNameWithId = spaceId => {
+    const filterOne = state.calendarViews.allSpaces.filter(item => item.id === spaceId)
+    if (filterOne.length > 0)
+      return filterOne[0].name
+    else return ""
+  }
+
+  useEffect(() => {    
+    setCalendarViews(state.calendarViews.calendarViewData.views)
+  }, [state.calendarViews.calendarViewData, state.calendarViews.allSpaces])
 
   const handleClickAddView = () => {
 
@@ -87,7 +97,7 @@ const CalendarCreateView = ({
       }
     ])
 
-    if( !calendarViewData.id || calendarViewData.id === -1) {
+    if( !state.calendarViews.calendarViewData.id || state.calendarViews.calendarViewData.id === -1) {
 
     } else {
 
@@ -110,9 +120,13 @@ const CalendarCreateView = ({
       }
     }
 
-    if (calendarViewData.id === -1) {
+    if (state.calendarViews.calendarViewData.id === -1) {
       try {
-        const res = await axios.post('/calendarview', {views: JSON.stringify(calendarViews)}, config)      
+        const res = await axios.post(
+          '/calendarview', {
+          views: JSON.stringify(calendarViews)}, 
+          config
+        )      
         dispatch({
           type: CREATE_CALENDAR_CUSTOM_VIEW_SUCCESS,
           payload: res.data.calendarView
@@ -122,9 +136,9 @@ const CalendarCreateView = ({
         dispatch({ type: CREATE_CALENDAR_CUSTOM_VIEW_ERROR })
       }      
     } else {
-      try {
+      try {        
         const res = await axios.put(
-          `/calendarview/${calendarViewData.id}`, 
+          `/calendarview/${state.calendarViews.calendarViewData.id}`, 
           {views: JSON.stringify(calendarViews)}, 
           config
         )
@@ -143,7 +157,7 @@ const CalendarCreateView = ({
 
   const handleChangeSpaces = (selected, nIndex) => {
     const newOne = [ ...calendarViews]
-    newOne[nIndex].spaces = [ ...getSelectedSpaces(selected) ]
+    newOne[nIndex].spaces = [ ...selected ]
     setCalendarViews([ ...newOne])
   }
 
@@ -159,17 +173,10 @@ const CalendarCreateView = ({
     ])
   }
 
-  const getSelectedSpaces = (selectedIds) => {
-    const filterOne = state.calendarViews.allSpaces.filter(item => selectedIds.includes(item.id))
-    return filterOne.map(item => {
-      return { id: item.id, name: item.name }
-    })
-  }
-
   const getSelectedAllString = spaces => {
     let strAll = "";
     spaces.forEach((item, nIndex) => {
-      strAll += item.name
+      strAll += getSpaceNameWithId(item)
       if (nIndex < spaces.length-1)
         strAll += ', '
     })
@@ -215,7 +222,7 @@ const CalendarCreateView = ({
                 options={state.calendarViews.allSpaces.map(item => {
                   return {value: item.id, label: item.name}
                 })}
-                selected={item.spaces.map(itemOne => itemOne.id)}
+                selected={item.spaces}
                 label=""
                 onSelectedChanged={selected => handleChangeSpaces(selected, nIndex)}
                 disableSearch={true}
