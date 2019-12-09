@@ -69,8 +69,8 @@ const BookingWidgetPage = () => {
         <WidgetContent>
           <Row style={{marginBottom: '1em'}}>
             <TableLabel style={{minWidth: '100px'}}>Widget ID</TableLabel>
-            <InputField value={state.auth.user.outseta_id} disabled style={{flex: 1}} />
-            <CopyToClipboard text={state.auth.user.outseta_id}>
+            <InputField value={state.auth.user.uuid} disabled style={{flex: 1}} />
+            <CopyToClipboard text={state.auth.user.uuid}>
               <Button primary style={{marginLeft: '1em'}}>
                 Copy
                 <ClipBoardIcon className="fa-icons" icon={faCopy} />
@@ -147,11 +147,11 @@ const BookingWidgetPage = () => {
                 </Row>
                 <Row style={{marginBottom: '1em'}}>
                   <InputField 
-                    value={`<script>caledarWidget("${state.auth.user.outseta_id}")</script>`} 
+                    value={`<script>calendarWidget("${state.auth.user.uuid}")</script>`} 
                     disabled         
                     style={{flex: 1}}            
                   />
-                  <CopyToClipboard text={`<script>caledarWidget("${state.auth.user.outseta_id}")</script>`}>
+                  <CopyToClipboard text={`<script>calendarWidget("${state.auth.user.uuid}")</script>`}>
                     <Button primary style={{marginLeft: '1em'}}>
                       Copy
                       <ClipBoardIcon className="fa-icons" icon={faCopy} />
