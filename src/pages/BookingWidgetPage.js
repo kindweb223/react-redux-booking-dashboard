@@ -97,13 +97,13 @@ const BookingWidgetPage = () => {
             </ModalTopSection>
             <ModalBottomSection>
               <TableLabel style={{width: '100%', marginBottom: '1em'}}>
-                1. Copy & Paste the following code above in your page.
+                1. Copy & Paste the following code below in your page.
               </TableLabel>
 
               <CodeContent>
                 <Row>
                   <TableLabel style={{color: colors.dark}}>
-                    You can add it in the HTML head section.
+                    You can add it in the HTML head section.                    
                   </TableLabel>
                 </Row>
                 <Row>                
@@ -123,12 +123,12 @@ const BookingWidgetPage = () => {
               </CodeContent>                                            
 
               <TableLabel style={{width: '100%', marginTop: '2em', marginBottom: '1em'}}>
-                2. Add following Markup & Script code.
+                2. Add following Markup code within the body of the page, where you want to display your calendar.
               </TableLabel>
               <CodeContent>
-                <Row>
+                {/* <Row>
                   <TableLabel style={{color: colors.dark}}>Add following Markup code where you want to add calendar</TableLabel>
-                </Row>
+                </Row> */}
                 <Row style={{marginBottom: '1em'}}>                  
                   <InputField 
                     value={`<div id="calendar-widget" style="width: 100%; height: 100vh"></div>`} 
@@ -143,7 +143,9 @@ const BookingWidgetPage = () => {
                   </CopyToClipboard>
                 </Row>
                 <Row>
-                  <TableLabel style={{color: colors.dark}}>Add following script code to create Calendar</TableLabel>
+                  <TableLabel style={{color: colors.dark}}>
+                    Add following script code to create Calendar.
+                  </TableLabel>
                 </Row>
                 <Row style={{marginBottom: '1em'}}>
                   <InputField 
