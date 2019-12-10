@@ -34,7 +34,7 @@ const HtmlDiv = styled.div`
   display: flex;
 `;
 
-const InstrunctionDiv = styled.div`
+const InstructionDiv = styled.div`
   margin-left: 1em;
 `
 const WidgetContent = styled.div`
@@ -61,10 +61,10 @@ const BookingWidgetPage = () => {
       <Table>
         <Row>
           <HtmlDiv><FontAwesomeIcon className="fa-icons" icon={faCode} /></HtmlDiv>
-          <InstrunctionDiv>
+          <InstructionDiv>
             <TableLabel color={colors.dark} style={{fontSize:'1em', margin: '0'}}>Setup Instructions</TableLabel>
-            <TableLabel>Find instrunctions on how to setup your website booking widget.</TableLabel>
-          </InstrunctionDiv>          
+            <TableLabel>Find instructions on how to setup your website booking widget.</TableLabel>
+          </InstructionDiv>          
         </Row>
         <WidgetContent>
           <Row style={{marginBottom: '1em'}}>
