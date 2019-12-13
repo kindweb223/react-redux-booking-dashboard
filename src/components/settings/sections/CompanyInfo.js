@@ -16,15 +16,6 @@ import Button from "../../buttons/Button";
 import SpinnerContainer from "../../layout/Spinner";
 import InputLabel from '../../buttons/InputLabel';
 
-import {
-  REQUEST_GET_COMPANYINFO,
-  GET_COMPANYINFO_SUCCESS,
-  GET_COMPANYINFO_ERROR,
-  REQUEDST_UPDATE_COMPANYINFO,
-  GET_UPDATE_COMPANYINFO_SUCCESS,
-  GET_UPDATE_COMPANYINFO_ERROR,
-  CHANGE_COMPANY_INFO,
-} from "../../../reducers/actionType";
 import CONFIG from '../../../config';
 
 const DropzonContainer = styled.div`
@@ -54,6 +45,9 @@ const DropzonContainer = styled.div`
 const DropZoneDescription = styled.p`
   visibility: ${props => props.isVisible ? "visible" : "hidden"};
 `
+const SubdomainDiv = styled.div`
+  display: flex;
+`
 
 const CompanyInfoSettingsSection = props => {
   const { state, dispatch } = props;
@@ -67,6 +61,7 @@ const CompanyInfoSettingsSection = props => {
     currency: "",
     vatRate: "",
     logoImg: "",
+    subdomain: "",
   })
   const [ isNameValidate, setIsNameValidate ] = useState(true);
   const [ imageUploading, setImageUploading ] = useState(false);
@@ -99,37 +94,36 @@ const CompanyInfoSettingsSection = props => {
         }
       };
       
+      let saveOne = { ...companyInfo }
+      delete saveOne['subdomain']
+
       let res = {};
       if (companyInfo.id) {
         res = await axios.put(
           `/companies/${companyInfo.id}`, 
-          JSON.stringify(companyInfo),
+          JSON.stringify(saveOne),
           axios_config
         );
       } else {
         res = await axios.post(
           `/companies`, 
-          JSON.stringify(companyInfo),
+          JSON.stringify(saveOne),
           axios_config
         );
+        setCompanyInfo({
+          ...companyInfo,
+          id: res.data.company.id,
+        })  
       }
-
-      dispatch({
-        type: GET_UPDATE_COMPANYINFO_SUCCESS,
-        payload: res.data.company,
-      })
     } catch (err) {
-      dispatch({
-        type: GET_UPDATE_COMPANYINFO_ERROR,
-        payload: companyInfo,
-      })
     }    
   }
 
-  const changeCompanyInfo = (key, value) => {
-    dispatch({
-      type: CHANGE_COMPANY_INFO,
-      payload: {key, value}
+  const changeCompanyInfo = (key, value) => {    
+    const companyOne = {...companyInfo}
+    companyOne[key] = value
+    setCompanyInfo({
+      ...companyOne
     })
   }
 
@@ -139,9 +133,9 @@ const CompanyInfoSettingsSection = props => {
     } else {
       setIsNameValidate(true);
     }
-    dispatch({
-      type: CHANGE_COMPANY_INFO,
-      payload: {key: "name", value}
+    setCompanyInfo({
+      ...companyInfo,
+      name: value,
     })
   }
 
@@ -164,6 +158,10 @@ const CompanyInfoSettingsSection = props => {
       ...companyInfo,
       logoImg: resUpload.data.fileNames[0],
     })
+  }
+
+  const onSaveSubdomain = () => {
+
   }
 
   return (
@@ -248,7 +246,7 @@ const CompanyInfoSettingsSection = props => {
           onChange={value => {changeCompanyInfo("vatRate", value)}}            
           style={{ width: "100%" }}
         />
-      </Grid>
+      </Grid>      
       <TableDivider />
       <Grid columns="1fr" style={{ width: "100%", marginTop: 14 }}> 
         <div style={{display: 'flex', flexDirection: 'column'}}>
@@ -282,6 +280,24 @@ const CompanyInfoSettingsSection = props => {
           Save
         </Button>       
       </Grid>
+
+      <TableDivider />
+      <SubdomainDiv>
+        <TableEditableValue
+          label="Subdomain"
+          value={companyInfo.subdomain}
+          onChange={value => {changeCompanyInfo("subdomain", value)}}
+          style={{ width: '100%' }}
+        />
+      </SubdomainDiv>
+      <Button 
+        primary 
+        onClick={onSaveSubdomain} 
+        disabled={!companyInfo.subdomain.length > 0}
+        style={{marginTop: 14}}
+      >
+        Change subdomain
+      </Button>
     </div>
   );
 };
