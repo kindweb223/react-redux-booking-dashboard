@@ -3,7 +3,6 @@ import axios from 'axios';
 import { css } from "emotion";
 import Dropzone from 'react-dropzone'
 import styled from "styled-components";
-
 import P2 from "../../typography/P2";
 import {
   TableEditableValue,
@@ -47,6 +46,23 @@ const DropZoneDescription = styled.p`
 `
 const SubdomainDiv = styled.div`
   display: flex;
+  align-items: center;
+
+  input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+`
+
+const SubdomainUrl = styled.div`
+  background-color: #93989F;
+  padding: 0 1em;
+  border-radius: 0.25em;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  height: 34px;
+  display: flex;
+  align-items: center;
 `
 
 const CompanyInfoSettingsSection = props => {
@@ -66,6 +82,7 @@ const CompanyInfoSettingsSection = props => {
   const [ isNameValidate, setIsNameValidate ] = useState(true);
   const [ imageUploading, setImageUploading ] = useState(false);
   const [ companyLoading, setCompanyLoading ] = useState(false);
+  const [ validateSubdomain, setValidateSubdomain ] = useState({ validate: true, msg: ""})
 
   useEffect(() => {    
 
@@ -160,8 +177,27 @@ const CompanyInfoSettingsSection = props => {
     })
   }
 
-  const onSaveSubdomain = () => {
+  const onSaveSubdomain = async () => {
+    try {
+      const res = await axios.put(
+        `/companies/savesubdomain/${companyInfo.id}`,
+        {subdomain: companyInfo.subdomain},
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          } 
+        }
+      )
+            
+      if (!res.data.success) {
+        setValidateSubdomain({
+          validate: false,
+          msg: res.data.error,
+        })
+      }
+    } catch(err) {
 
+    }    
   }
 
   return (
@@ -282,14 +318,35 @@ const CompanyInfoSettingsSection = props => {
       </Grid>
 
       <TableDivider />
+      
+      <InputLabel>Subdomain</InputLabel>
       <SubdomainDiv>
-        <TableEditableValue
-          label="Subdomain"
+        <TableEditableValue          
           value={companyInfo.subdomain}
           onChange={value => {changeCompanyInfo("subdomain", value)}}
-          style={{ width: '100%' }}
+          style={{ width: '100%'}}
+          className={!validateSubdomain.validate? "error" : ""}
         />
+        <SubdomainUrl>
+          app.heyagenda.com
+        </SubdomainUrl>
       </SubdomainDiv>
+      {
+        !validateSubdomain.validate && 
+        <p 
+          className={
+            css`
+              color: #E92579;            
+              margin: 0.2em 0 0 0;
+              padding: 0 0.6em;
+              font-size: 0.8em;
+            `
+          }
+        >
+          {validateSubdomain.msg}
+        </p>
+      }           
+      
       <Button 
         primary 
         onClick={onSaveSubdomain} 
