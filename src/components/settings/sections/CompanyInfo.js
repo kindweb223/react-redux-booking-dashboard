@@ -351,7 +351,7 @@ const CompanyInfoSettingsSection = props => {
         primary 
         onClick={onSaveSubdomain} 
         disabled={!companyInfo.subdomain.length > 0}
-        style={{marginTop: 14}}
+        style={{marginTop: 14, marginBottom: 20}}
       >
         Change subdomain
       </Button>
