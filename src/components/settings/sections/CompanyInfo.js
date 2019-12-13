@@ -3,7 +3,6 @@ import axios from 'axios';
 import { css } from "emotion";
 import Dropzone from 'react-dropzone'
 import styled from "styled-components";
-
 import P2 from "../../typography/P2";
 import {
   TableEditableValue,
@@ -16,15 +15,6 @@ import Button from "../../buttons/Button";
 import SpinnerContainer from "../../layout/Spinner";
 import InputLabel from '../../buttons/InputLabel';
 
-import {
-  REQUEST_GET_COMPANYINFO,
-  GET_COMPANYINFO_SUCCESS,
-  GET_COMPANYINFO_ERROR,
-  REQUEDST_UPDATE_COMPANYINFO,
-  GET_UPDATE_COMPANYINFO_SUCCESS,
-  GET_UPDATE_COMPANYINFO_ERROR,
-  CHANGE_COMPANY_INFO,
-} from "../../../reducers/actionType";
 import CONFIG from '../../../config';
 
 const DropzonContainer = styled.div`
@@ -54,6 +44,26 @@ const DropzonContainer = styled.div`
 const DropZoneDescription = styled.p`
   visibility: ${props => props.isVisible ? "visible" : "hidden"};
 `
+const SubdomainDiv = styled.div`
+  display: flex;
+  align-items: center;
+
+  input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+`
+
+const SubdomainUrl = styled.div`
+  background-color: #93989F;
+  padding: 0 1em;
+  border-radius: 0.25em;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  height: 34px;
+  display: flex;
+  align-items: center;
+`
 
 const CompanyInfoSettingsSection = props => {
   const { state, dispatch } = props;
@@ -67,10 +77,12 @@ const CompanyInfoSettingsSection = props => {
     currency: "",
     vatRate: "",
     logoImg: "",
+    subdomain: "",
   })
   const [ isNameValidate, setIsNameValidate ] = useState(true);
   const [ imageUploading, setImageUploading ] = useState(false);
   const [ companyLoading, setCompanyLoading ] = useState(false);
+  const [ validateSubdomain, setValidateSubdomain ] = useState({ validate: true, msg: ""})
 
   useEffect(() => {    
 
@@ -99,37 +111,36 @@ const CompanyInfoSettingsSection = props => {
         }
       };
       
+      let saveOne = { ...companyInfo }
+      delete saveOne['subdomain']
+
       let res = {};
       if (companyInfo.id) {
         res = await axios.put(
           `/companies/${companyInfo.id}`, 
-          JSON.stringify(companyInfo),
+          JSON.stringify(saveOne),
           axios_config
         );
       } else {
         res = await axios.post(
           `/companies`, 
-          JSON.stringify(companyInfo),
+          JSON.stringify(saveOne),
           axios_config
         );
+        setCompanyInfo({
+          ...companyInfo,
+          id: res.data.company.id,
+        })  
       }
-
-      dispatch({
-        type: GET_UPDATE_COMPANYINFO_SUCCESS,
-        payload: res.data.company,
-      })
     } catch (err) {
-      dispatch({
-        type: GET_UPDATE_COMPANYINFO_ERROR,
-        payload: companyInfo,
-      })
     }    
   }
 
-  const changeCompanyInfo = (key, value) => {
-    dispatch({
-      type: CHANGE_COMPANY_INFO,
-      payload: {key, value}
+  const changeCompanyInfo = (key, value) => {    
+    const companyOne = {...companyInfo}
+    companyOne[key] = value
+    setCompanyInfo({
+      ...companyOne
     })
   }
 
@@ -139,9 +150,9 @@ const CompanyInfoSettingsSection = props => {
     } else {
       setIsNameValidate(true);
     }
-    dispatch({
-      type: CHANGE_COMPANY_INFO,
-      payload: {key: "name", value}
+    setCompanyInfo({
+      ...companyInfo,
+      name: value,
     })
   }
 
@@ -164,6 +175,29 @@ const CompanyInfoSettingsSection = props => {
       ...companyInfo,
       logoImg: resUpload.data.fileNames[0],
     })
+  }
+
+  const onSaveSubdomain = async () => {
+    try {
+      const res = await axios.put(
+        `/companies/savesubdomain/${companyInfo.id}`,
+        {subdomain: companyInfo.subdomain},
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          } 
+        }
+      )
+            
+      if (!res.data.success) {
+        setValidateSubdomain({
+          validate: false,
+          msg: res.data.error,
+        })
+      }
+    } catch(err) {
+
+    }    
   }
 
   return (
@@ -248,7 +282,7 @@ const CompanyInfoSettingsSection = props => {
           onChange={value => {changeCompanyInfo("vatRate", value)}}            
           style={{ width: "100%" }}
         />
-      </Grid>
+      </Grid>      
       <TableDivider />
       <Grid columns="1fr" style={{ width: "100%", marginTop: 14 }}> 
         <div style={{display: 'flex', flexDirection: 'column'}}>
@@ -282,6 +316,45 @@ const CompanyInfoSettingsSection = props => {
           Save
         </Button>       
       </Grid>
+
+      <TableDivider />
+      
+      <InputLabel>Subdomain</InputLabel>
+      <SubdomainDiv>
+        <TableEditableValue          
+          value={companyInfo.subdomain}
+          onChange={value => {changeCompanyInfo("subdomain", value)}}
+          style={{ width: '100%'}}
+          className={!validateSubdomain.validate? "error" : ""}
+        />
+        <SubdomainUrl>
+          app.heyagenda.com
+        </SubdomainUrl>
+      </SubdomainDiv>
+      {
+        !validateSubdomain.validate && 
+        <p 
+          className={
+            css`
+              color: #E92579;            
+              margin: 0.2em 0 0 0;
+              padding: 0 0.6em;
+              font-size: 0.8em;
+            `
+          }
+        >
+          {validateSubdomain.msg}
+        </p>
+      }           
+      
+      <Button 
+        primary 
+        onClick={onSaveSubdomain} 
+        disabled={!companyInfo.subdomain.length > 0}
+        style={{marginTop: 14}}
+      >
+        Change subdomain
+      </Button>
     </div>
   );
 };

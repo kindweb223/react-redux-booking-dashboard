@@ -43,10 +43,6 @@ import {
   REQUEST_GET_COMPANYINFO,
   GET_COMPANYINFO_SUCCESS,
   GET_COMPANYINFO_ERROR,
-  REQUEDST_UPDATE_COMPANYINFO,
-  GET_UPDATE_COMPANYINFO_SUCCESS,
-  GET_UPDATE_COMPANYINFO_ERROR,
-  CHANGE_COMPANY_INFO,
   UPDATE_ALL_BOOKINGSTATUS_SUCCESS,
 } from "./actionType";
 
@@ -379,29 +375,6 @@ function settingsReducer(state = {}, action) {
         companyLoading: false,
       }
     }
-    case REQUEDST_UPDATE_COMPANYINFO:
-      return {
-        ...state,
-        companyLoading: true,
-      }
-    case GET_UPDATE_COMPANYINFO_SUCCESS:
-      return {
-        ...state,
-        companyLoading: false,
-        companyInfo: { ...action.payload }
-      }
-    case GET_UPDATE_COMPANYINFO_ERROR:
-      return {
-        ...state,
-        companyLoading: false,        
-      }
-    case CHANGE_COMPANY_INFO:
-      const newCompanyInfo = { ... state.companyInfo };
-      newCompanyInfo[action.payload.key] = action.payload.value
-      return {
-        ...state,
-        companyInfo: { ...newCompanyInfo }
-      }
     default:
       return state;
   }
