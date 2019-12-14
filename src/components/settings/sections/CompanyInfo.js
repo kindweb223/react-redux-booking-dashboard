@@ -83,6 +83,7 @@ const CompanyInfoSettingsSection = props => {
   const [ imageUploading, setImageUploading ] = useState(false);
   const [ companyLoading, setCompanyLoading ] = useState(false);
   const [ validateSubdomain, setValidateSubdomain ] = useState({ validate: true, msg: ""})
+  const [ prevSubdomain, setPreSubdomain ] = useState("")
 
   useEffect(() => {    
 
@@ -94,6 +95,7 @@ const CompanyInfoSettingsSection = props => {
           setCompanyInfo({
             ...res.data.company,
           })
+          setPreSubdomain(res.data.company.subdomain)
         }
         setCompanyLoading(false)    
       } catch (err) {
@@ -136,7 +138,21 @@ const CompanyInfoSettingsSection = props => {
     }    
   }
 
-  const changeCompanyInfo = (key, value) => {    
+  const changeCompanyInfo = (key, value) => {   
+    if (key === 'subdomain') {
+      if (value.length === 0) {
+        setValidateSubdomain({
+          validate: false,
+          msg: 'Subdomain Required.'
+        })
+      } else {
+        setValidateSubdomain({
+          validate: true,
+          msg: ''
+        })
+      }
+    }
+
     const companyOne = {...companyInfo}
     companyOne[key] = value
     setCompanyInfo({
@@ -178,18 +194,37 @@ const CompanyInfoSettingsSection = props => {
   }
 
   const onSaveSubdomain = async () => {
+    debugger;
+    if (companyInfo.subdomainCount >= 5)
+    {
+      setValidateSubdomain({
+        validate: false,
+        msg: "Sorry, but your new subdomain is not allowed. You may have reached your limit of five changes."
+      })
+      return;
+    }
+
     try {
       const res = await axios.put(
         `/companies/savesubdomain/${companyInfo.id}`,
-        {subdomain: companyInfo.subdomain},
+        {
+          subdomain: companyInfo.subdomain,
+          subdomainCount: companyInfo.subdomainCount + 1,
+        },
         {
           headers: {
             'Content-Type': 'application/json'
           } 
         }
       )
-            
-      if (!res.data.success) {
+      
+      if (res.data.success){
+        setPreSubdomain(res.data.company.subdomain)
+        setCompanyInfo({
+          ...companyInfo,
+          subdomainCount: res.data.companyInfo.subdomainCount,
+        })
+      } else {
         setValidateSubdomain({
           validate: false,
           msg: res.data.error,
@@ -350,7 +385,7 @@ const CompanyInfoSettingsSection = props => {
       <Button 
         primary 
         onClick={onSaveSubdomain} 
-        disabled={!companyInfo.subdomain.length > 0}
+        disabled={!companyInfo.subdomain.length > 0 || prevSubdomain === companyInfo.subdomain}
         style={{marginTop: 14, marginBottom: 20}}
       >
         Change subdomain
