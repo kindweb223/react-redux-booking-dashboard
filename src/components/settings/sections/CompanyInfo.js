@@ -194,7 +194,6 @@ const CompanyInfoSettingsSection = props => {
   }
 
   const onSaveSubdomain = async () => {
-    debugger;
     if (companyInfo.subdomainCount >= 5)
     {
       setValidateSubdomain({
@@ -222,7 +221,7 @@ const CompanyInfoSettingsSection = props => {
         setPreSubdomain(res.data.company.subdomain)
         setCompanyInfo({
           ...companyInfo,
-          subdomainCount: res.data.companyInfo.subdomainCount,
+          subdomainCount: res.data.company.subdomainCount,
         })
       } else {
         setValidateSubdomain({
