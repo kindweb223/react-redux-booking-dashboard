@@ -32,6 +32,7 @@ import Spacer from "../../layout/Spacer";
 import { AppReducerContext } from "../../../contexts/AppReducerContext";
 import SpinnerContainer from "../../layout/Spinner";
 import CustomerSection from "./sections/customer";
+import CardPaymentForm from './CardPaymentForm/CardPaymentForm';
 
 import "../../../css/common.css";
 
@@ -481,6 +482,12 @@ const BookingForm = props => {
           Add Date Range
         </OutlinedButton>
       </div>
+      <CardPaymentForm 
+        chargeData={{
+          amount: 25,
+          currency: 'GBP',
+        }}
+      />
     </>
   );
 };
