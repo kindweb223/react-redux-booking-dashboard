@@ -57,7 +57,7 @@ const App = props => {
     <>
       <AppReducerContext.Provider value={{ state, dispatch }}>
         <Router>
-          {state.auth.isAuthenticated && <Sidebar />}
+          <Sidebar />
           <LayoutWrapper>
             <LayoutSection bgColor="lightest" fullWidth>
               <Switch>

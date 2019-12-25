@@ -1,15 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
 import colors from "../style/colors";
 import LayoutBlock from "../layout/LayoutBlock";
 import P1 from "../typography/P1";
-import CalendarSvg from "../../images/sidebar/calendar.svg";
-import BookingsSvg from "../../images/sidebar/bookings.svg";
-import InvoicesSvg from "../../images/sidebar/invoices.svg";
+import CalendarSvg  from "../../images/sidebar/calendar.svg";
+import BookingsSvg  from "../../images/sidebar/bookings.svg";
+import InvoicesSvg  from "../../images/sidebar/invoices.svg";
 import CustomersSvg from "../../images/sidebar/customers.svg";
-import SettingsSvg from "../../images/sidebar/settings.svg";
-import LogOutSvg from "../../images/sidebar/logout.svg";
+import SettingsSvg  from "../../images/sidebar/settings.svg";
+import LogOutSvg    from "../../images/sidebar/logout.svg";
+import LogInSvg     from "../../images/sidebar/login.svg";
+import RegisterSvg  from "../../images/sidebar/register.svg";
+
 import constants from "./constants";
 import CONFIG from "../../config";
 
@@ -75,9 +78,9 @@ const SidebarButton = styled.div`
 
 const SidebarWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  flex-direction: column;  
   height: 100% !important;
+  justify-content: ${props => (props.logined ? 'space-between' : 'flex-end')};
 `;
 
 const TopLinks = [
@@ -92,7 +95,7 @@ const BottomLinks = [
 
 const Sidebar = props => {
   const { history } = props;
-  const { dispatch } = useContext(AppReducerContext);
+  const { state, dispatch } = useContext(AppReducerContext);
 
   const logout = () => {
     setAuthToken("");
@@ -102,42 +105,80 @@ const Sidebar = props => {
     }, 100)    
   }
 
+  const login = () => {
+    setAuthToken("");
+    window.location.replace(CONFIG.BASE_URL + 'login');
+  }
+
+  const register = () => {
+    setAuthToken("");
+    window.location.replace(CONFIG.BASE_URL + 'register');    
+  }
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    setIsLoggedIn(state.auth.token && state.auth.token.length)
+  }, [state.auth.token])
+
   return (
     <Container>
-      <SidebarWrapper>
-        <div>
-          {TopLinks.map(link => (
-            <SidebarButton
-              key={link.title}
-              selected={window.location.pathname === link.href}
-              onClick={() => history.push(link.href)}
-            >
-              <img alt={link.title} src={link.svg} />
-              <P1>{link.title}</P1>
-            </SidebarButton>
-          ))}
-        </div>
-        <div>
-          {BottomLinks.map(link => (
-            <SidebarButton
-              key={link.title}
-              selected={window.location.pathname === link.href}
-              onClick={
-                () => link.href && history.push(link.href)
-              }
-            >
-              <img alt={link.title} src={link.svg} />
-              <P1>{link.title}</P1>
-            </SidebarButton>
-          ))}
-          <SidebarButton
-            key={"logout"}
-            onClick={logout}
-          >
-            <img alt="Log Out" src={LogOutSvg} />
-            <P1>Log Out</P1>
-          </SidebarButton>
-        </div>
+      <SidebarWrapper logined={isLoggedIn}>
+        {
+          ( isLoggedIn) ? (
+            <React.Fragment>
+              <div>
+                {TopLinks.map(link => (
+                  <SidebarButton
+                    key={link.title}
+                    selected={window.location.pathname === link.href}
+                    onClick={() => history.push(link.href)}
+                  >
+                    <img alt={link.title} src={link.svg} />
+                    <P1>{link.title}</P1>
+                  </SidebarButton>
+                ))}
+              </div>
+              <div>
+                {BottomLinks.map(link => (
+                  <SidebarButton
+                    key={link.title}
+                    selected={window.location.pathname === link.href}
+                    onClick={
+                      () => link.href && history.push(link.href)
+                    }
+                  >
+                    <img alt={link.title} src={link.svg} />
+                    <P1>{link.title}</P1>
+                  </SidebarButton>
+                ))}
+                <SidebarButton
+                  key={"logout"}
+                  onClick={logout}
+                >
+                  <img alt="Log Out" src={LogOutSvg} />
+                  <P1>Log Out</P1>
+                </SidebarButton>
+              </div>
+            </React.Fragment>
+          ) : (
+            <div>              
+              <SidebarButton
+                key={"register"}
+                onClick={register}
+              >
+                <img alt="Log In" src={RegisterSvg} style={{width: '24px', height: '24px'}}/>
+                <P1>Register</P1>
+              </SidebarButton>
+              <SidebarButton
+                key={"login"}
+                onClick={login}
+              >
+                <img alt="Log In" src={LogInSvg} style={{width: '24px', height: '24px'}}/>
+                <P1>Log In</P1>
+              </SidebarButton>
+            </div>
+          )
+        }        
       </SidebarWrapper>
     </Container>
   );
