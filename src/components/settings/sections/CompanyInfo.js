@@ -362,7 +362,7 @@ const CompanyInfoSettingsSection = props => {
           className={!validateSubdomain.validate? "error" : ""}
         />
         <SubdomainUrl>
-          app.heyagenda.com
+          .heyagenda.com
         </SubdomainUrl>
       </SubdomainDiv>
       {
