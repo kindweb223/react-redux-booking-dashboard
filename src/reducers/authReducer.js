@@ -18,6 +18,7 @@ function authReducer(state, action) {
         loading: false,
         isAuthenticated: true,
         user: {...action.payload.user},
+        token: action.payload.token,
       };
     case "get_login_error":
       return {
@@ -33,7 +34,8 @@ function authReducer(state, action) {
         isAuthenticated: true,
         user: {
           ...action.payload.user
-        }
+        },
+        token: localStorage.token,
       }
     case "auth_error":
       return {

@@ -86,22 +86,25 @@ const CalendarPage = props => {
   useEffect(() => {
         
     setLoading(true);
-    const getCalendarSetting = async () => {
-      try {
-        const res = await axios.get('/calendarsetting')   
-        dispatch({ 
-          type: SET_CALENDAR_SETTING_DATA,
-          payload: {            
-            ...res.data.calendarSetting,
-            selectedDate: new Date(res.data.calendarSetting.selectedDate),
-            loading: false,
-          }
-        })
-      } catch (err) {
-        dispatch({ type: GET_CALENDAR_SETTING_ERROR })
+
+    if (state.auth.token && state.auth.token.length > 0) {
+      const getCalendarSetting = async () => {
+        try {
+          const res = await axios.get('/calendarsetting')   
+          dispatch({ 
+            type: SET_CALENDAR_SETTING_DATA,
+            payload: {            
+              ...res.data.calendarSetting,
+              selectedDate: new Date(res.data.calendarSetting.selectedDate),
+              loading: false,
+            }
+          })
+        } catch (err) {
+          dispatch({ type: GET_CALENDAR_SETTING_ERROR })
+        }
       }
+      getCalendarSetting();
     }
-    getCalendarSetting();
 
     const getBookings = async () => {
       try {

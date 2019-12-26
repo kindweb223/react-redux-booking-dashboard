@@ -9,15 +9,13 @@ const PrivateRoute = ({
   ...rest
 }) => {
 
-
   const { state } = useContext(AppReducerContext);
   const { isAuthenticated, loading } = state.auth;
-
   return (
     <Route
     {...rest}
     render={props =>
-      !isAuthenticated && !loading ? (
+      !isAuthenticated && !loading && rest.computedMatch.path !== 'calendar' ? (
         <Redirect to='/login' />
       ) : (
         <Component {...props} />
