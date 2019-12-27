@@ -1,18 +1,19 @@
 import React, {useState, useContext, useEffect, useCallback } from "react";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import moment from 'moment';
 import Grid from "../components/layout/Grid";
 import constants from "../components/layout/constants";
 import SpinnerContainer from "../components/layout/Spinner";
 import Calendar from "../components/features/calendar";
-import { bookingToEvents } from "../models/bookingToEvents";
 import TabbedBookingsList from "../components/features/tabbedBookingsList";
 import BookingDetail from "../components/features/bookingDetail/bookingDetail";
 import Modal from "../components/modals/modal";
-import { AppReducerContext } from "../contexts/AppReducerContext";
 import BookingDetailEdit from "../components/features/bookingDetail/bookingDetailEdit";
+import BookingEmailLogin from '../components/features/bookingDetail/bookingEmailLogin'
+import { AppReducerContext } from "../contexts/AppReducerContext";
 import { createEmptyBooking } from "../models/bookings";
+import { bookingToEvents } from "../models/bookingToEvents";
+
 import {
   REQUSET_ADD_BOOKING, GET_ADD_BOOKING_SUCCESS, GET_ADD_BOOKING_ERROR,
   REQUEST_UPDATE_BOOKING, GET_UPDATE_BOOKING_SUCCESS, GET_UPDATE_BOOKIG_ERROR,
@@ -22,13 +23,12 @@ import {
   REQUEST_GET_BOOKING_BOOKINGSTATUS,
   REQUEST_GET_BOOKINGS, REQUEST_GET_CUSTOMERS,
   REQUEST_GET_VENUE,
-  REUQEST_GET_BOOKING_SETTINGS,
   CLEAR_BOOKING_DATA,
   GET_ADD_CUSTOMER_SUCCESS,
   REQUEST_GET_CUSTOM_BOOKING_COLOR, GET_CUSTOM_BOOKING_COLOR_SUCCESS, GET_CUSTOM_BOOKING_COLOR_ERROR,
-  REQUEST_GET_CALENDAR_CUSTOM_VIEW, GET_CALENDAR_CUSTOM_VIEW_SUCCESS, GET_CALENDAR_CUSTOM_VIEW_ERROR,
+  GET_CALENDAR_CUSTOM_VIEW_SUCCESS, GET_CALENDAR_CUSTOM_VIEW_ERROR,
   GET_USERS_ALL_SPACES_SUCCESS, GET_USERS_ALL_SPACES_ERROR,
-  GET_CALENDAR_SETTING_SUCCESS, GET_CALENDAR_SETTING_ERROR, SET_CALENDAR_SETTING_DATA,
+  GET_CALENDAR_SETTING_ERROR, SET_CALENDAR_SETTING_DATA,
   GET_COMPANYINFO_SUCCESS, GET_COMPANYINFO_ERROR,
 } from "../reducers/actionType";
 import {
@@ -44,11 +44,11 @@ import {
 
 import CONFIG from '../config'
 
-
 const CalendarPage = props => {
   const [selectedBookingID, setSelectedBookingID] = useState(null);
   const [showCreateBookingModal, setShowCreateBookingModal] = useState(false);
   const [createBookingModalInfo, setCreateBookingModalInfo] = useState(null);
+  const [showEnterEmailModal, setShowEnterEmailModal] = useState(false);
   const [subdomain, setSubdomain] = useState(getSubDomain())
 
   const { state, dispatch } = useContext(AppReducerContext);
@@ -372,6 +372,13 @@ const CalendarPage = props => {
     state.bookings.bookings, 
     state.customBookingColor.bookingColors,
   ])
+
+  useEffect(() => {
+    if (showCreateBookingModal || showEnterEmailModal || selectedBookingID !== null)
+      document.removeEventListener("keydown", handleKeyDown, false);      
+    else
+      document.addEventListener('keydown', handleKeyDown, false);     
+  }, [showCreateBookingModal, showEnterEmailModal, selectedBookingID !== null])
   
   const handleClickSave = async (booking) => {
     setShowCreateBookingModal(false);
@@ -486,9 +493,13 @@ const CalendarPage = props => {
   }
 
   const handleSelectSlot = ({ start, end }) => {
-    setShowCreateBookingModal(true);
-    setCreateBookingModalInfo({ startDate: start, endDate: end });
-  };
+    if (state.auth.token && state.auth.token.length > 0) {
+      setShowCreateBookingModal(true);
+      setCreateBookingModalInfo({ startDate: start, endDate: end });
+    } else {
+      setShowEnterEmailModal(true)
+    }   
+  };  
 
   const onSelectEvent = event => {
     dispatch({
@@ -539,6 +550,12 @@ const CalendarPage = props => {
             }}
             {...createBookingModalInfo}
           />
+        </Modal>
+        <Modal
+          isOpen={showEnterEmailModal}
+          onClose={() => setShowEnterEmailModal(false)}
+        >
+          <BookingEmailLogin />
         </Modal>
         <Calendar
           selectable
