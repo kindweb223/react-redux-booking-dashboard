@@ -309,72 +309,48 @@ const CalendarPage = props => {
               }
             }
             getCalendarViews();
-      
-
+            
+            const getBookingStatus = async () => {
+              try {
+                dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
+        
+                const res = await axios.get(`/statuses/subdomain/${subdomain}`);
+        
+                dispatch({
+                  type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+                  payload: res.data.statuses
+                });
+              } catch(err) {
+                dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
+              }        
+            }            
+            getBookingStatus();
+        
+            const getBookingColors = async () => {
+              dispatch({ type: REQUEST_GET_CUSTOM_BOOKING_COLOR })
+              try {
+                const res = await axios.get(`/bookingcolor/subdomain/${subdomain}`)
+                if (res.data.bookingColor) {
+                  dispatch({
+                    type: GET_CUSTOM_BOOKING_COLOR_SUCCESS,
+                    payload: JSON.parse(res.data.bookingColor.color)
+                  })
+                } else {
+                  dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })  
+                }
+              } catch (err) {
+                dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })
+              }      
+            }
+            getBookingColors();
+        
           } else window.location.replace(CONFIG.BASE_URL);
         } catch (err) {
           window.location.replace(CONFIG.BASE_URL);
         }
       }
       checkSubdomain();      
-  
-      const getCustomers = async () => {
-        try {
-          dispatch({ type: REQUEST_GET_CUSTOMERS });
-  
-          const res = await axios.get('/customers');
-          console.log('customers');
-          dispatch({
-            type: GET_CUSTOMERS_SUCCESS,
-            payload: res.data.customers
-          })
-        } catch (err) {
-          dispatch({ type: GET_CUSTOMERS_ERROR });
-        }
-      }
-      if (!(state.customers.customers && state.customers.customers.length))
-      getCustomers();          
-    
-      const getBookingStatus = async () => {
-  
-        try {
-          dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
-  
-          const res = await axios.get('/statuses');
-          console.log('statues');
-  
-          dispatch({
-            type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
-            payload: res.data.statuses
-          });
-        } catch(err) {
-          dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
-        }
-  
-      }
-      if(!(state.bookings.bookingStatus && state.bookings.bookingStatus.length > 0))
-      getBookingStatus();
-  
-      const getBookingColors = async () => {
-        dispatch({ type: REQUEST_GET_CUSTOM_BOOKING_COLOR })
-        try {
-          const res = await axios.get('/bookingcolor')
-          console.log('bookingcolor');
-          if (res.data.bookingColor) {
-            dispatch({
-              type: GET_CUSTOM_BOOKING_COLOR_SUCCESS,
-              payload: JSON.parse(res.data.bookingColor.color)
-            })
-          } else {
-            dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })  
-          }
-        } catch (err) {
-          dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })
-        }      
-      }
-      getBookingColors();
-  
-  
+                   
     }
 
     document.addEventListener('keydown', handleKeyDown, false);
