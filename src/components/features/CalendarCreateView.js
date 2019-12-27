@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react"
 import axios from 'axios'
 import styled from "styled-components";
-import { css } from "emotion";
 import { AppReducerContext } from '../../contexts/AppReducerContext'
 import MultiSelect from "@khanacademy/react-multi-select";
 import {
@@ -19,8 +18,8 @@ import SvgButton from "../buttons/SvgButton";
 import removeSvg from "../../images/ui/remove.svg";
 
 import {
-  REQUEST_CREATE_CALENDAR_CUSTOM_VIEW, CREATE_CALENDAR_CUSTOM_VIEW_SUCCESS, CREATE_CALENDAR_CUSTOM_VIEW_ERROR,
-  REQUSET_UPDATE_CALENDAR_CUSTOM_VIEW, UPDATE_CALENDAR_CUSTOM_VIEW_SUCCESS, UPDATE_CALENDAR_CUSTOM_VIEW_ERROR,
+  CREATE_CALENDAR_CUSTOM_VIEW_SUCCESS, CREATE_CALENDAR_CUSTOM_VIEW_ERROR,
+  UPDATE_CALENDAR_CUSTOM_VIEW_SUCCESS, UPDATE_CALENDAR_CUSTOM_VIEW_ERROR,
 } from '../../reducers/actionType'
 
 const Row = styled.div`
