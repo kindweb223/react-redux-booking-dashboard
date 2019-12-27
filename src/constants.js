@@ -52,3 +52,9 @@ export const BOOKING_COLORS = [
   '#4d4d4d',
   '#a9a9a9',
 ]
+
+export const getSubDomain = () => {
+  const a = window.location.href
+  // return a.substring(a.indexOf('://') + 3, a.indexOf('.'))
+  return 'asdfasdf'
+}

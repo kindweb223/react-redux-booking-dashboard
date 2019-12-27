@@ -107,39 +107,41 @@ const BookingDetail = props => {
   const { state, dispatch } = useContext(AppReducerContext);
 
   useEffect(() => {
-    const getQuote = async () => {
-      try {
-        dispatch({ type: REQUEST_GET_BOOKING_QUOTE })
-
-        const res = await axios.get(`/bookings/${booking.id}/quotes`);
-
-        dispatch({
-          type: GET_BOOKING_QUOTE_SUCCESS,
-          payload: res.data.quotes,
-        })
-      } catch (err) {
-        dispatch({ GET_BOOKING_QUOTE_ERROR })
+    if (state.auth.token && state.auth.token.length > 0) {
+      const getQuote = async () => {
+        try {
+          dispatch({ type: REQUEST_GET_BOOKING_QUOTE })
+  
+          const res = await axios.get(`/bookings/${booking.id}/quotes`);
+  
+          dispatch({
+            type: GET_BOOKING_QUOTE_SUCCESS,
+            payload: res.data.quotes,
+          })
+        } catch (err) {
+          dispatch({ GET_BOOKING_QUOTE_ERROR })
+        }
       }
-    }
-
-    getQuote();
-
-    const getInvoice = async () => {
-      try {
-        dispatch({ type: REQUEST_GET_BOOKING_INVOICE })
-
-        const res = await axios.get(`/bookings/${booking.id}/invoices`);
-
-        dispatch({
-          type: GET_BOOKING_INVOICE_SUCCESS,
-          payload: res.data.invoices,
-        })
-      } catch (err) {
-        dispatch({ GET_BOOKING_INVOICE_ERROR })
+  
+      getQuote();
+  
+      const getInvoice = async () => {
+        try {
+          dispatch({ type: REQUEST_GET_BOOKING_INVOICE })
+  
+          const res = await axios.get(`/bookings/${booking.id}/invoices`);
+  
+          dispatch({
+            type: GET_BOOKING_INVOICE_SUCCESS,
+            payload: res.data.invoices,
+          })
+        } catch (err) {
+          dispatch({ GET_BOOKING_INVOICE_ERROR })
+        }
       }
-    }
-
-    getInvoice();
+  
+      getInvoice();
+    }    
   },[])
 
   const handleUpdateBooking = async (updateBooking) => {
@@ -251,34 +253,37 @@ const BookingDetail = props => {
     );
   }
 
-
   return (
     <Container>
       <TopSection>
         <TitleAndButtons>
           <H3>{booking.eventName}</H3>
-          <div>
-            <PickerButton
-              style={{ minWidth: 120, marginRight: 10 }}
-              options={state.bookings.bookingStatus.map(item => item.name)}
-              colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
-              selectedOption={booking.status.name}
-              onOptionSelected={opt =>
-                handleChangeStatus(opt)
-              }
-            />
-            <Button primary onClick={() => setEditing(true)}>
-              Edit
-            </Button>
-          </div>
+          {(state.auth.token && state.auth.token.length) > 0 && (
+            <div>
+              <PickerButton
+                style={{ minWidth: 120, marginRight: 10 }}
+                options={state.bookings.bookingStatus.map(item => item.name)}
+                colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
+                selectedOption={booking.status.name}
+                onOptionSelected={opt =>
+                  handleChangeStatus(opt)
+                }
+              />
+              <Button primary onClick={() => setEditing(true)}>
+                Edit
+              </Button>
+            </div>
+          )}          
         </TitleAndButtons>
-
-        <TabBar
-          items={TABBAR_ITEMS}
-          selectedItem={selectedTab}
-          onOptionSelected={setSelectedTab}
-          itemsSideMargin={20}
-        />
+                
+        {(state.auth.token && state.auth.token.length) > 0 && (
+          <TabBar
+            items={TABBAR_ITEMS}
+            selectedItem={selectedTab}
+            onOptionSelected={setSelectedTab}
+            itemsSideMargin={20}
+          />
+        )}        
       </TopSection>
 
       <BottomSection>
