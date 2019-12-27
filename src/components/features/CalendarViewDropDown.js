@@ -66,6 +66,7 @@ const ViewTitle = styled.p`
   font-size: 0.8rem;
   color: ${colors.grey};
   margin: 1rem 0 0.5rem;
+  opacity: 0.7;
 `;
 
 const CalendarViewDropDown = ({
@@ -124,10 +125,17 @@ const CalendarViewDropDown = ({
       </WrapperButton>
       <ViewDropDown isOpen={openViewDropDown}>
         <ul>
-          <li onClick={() => history.push('/settings')}>
-            <CircleAddGlyph side={16} fill={colors.grey} />&nbsp;&nbsp;Add another space
-          </li>
-          <div className="divide-line"></div>
+          {
+            (state.auth.token && state.auth.token.length) > 0 && (
+              <React.Fragment>
+                <li onClick={() => history.push('/settings')}>
+                  <CircleAddGlyph side={16} fill={colors.grey} />&nbsp;&nbsp;Add another space
+                </li>
+                <div className="divide-line"></div>
+              </React.Fragment>
+            )
+          }          
+          
           <ViewTitle>Views</ViewTitle>
           <li onClick={() => {setOpenViewDropDown(false); handleClickView('spaces');}}>All Spaces</li>
 
@@ -136,11 +144,17 @@ const CalendarViewDropDown = ({
               {item.title}
             </li>
           })}
-          <div className="divide-line"></div>
-          <li onClick={() => {setOpenViewDropDown(false); showCreateViewModalFunc(true);}}>
-            <FontAwesomeIcon className="fa-icons" icon={faPencilAlt} />
-            &nbsp;&nbsp;Manage Views
-          </li>
+          {
+            (state.auth.token && state.auth.token.length) > 0 && (
+              <React.Fragment>
+                <div className="divide-line"></div>
+                <li onClick={() => {setOpenViewDropDown(false); showCreateViewModalFunc(true);}}>
+                  <FontAwesomeIcon className="fa-icons" icon={faPencilAlt} />
+                  &nbsp;&nbsp;Manage Views
+                </li>
+              </React.Fragment>
+            )
+          }          
         </ul>
       </ViewDropDown>
     </ViewsButton>
