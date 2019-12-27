@@ -350,7 +350,6 @@ const CalendarPage = props => {
         }
       }
       checkSubdomain();      
-                   
     }
 
     document.addEventListener('keydown', handleKeyDown, false);
