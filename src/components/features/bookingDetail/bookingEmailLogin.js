@@ -7,8 +7,11 @@ import InputField from "../../buttons/InputField"
 import { ModalContainer, ModalTopSection, ModalTitleAndButtons, ModalBottomSection } from "../../modals/containers"
 import { TableLabel, TableDivider, TableEditableValue } from "../../tables/tables"
 import Button from '../../buttons/Button'
-import { getSubDomain } from "../../../constants";
+import SpinnerContainer from "../../layout/Spinner";
 import { AppReducerContext } from "../../../contexts/AppReducerContext";
+
+import { getSubDomain } from "../../../constants";
+import CONFIG from "../../../config"
 
 const Row = styled.div`
   display: flex;  
@@ -18,7 +21,8 @@ const BookingEmailLogin = () => {
 
   const { state, dispatch } = useContext(AppReducerContext);
   const [userEmail, setUserEmail] = useState({value: '', validate: true, errMsg: ''})
-  
+  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     setUserEmail({value: '', validate: true, errMsg: ''});
   }, [])
@@ -49,25 +53,27 @@ const BookingEmailLogin = () => {
     if (!userEmail.validate)
       return;
 
+    setLoading(true)
+
     axios.post(
       '/users/loginWithEmailSubdomain', 
       {email: userEmail.value, subdomain: getSubDomain()}
     ).then(res => {
+      setLoading(false)
       if (res.data.success) {
-        dispatch({
-          type: 'get_login_success',
-          payload: {...res.data},
-        })
+        window.location.replace(CONFIG.BASE_URL + 'login/?returnUrl=');
       } else {
         setUserEmail({...userEmail, validate: false, errMsg: res.data.error})
       }
     }).catch(error => {
+      setLoading(false)
       setUserEmail({...userEmail, validate: false, errMsg: error.response.data.error})
     });              
   }
 
   return (
     <ModalContainer>
+      <SpinnerContainer loading={loading.toString()}/>
       <ModalTopSection>
         <ModalTitleAndButtons>
           <H3>New Booking</H3>
