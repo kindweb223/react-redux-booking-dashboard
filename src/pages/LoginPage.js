@@ -7,6 +7,7 @@ import SpinnerContainer from '../components/layout/Spinner';
 import styled from "styled-components";
 import "../css/validate.css";
 import CONFIG from "../config";
+import { CALENDAR_REDIRECT_VALUE } from "../constants"
 
 import {
   AppReducerContext,
@@ -30,7 +31,17 @@ const LoginPage = props => {
     const href = window.location.href;
     const nIndex = href.indexOf(indexStr);
     if( nIndex >= 0) {
-      const accessToken = href.substring(nIndex + indexStr.length, href.length);
+      let accessToken = '';
+      let calendarInfo = '';
+
+      if (window.location.href.indexOf('start=') > 0) {
+        accessToken = href.substring(nIndex + indexStr.length, href.length)
+        calendarInfo = href.substring(
+          window.location.href.indexOf('start='), 
+          window.location.href.indexOf(indexStr)
+        )
+      } else
+        accessToken = href.substring(nIndex + indexStr.length, href.length);
 
       if(accessToken.length > 0) {
 
@@ -73,7 +84,11 @@ const LoginPage = props => {
                 signedUpAt: res.data.user.createdAt,
               })
               userflow.startFlow('d496295e-ae0c-4c03-83c8-9794fcac74ed')
-            }else props.history.push('/calendar')
+            }else {
+              if (calendarInfo.length > 0)
+                props.history.push('/calendar?' + calendarInfo)
+              else props.history.push('/calendar')
+            }
 
           } catch (err) {
             dispatch({

@@ -40,6 +40,7 @@ import {
   CUSTOMER_OPTION_CREATE_USER,
   // CUSTOMER_OPTION_CASUAL_USER,
   getSubDomain,
+  getReturnUrlSlots,
 } from '../constants'
 
 import CONFIG from '../config'
@@ -251,10 +252,16 @@ const CalendarPage = props => {
         }
       }
       getAllSpaces();
+
+      // check if returnUrl exist
+      if (window.location.href.indexOf(CONFIG.CALENDAR_REDIRECT_VALUE) > 0) {        
+        setShowCreateBookingModal(true);
+        const slots = getReturnUrlSlots()
+        setCreateBookingModalInfo({ startDate: slots.start, endDate: slots.end });
+      }      
     } else {
       //without token
       // check subdomain is exsit
-
       const checkSubdomain = async () => {
         try {
           const res = await axios.get(`/companies/subdomain/${subdomain}`)
@@ -493,10 +500,11 @@ const CalendarPage = props => {
   }
 
   const handleSelectSlot = ({ start, end }) => {
-    if (state.auth.token && state.auth.token.length > 0) {
+    if (state.auth.token && state.auth.token.length > 0) {      
       setShowCreateBookingModal(true);
       setCreateBookingModalInfo({ startDate: start, endDate: end });
     } else {
+      setCreateBookingModalInfo({ startDate: start, endDate: end });
       setShowEnterEmailModal(true)
     }   
   };  
@@ -551,12 +559,22 @@ const CalendarPage = props => {
             {...createBookingModalInfo}
           />
         </Modal>
-        <Modal
-          isOpen={showEnterEmailModal}
-          onClose={() => setShowEnterEmailModal(false)}
-        >
-          <BookingEmailLogin />
-        </Modal>
+        {
+          showEnterEmailModal && (
+            <Modal
+              isOpen={showEnterEmailModal}
+              onClose={() => {
+                setShowEnterEmailModal(false)
+                setCreateBookingModalInfo(null)
+              }}
+            >
+              <BookingEmailLogin 
+                startDate={createBookingModalInfo.startDate}
+                endDate={createBookingModalInfo.endDate}
+              />
+            </Modal>
+          )
+        }        
         <Calendar
           selectable
           events={events}

@@ -10,14 +10,17 @@ import Button from '../../buttons/Button'
 import SpinnerContainer from "../../layout/Spinner";
 import { AppReducerContext } from "../../../contexts/AppReducerContext";
 
-import { getSubDomain } from "../../../constants";
+import { getSubDomain, CALENDAR_REDIRECT_VALUE } from "../../../constants";
 import CONFIG from "../../../config"
 
 const Row = styled.div`
   display: flex;  
   width: 100%;
 `
-const BookingEmailLogin = () => {
+const BookingEmailLogin = ({
+  startDate,
+  endDate,
+}) => {
 
   const { state, dispatch } = useContext(AppReducerContext);
   const [userEmail, setUserEmail] = useState({value: '', validate: true, errMsg: ''})
@@ -60,8 +63,14 @@ const BookingEmailLogin = () => {
       {email: userEmail.value, subdomain: getSubDomain()}
     ).then(res => {
       setLoading(false)
-      if (res.data.success) {
-        window.location.replace(CONFIG.BASE_URL + 'login/?returnUrl=');
+      if (res.data.success) {        
+        window.location.replace(
+          CONFIG.BASE_URL + 'login/?' + 
+          CALENDAR_REDIRECT_VALUE + 
+          'https://' + getSubDomain() + '.heyagenda.com/login?' +
+          'start=' + startDate.valueOf() + 
+          'end=' + endDate.valueOf(),
+        );
       } else {
         setUserEmail({...userEmail, validate: false, errMsg: res.data.error})
       }
