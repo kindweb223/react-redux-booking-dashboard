@@ -91,7 +91,6 @@ const CalendarPage = props => {
 
   useEffect(() => {
     setLoading(true);
-
     if (state.auth.token && state.auth.token.length > 0) {
       const getCalendarSetting = async () => {
         try {
@@ -254,10 +253,10 @@ const CalendarPage = props => {
       getAllSpaces();
 
       // check if returnUrl exist
-      if (window.location.href.indexOf(CONFIG.CALENDAR_REDIRECT_VALUE) > 0) {        
-        setShowCreateBookingModal(true);
-        const slots = getReturnUrlSlots()
-        setCreateBookingModalInfo({ startDate: slots.start, endDate: slots.end });
+      if (window.location.href.indexOf('start=') > 0) {    
+          const slots = getReturnUrlSlots()        
+          setCreateBookingModalInfo({ startDate: slots.start, endDate: slots.end });
+          setShowCreateBookingModal(true);
       }      
     } else {
       //without token

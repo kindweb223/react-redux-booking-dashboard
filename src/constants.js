@@ -68,5 +68,5 @@ export const getReturnUrlSlots = () => {
     window.location.href.indexOf('end=') + 'end='.length,
     window.location.href.length
   )
-  return ({start: new Date(startDateStr), end: new Date(endDateStr)})
+  return ({start: new Date(parseInt(startDateStr)), end: new Date(parseInt(endDateStr))})
 }
