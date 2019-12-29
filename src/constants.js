@@ -1,5 +1,6 @@
-export const CUSTOMER_OPTION_CREATE_USER = -10;
-export const CUSTOMER_OPTION_CASUAL_USER = -11;
+export const CUSTOMER_OPTION_CREATE_USER  = -10;
+export const CUSTOMER_OPTION_CASUAL_USER  = -11;
+export const CALENDAR_REDIRECT_VALUE      = 'returnUrl='
 
 export const BOOKING_COLOR_CONDITION_KEYS = [
   // {
@@ -55,6 +56,17 @@ export const BOOKING_COLORS = [
 
 export const getSubDomain = () => {
   const a = window.location.href
-  // return a.substring(a.indexOf('://') + 3, a.indexOf('.'))
-  return 'asdfasdf'
+  return a.substring(a.indexOf('://') + 3, a.indexOf('.'))  
+}
+
+export const getReturnUrlSlots = () => {
+  const startDateStr = window.location.href.substring(
+    window.location.href.indexOf('start=') + 'start='.length,
+    window.location.href.indexOf('end=')
+  )
+  const endDateStr = window.location.href.substring(
+    window.location.href.indexOf('end=') + 'end='.length,
+    window.location.href.length
+  )
+  return ({start: new Date(startDateStr), end: new Date(endDateStr)})
 }
