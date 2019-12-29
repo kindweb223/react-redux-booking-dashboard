@@ -27,7 +27,7 @@ const LoginPage = props => {
   const { dispatch } = useContext(AppReducerContext);
 
   useEffect(() => {
-    const indexStr = 'access_token=';
+    const indexStr = '?access_token=';
     const href = window.location.href;
     const nIndex = href.indexOf(indexStr);
     if( nIndex >= 0) {
