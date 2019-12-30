@@ -181,6 +181,8 @@ const Calendar = props => {
       date={state.calendarSettings.selectedDate}
       defaultView='week'
       view={state.calendarSettings.viewMode}
+      step={15}
+      timeslots={4}
       components={{
         event: Event,
         eventWrapper: EventWrapper,

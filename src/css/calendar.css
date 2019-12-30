@@ -58,6 +58,12 @@
   display: none;
 }
 
+.rbc-time-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .rbc-time-slot > span {
   /* H5 */
   font-style: normal;
@@ -97,6 +103,36 @@
 }
 .rbc-day-slot .rbc-event {
   position: absolute;
+}
+
+.rbc-timeslot-group {
+  min-height: 100px;
+}
+
+.current-time-indicator-value {
+  display: flex;
+  color: #74ad31;
+  border: 2px solid #74ad31;
+  position: absolute;
+  padding: 0 7px;
+  border-radius: 14px;
+  font-size: 14px;
+  right: 100%;
+  top: -12px;
+  text-align: center;
+  align-items: center;
+  z-index: 11;
+  width: 73px;
+  background-color: white;
+  justify-content: center;
+}
+
+.rbc-current-time-indicator {
+  height: 2px;
+}
+
+.rbc-time-content > .rbc-day-slot {
+  z-index: 10;
 }
 
 /* React Dropown */

@@ -29,6 +29,7 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1",
     "react-stripe-elements": "^5.0.1",
+    "react-useinterval": "^1.0.1",
     "styled-components": "^5.0.0-beta.8-groupsizefix",
     "use-debounce": "^3.1.0",
     "userflow.js": "^0.14.0"
