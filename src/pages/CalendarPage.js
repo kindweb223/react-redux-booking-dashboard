@@ -1,6 +1,7 @@
 import React, {useState, useContext, useEffect, useCallback } from "react";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
+import useInterval from 'react-useinterval';
 import Grid from "../components/layout/Grid";
 import constants from "../components/layout/constants";
 import SpinnerContainer from "../components/layout/Spinner";
@@ -44,6 +45,7 @@ import {
 } from '../constants'
 
 import CONFIG from '../config'
+import moment from "moment";
 
 const CalendarPage = props => {
   const [selectedBookingID, setSelectedBookingID] = useState(null);
@@ -56,7 +58,25 @@ const CalendarPage = props => {
   const [events, setEvents] = useState([])
 
   const [loading, setLoading] = useState(true)
-      
+
+  useInterval(() => {
+    if (state.calendarSettings.viewMode === 'day') {
+      const currentTimeIndicator = document.getElementsByClassName('rbc-current-time-indicator')[0]
+      if (currentTimeIndicator) {
+                
+        if (currentTimeIndicator.hasChildNodes()) {
+          const indicatorDiv = document.getElementsByClassName('current-time-indicator-value')[0]
+          indicatorDiv.innerText = moment().format('h:mm')
+        } else {
+          const currentTimeElement = document.createElement('div')
+          currentTimeElement.className= 'current-time-indicator-value'
+          currentTimeElement.innerText = moment().format('h:mm')
+          currentTimeIndicator.appendChild(currentTimeElement)
+        }                
+      }      
+    }    
+  }, 1000)
+
   useEffect(() => {
     localStorage.setItem('calendarsetting', JSON.stringify(state.calendarSettings))
   }, [state.calendarSettings])
@@ -87,7 +107,6 @@ const CalendarPage = props => {
       setCalendarSettingAction(dispatch, {...calendarSettings, viewMode: getViewMode(event.key)})      
     }
   }, []);
-
 
   useEffect(() => {
     setLoading(true);
