@@ -80,12 +80,24 @@ function invoiceDetailEditReducer(state, action) {
     case "append_cost_item": {
       const newState = { ...state };
       newState.costItems.push(createEmptyCostItem({ vatRate: action.vatRate }));
+
+      newState.grand_total = computeCostItemsSummary(
+        newState.costItems,
+        newState.discount
+      )[2];
+
       return newState;
     }
 
     case "remove_cost_item": {
       const newState = { ...state };
       newState.costItems.splice(action.index, 1);
+
+      newState.grand_total = computeCostItemsSummary(
+        newState.costItems,
+        newState.discount
+      )[2];
+
       return newState;
     }
 
@@ -93,6 +105,19 @@ function invoiceDetailEditReducer(state, action) {
       const newState = { ...state };
       const costItem = state.costItems[action.index];
       costItem[action.key] = action.value;
+
+      newState.costItems = [
+        ...newState.costItems.map((item, nIndex) => {
+          if (nIndex === action.index)
+            return costItem;
+          else return item;
+        })
+      ]
+      newState.grand_total = computeCostItemsSummary(
+        newState.costItems,
+        newState.discount
+      )[2];
+
       return newState;
     }
 
@@ -110,16 +135,21 @@ function invoiceDetailEditReducer(state, action) {
       }
 
       newState.discountText = action.value;
+      newState.grand_total = computeCostItemsSummary(
+        newState.costItems,
+        newState.discount
+      )[2];
+
       return newState;
     }
 
     case "update_total": {
       const newState = { ...state };
-      const grandTotal = computeCostItemsSummary(
+      const grand_total = computeCostItemsSummary(
         state.costItems,
         state.discount
       )[2];
-      newState.amount = grandTotal;
+      newState.grand_total = grand_total;
       return newState;
     }
 
