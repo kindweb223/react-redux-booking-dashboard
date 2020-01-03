@@ -31,7 +31,7 @@ function createEmptyInvoice(number, booking) {
     costItems: [],
     discount: 0,
     booking: booking,
-    amount: 0
+    grand_total: 0
   };
 }
 

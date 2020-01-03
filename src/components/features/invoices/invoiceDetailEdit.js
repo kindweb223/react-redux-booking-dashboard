@@ -369,9 +369,6 @@ const InvoiceDetailEdit = props => {
                         value: value,
                         index: costItemIndex
                       });
-                      dispatch({
-                        type: "update_total"
-                      });
                     }}
                   />
                   <TableEditableValue
@@ -395,9 +392,6 @@ const InvoiceDetailEdit = props => {
                         value: value,
                         index: costItemIndex
                       });
-                      dispatch({
-                        type: "update_total"
-                      });
                     }}
                   />
                   <TableEditableValue
@@ -410,10 +404,7 @@ const InvoiceDetailEdit = props => {
                         key: "unitPrice",
                         value: value,
                         index: costItemIndex
-                      });
-                      dispatch({
-                        type: "update_total"
-                      });
+                      });                      
                     }}
                   />
 
@@ -434,9 +425,6 @@ const InvoiceDetailEdit = props => {
                           type: "remove_cost_item",
                           index: costItemIndex
                         });
-                        dispatch({
-                          type: "update_total"
-                        });
                       }}
                     />
                   </SvgButtonWrapper>
@@ -451,9 +439,6 @@ const InvoiceDetailEdit = props => {
             dispatch({
               type: "append_cost_item",
               vatRate: state.settings.companyInfo.vatRate,              
-            });
-            dispatch({
-              type: "update_total"
             });
           }}
           iconComponent={() => <AddGlyph fill={colors.grey} />}

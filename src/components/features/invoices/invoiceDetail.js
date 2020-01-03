@@ -182,7 +182,7 @@ const InvoiceDetail = props => {
                 <TableValue>{formatPercentage(item.vatRate / 100)}</TableValue>
                 <TableValue>
                   {formatCurrency(
-                    item.unitPrice * item.quantity * (1 + item.vatRate),
+                    item.unitPrice * item.quantity * (1 + item.vatRate / 100),
                     state.settings.companyInfo.currency
                   )}
                 </TableValue>
