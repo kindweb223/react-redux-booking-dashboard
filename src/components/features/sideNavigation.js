@@ -30,11 +30,7 @@ const SideNavigation = props => {
           <P1
             key={item}
             className={selectedItem === item ? "selected" : ""}
-            onClick={() => {
-              if (item === 'Suggestion')
-                window.open('https://heyagenda.kampsite.co/', '_blank')
-              else onClick(item)}
-            }
+            onClick={() => onClick(item)}
           >
             {item}
           </P1>

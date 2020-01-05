@@ -9,6 +9,7 @@ import CustomBookingColorSection from "../components/settings/sections/CustomBoo
 import VenuesAndSpacesPage from "./VenuesAndSpacesPage";
 import OnlinePaymentPage from "./OnlinePaymentPage";
 import BookingWidgetPage from "./BookingWidgetPage";
+import SuggestionPage from "../components/settings/sections/Suggestion"
 
 const VENUES_AND_SPACES_SECTION_NAME  = "Venues and Spaces";
 const COMPANY_SETTINGS_SECTION_NAME   = "Company Settings";
@@ -63,6 +64,8 @@ const SettingsPage = props => {
             return <CustomBookingColorSection />
           case GET_BOOKING_WIDGET:
             return <BookingWidgetPage />
+          case SUGGESTIONS_TAB:
+            return <SuggestionPage />
           default:
             throw new Error("unhandled section");
         }
