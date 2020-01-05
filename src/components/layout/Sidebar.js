@@ -4,6 +4,8 @@ import styled from "styled-components";
 import colors from "../style/colors";
 import LayoutBlock from "../layout/LayoutBlock";
 import P1 from "../typography/P1";
+import SideCollapseLeftSvg    from "../../images/sidebar/calendar.svg";
+import SideCollapseRightSvg   from "../../images/sidebar/bookings.svg";
 import CalendarSvg  from "../../images/sidebar/calendar.svg";
 import BookingsSvg  from "../../images/sidebar/bookings.svg";
 import InvoicesSvg  from "../../images/sidebar/invoices.svg";
@@ -24,7 +26,7 @@ const Container = styled.div`
   position: sticky;
   float: left;
   top: 0;
-  width: ${constants.sidebarWidth};
+  width: ${props => props.collapsed ? constants.collapseSidebarWidth : constants.sidebarWidth};
   padding-top: 0.3em;
   padding-bottom: 0.3em;
   background: ${colors.ultra_dark};
@@ -45,6 +47,7 @@ const SidebarButton = styled.div`
   align-items: center;
   margin-bottom: 1em;
   cursor: pointer;
+  min-height: 32px;
   p {
     margin: 0;
     color: ${props => (props.selected ? "white" : "")};
@@ -96,6 +99,7 @@ const BottomLinks = [
 const Sidebar = props => {
   const { history } = props;
   const { state, dispatch } = useContext(AppReducerContext);
+  const [ sidebarCollapsed, setSidebarCollapsed ] = useState(false)
 
   const logout = () => {
     setAuthToken("");
@@ -121,12 +125,19 @@ const Sidebar = props => {
   }, [state.auth.token])
 
   return (
-    <Container>
-      <SidebarWrapper logined={isLoggedIn}>
+    <Container collapsed={sidebarCollapsed}>
+      <SidebarWrapper logined={isLoggedIn}>        
         {
           ( isLoggedIn) ? (
             <React.Fragment>
               <div>
+                <SidebarButton key={'sidebar-collapsed'}>
+                  <img 
+                    alt={'collapse'} 
+                    src={sidebarCollapsed ? SideCollapseRightSvg : SideCollapseLeftSvg} 
+                    onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                  />
+                </SidebarButton>
                 {TopLinks.map(link => (
                   <SidebarButton
                     key={link.title}
@@ -134,7 +145,7 @@ const Sidebar = props => {
                     onClick={() => history.push(link.href)}
                   >
                     <img alt={link.title} src={link.svg} />
-                    <P1>{link.title}</P1>
+                    { !sidebarCollapsed && <P1>{link.title}</P1>}                    
                   </SidebarButton>
                 ))}
               </div>
@@ -148,7 +159,7 @@ const Sidebar = props => {
                     }
                   >
                     <img alt={link.title} src={link.svg} />
-                    <P1>{link.title}</P1>
+                    { !sidebarCollapsed && <P1>{link.title}</P1>}                    
                   </SidebarButton>
                 ))}
                 <SidebarButton
@@ -156,7 +167,7 @@ const Sidebar = props => {
                   onClick={logout}
                 >
                   <img alt="Log Out" src={LogOutSvg} />
-                  <P1>Log Out</P1>
+                  { !sidebarCollapsed && <P1>Log Out</P1> }
                 </SidebarButton>
               </div>
             </React.Fragment>
@@ -167,14 +178,14 @@ const Sidebar = props => {
                 onClick={register}
               >
                 <img alt="Log In" src={RegisterSvg} style={{width: '24px', height: '24px'}}/>
-                <P1>Register</P1>
+                { !sidebarCollapsed && <P1>Register</P1> }
               </SidebarButton>
               <SidebarButton
                 key={"login"}
                 onClick={login}
               >
                 <img alt="Log In" src={LogInSvg} style={{width: '24px', height: '24px'}}/>
-                <P1>Log In</P1>
+                { !sidebarCollapsed && <P1>Log In</P1> }
               </SidebarButton>
             </div>
           )
