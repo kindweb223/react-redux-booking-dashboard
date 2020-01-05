@@ -16,6 +16,7 @@ const BOOKING_STATUS_SECTION_NAME     = "Booking Status";
 const ONLINE_PAYMENT_SECTION_NAME     = "Online Payments";
 const CUSTOM_BOOKING_COLOR_NAME       = "Custom Booking Colour";
 const GET_BOOKING_WIDGET              = "Get Booking Widget"
+const SUGGESTIONS_TAB                 = "Suggestion"
 
 const SettingsPage = props => {
   const [currentSection, setCurrentSection] = useState(
@@ -35,6 +36,7 @@ const SettingsPage = props => {
           ONLINE_PAYMENT_SECTION_NAME,
           CUSTOM_BOOKING_COLOR_NAME,
           GET_BOOKING_WIDGET,
+          SUGGESTIONS_TAB,
         ]}
         onClick={item => {
           setCurrentSection(item);
