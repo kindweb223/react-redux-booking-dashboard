@@ -134,7 +134,7 @@ const Sidebar = props => {
               <div>
                 <SidebarButton key={'sidebar-collapsed'}>
                   <img 
-                    style={{width: '28px',}}
+                    style={{width: '32px',}}
                     alt={'collapse'} 
                     src={sidebarCollapsed ? SideCollapseRightSvg : SideCollapseLeftSvg} 
                     onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
