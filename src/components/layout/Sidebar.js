@@ -4,8 +4,9 @@ import styled from "styled-components";
 import colors from "../style/colors";
 import LayoutBlock from "../layout/LayoutBlock";
 import P1 from "../typography/P1";
-import SideCollapseLeftSvg    from "../../images/sidebar/calendar.svg";
-import SideCollapseRightSvg   from "../../images/sidebar/bookings.svg";
+import SideCollapseRightSvg from "../../images/Glyphs/calendarExpand.svg";
+import SideCollapseLeftSvg from "../../images/Glyphs/calendarCollapse.svg";
+
 import CalendarSvg  from "../../images/sidebar/calendar.svg";
 import BookingsSvg  from "../../images/sidebar/bookings.svg";
 import InvoicesSvg  from "../../images/sidebar/invoices.svg";
@@ -133,6 +134,7 @@ const Sidebar = props => {
               <div>
                 <SidebarButton key={'sidebar-collapsed'}>
                   <img 
+                    style={{width: '28px',}}
                     alt={'collapse'} 
                     src={sidebarCollapsed ? SideCollapseRightSvg : SideCollapseLeftSvg} 
                     onClick={() => setSidebarCollapsed(!sidebarCollapsed)}

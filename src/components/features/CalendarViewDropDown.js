@@ -34,7 +34,7 @@ const ViewDropDown = styled.div`
   padding: 5px 10px;
   border: 1px solid #E6E8E9;
   border-radius: 0.25em;
-  z-index: 9;
+  z-index: 14;
 
   ul {
     margin: 0;

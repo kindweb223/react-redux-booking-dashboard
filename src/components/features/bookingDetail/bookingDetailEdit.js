@@ -482,12 +482,12 @@ const BookingForm = props => {
           Add Date Range
         </OutlinedButton>
       </div>
-      <CardPaymentForm 
+      {/* <CardPaymentForm 
         chargeData={{
           amount: 25,
           currency: 'GBP',
         }}
-      />
+      /> */}
     </>
   );
 };

@@ -31,7 +31,7 @@ const Wrapper = styled.div`
   }
 
   .react-datepicker-popper {
-    z-index: 5;
+    z-index: 15;
   }
 `;
 
