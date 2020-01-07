@@ -1,6 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChartArea } from '@fortawesome/free-solid-svg-icons'
+
 import colors from "../style/colors";
 import LayoutBlock from "../layout/LayoutBlock";
 import P1 from "../typography/P1";
@@ -134,11 +137,23 @@ const Sidebar = props => {
               <div>
                 <SidebarButton key={'sidebar-collapsed'}>
                   <img 
-                    style={{width: '28px',}}
+                    style={{width: '32px',}}
                     alt={'collapse'} 
                     src={sidebarCollapsed ? SideCollapseRightSvg : SideCollapseLeftSvg} 
                     onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                   />
+                </SidebarButton>
+                <SidebarButton 
+                  key={'dashboard'}
+                  selected={window.location.pathname === '/dashboard'}
+                  onClick={() => history.push('/dashboard')}
+                >
+                  <FontAwesomeIcon 
+                    className="fa-icons" 
+                    icon={faChartArea} 
+                    style={{width: '22px', height: '22px', marginLeft:'5px', color: '#E92579'}}
+                  />
+                  { !sidebarCollapsed && <P1>Dashboard</P1>}
                 </SidebarButton>
                 {TopLinks.map(link => (
                   <SidebarButton
