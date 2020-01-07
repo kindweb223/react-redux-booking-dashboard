@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import PrivateRoutesTree from './PrivateRoutesTree';
-import PrivateRoute from './PrivateRoute';
 import LoginPage from '../pages/LoginPage';
 
 const Routes = () => {
@@ -10,7 +9,7 @@ const Routes = () => {
     <Fragment>
       <Switch>
         <Route exact path='/login' component={LoginPage} />
-        <PrivateRoute component={PrivateRoutesTree} />
+        <Route component={PrivateRoutesTree} />
       </Switch>
     </Fragment>
   );
