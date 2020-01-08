@@ -22,14 +22,18 @@ const TitleDiv = styled.div`
 const TopBanner = ({
   title,
   selectedDate,
+  timePeriods,
 }) => {
   return (
     <Container>
       <TitleDiv>
         <H3 style={{marginBottom: '0'}}>{title}</H3>
-        <P2 style={{color: `${colors.grey}`, marginTop: '0'}}>{selectedDate}</P2>
+        <P2 style={{color: `${colors.grey}`, marginTop: '0', marginBottom: '0'}}>{selectedDate}</P2>
       </TitleDiv>
-      <PanelDateSelector />
+      <PanelDateSelector 
+        timePeriodOptions={timePeriods} 
+        selectedDate={selectedDate}
+      />
     </Container>
   )
 }

@@ -62,10 +62,17 @@ const ViewDropDownArrow = styled.span`
   }
 `
 
-const PanelDateSelector = () => {
+const PanelDateSelector = ({
+  timePeriodOptions,
+  selectedDate,
+}) => {
 
   const [openDropDown, setOpenDropDown] = useState(false)
-  const [timePeriod, setTimePeriod] = useState('Last 7 days')
+  const [timePeriod, setTimePeriod] = useState(selectedDate)
+
+  useEffect(() => {
+    setTimePeriod(selectedDate)
+  }, [selectedDate])
 
   const refOne = useRef(null);
 
@@ -90,6 +97,10 @@ const PanelDateSelector = () => {
   const handleChangeTime = selectedOne => {
     setTimePeriod(selectedOne)
   }
+
+  const applyChanges = () => {
+    
+  }
   
   return (
     <Container ref={refOne}>
@@ -107,7 +118,7 @@ const PanelDateSelector = () => {
             <ViewDropDown>        
               <TablePicker 
                 label="Time Period"
-                options={['Last 7 days', 'Last 30 days']}
+                options={timePeriodOptions}
                 selectedOption={timePeriod}
                 onOptionSelected={selectedOne => handleChangeTime(selectedOne)}
                 style={{width: '100%'}}
@@ -119,7 +130,7 @@ const PanelDateSelector = () => {
                 >
                   Cancel
                 </Button>
-                <Button primary style={{width: '124px'}}>
+                <Button primary style={{width: '124px'}} onClick={applyChanges}>
                   Apply Changes
                 </Button>
               </div>

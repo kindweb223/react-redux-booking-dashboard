@@ -16,11 +16,18 @@ const PanelDiv = styled.div`
 const DashboardPanel = ({
   title,
   selectedDate,
+  timePeriods,
+  children
 }) => {
 
   return (
     <PanelDiv>
-      <TopBanner title={title} selectedDate={selectedDate} />
+      <TopBanner 
+        title={title} 
+        selectedDate={selectedDate} 
+        timePeriods={timePeriods}
+      />
+      {children}
     </PanelDiv>
   )
 }
