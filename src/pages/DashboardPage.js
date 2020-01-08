@@ -10,9 +10,11 @@ import { AppReducerContext } from '../contexts/AppReducerContext'
 import colors from "../components/style/colors"
 import Grid from '../components/layout/Grid'
 import H1 from '../components/typography/H1'
+import H3 from '../components/typography/H3'
 import P2 from '../components/typography/P2'
 
 import DashboardPanel from '../components/features/dashboard/panel/dashboardPanel'
+import TopVenueTable from '../components/features/dashboard/panel/topVenueTable'
 
 import { 
   REQUEST_GET_BOOKINGS, 
@@ -47,6 +49,12 @@ const ValueP = styled(P2)`
   color: ${colors.dark};
   margin-top: 0;
   margin-bottom: 0;  
+`
+
+const Row = styled.div`
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid gray;  
 `
 
 const getSelectedDateRange = dateRange => {
@@ -207,6 +215,8 @@ const DashboardPage = () => {
           <ValueP>0</ValueP>
         </ValueDiv>
       </DashboardPanel>
+      
+      <TopVenueTable />              
 
     </Grid>
   )
