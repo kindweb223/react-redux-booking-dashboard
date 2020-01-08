@@ -59,12 +59,28 @@ const getSelectedDateRange = dateRange => {
       current.subtract(1, 'day')
       n--
     }
+    arrDate.reverse();
   } else if (dateRange === 'Last 30 days') {
     let n = 31
     while (n>0) {
       arrDate.push(current.format('ddd D'))
       current.subtract(1, 'day')
       n--
+    }
+    arrDate.reverse();
+  } else if (dateRange === 'Next 7 days') {    
+    let n = 0;
+    while (n<8) {
+      arrDate.push(current.format('ddd D'))
+      current.add(1, 'day')
+      n++
+    }
+  } else if (dateRange === 'Next 30 days') {
+    let n=0;
+    while (n<31) {
+      arrDate.push(current.format('ddd D'))
+      current.add(1, 'day')
+      n++
     }
   }
   return arrDate;  
