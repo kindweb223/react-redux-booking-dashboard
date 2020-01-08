@@ -15,7 +15,7 @@ import P2 from '../components/typography/P2'
 
 import DashboardPanel from '../components/features/dashboard/panel/dashboardPanel'
 import TopVenueTable from '../components/features/dashboard/panel/topVenueTable'
-
+import TopStaffTable from '../components/features/dashboard/panel/topStaffTable'
 import { 
   REQUEST_GET_BOOKINGS, 
   GET_BOOKINGS_SUCCESS, 
@@ -216,7 +216,8 @@ const DashboardPage = () => {
         </ValueDiv>
       </DashboardPanel>
       
-      <TopVenueTable />              
+      <TopVenueTable />   
+      <TopStaffTable />           
 
     </Grid>
   )
