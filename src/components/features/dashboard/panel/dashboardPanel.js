@@ -16,7 +16,7 @@ const PanelDiv = styled.div`
 const DashboardPanel = ({
   title,
   selectedDate,
-  timePeriods,
+  timePeriods,  
   children
 }) => {
 

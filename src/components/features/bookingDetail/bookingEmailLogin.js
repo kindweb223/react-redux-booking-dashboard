@@ -3,7 +3,6 @@ import axios from 'axios'
 import { css } from "emotion";
 import styled from "styled-components"
 import H3 from "../../typography/H3"
-import InputField from "../../buttons/InputField"
 import { ModalContainer, ModalTopSection, ModalTitleAndButtons, ModalBottomSection } from "../../modals/containers"
 import { TableLabel, TableDivider, TableEditableValue } from "../../tables/tables"
 import Button from '../../buttons/Button'

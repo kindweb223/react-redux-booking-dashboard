@@ -1,11 +1,13 @@
 import React from "react";
-import bookingsReducer from "../reducers/bookingsReducer";
-import settingsReducer from "../reducers/settingsReducer";
-import customersReducer from "../reducers/customersReducer";
-import authReducer from "../reducers/authReducer";
-import customBookingColorReducer from "../reducers/customBookingColorReducer";
-import calendarViewReducer from "../reducers/calendarCustomViewReducer";
-import calendarSettingReducer from "../reducers/calendarSettingReducer";
+import bookingsReducer            from "../reducers/bookingsReducer";
+import settingsReducer            from "../reducers/settingsReducer";
+import customersReducer           from "../reducers/customersReducer";
+import authReducer                from "../reducers/authReducer";
+import customBookingColorReducer  from "../reducers/customBookingColorReducer";
+import calendarViewReducer        from "../reducers/calendarCustomViewReducer";
+import calendarSettingReducer     from "../reducers/calendarSettingReducer";
+import dashboardReducer           from  "../reducers/dashboardReducer";
+
 const AppReducerContext = React.createContext(null);
 
 const initialState = {
@@ -48,7 +50,7 @@ const initialState = {
 
     payment: {      
       public_key: "",
-    },
+    },    
   },
 
   customers: {
@@ -84,6 +86,11 @@ const initialState = {
     selectedDate: new Date(),
     viewMode: 'week',
     viewExpand: true
+  },
+
+  dashboard: {
+    recentSalesPeriod: 'Last 7 days',
+    upcomingBookingPeriod: 'Next 7 days'
   }
 };
 
@@ -95,6 +102,7 @@ const reducer = combineReducers({
   customBookingColor: customBookingColorReducer,
   calendarViews: calendarViewReducer, 
   calendarSettings: calendarSettingReducer,
+  dashboard: dashboardReducer,
 });
 
 function combineReducers(reducers) {

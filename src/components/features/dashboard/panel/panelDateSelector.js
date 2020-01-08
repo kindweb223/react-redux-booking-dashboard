@@ -1,4 +1,4 @@
-import React ,{ useEffect, useState, useRef } from 'react'
+import React ,{ useEffect, useState, useRef, useContext } from 'react'
 import ReactDOM from "react-dom";
 import styled from "styled-components"
 
@@ -7,6 +7,18 @@ import colors from "../../../style/colors"
 import P2 from '../../../typography/P2'
 import { TablePicker } from '../../../tables/tables'
 import Button from '../../../buttons/Button'
+
+import { AppReducerContext } from '../../../../contexts/AppReducerContext'
+
+import { 
+  DASHBOARD_RECENT_SALES_PANEL,
+  DASHBOARD_UPCOMING_BOOKING_PANEL,
+} from '../../../../constants'
+
+import {
+  SET_RECENT_SALES_PERIOD,
+  SET_UPCOMING_BOOKING_PERIOD,
+} from '../../../../reducers/actionType'
 
 const Container = styled.div`
   position: relative;
@@ -63,9 +75,12 @@ const ViewDropDownArrow = styled.span`
 `
 
 const PanelDateSelector = ({
+  panelKind,
   timePeriodOptions,
   selectedDate,
 }) => {
+
+  const { state, dispatch } = useContext(AppReducerContext)
 
   const [openDropDown, setOpenDropDown] = useState(false)
   const [timePeriod, setTimePeriod] = useState(selectedDate)
@@ -81,7 +96,8 @@ const PanelDateSelector = ({
       if (refOne.current) {
         if (!ReactDOM.findDOMNode(refOne.current).contains(event.target)) {
           if (openDropDown) {
-            setOpenDropDown(false);
+            setOpenDropDown(false)
+            setTimePeriod(selectedDate)
           }
         }
       }
@@ -92,6 +108,7 @@ const PanelDateSelector = ({
     return () => {
       document.removeEventListener("click", handleDocumentClick, false);
     };
+
   }, [refOne, openDropDown]);
 
   const handleChangeTime = selectedOne => {
@@ -99,7 +116,14 @@ const PanelDateSelector = ({
   }
 
   const applyChanges = () => {
-    
+    setOpenDropDown(false)
+    setTimeout(() => {
+      if (panelKind === DASHBOARD_RECENT_SALES_PANEL) {
+        dispatch({ type: SET_RECENT_SALES_PERIOD, payload: timePeriod })
+      } else if (panelKind === DASHBOARD_UPCOMING_BOOKING_PANEL) {
+        dispatch({ type: SET_UPCOMING_BOOKING_PERIOD, payload: timePeriod })
+      }
+    }, 1)    
   }
   
   return (
@@ -116,6 +140,7 @@ const PanelDateSelector = ({
           <React.Fragment>
             <ViewDropDownArrow />
             <ViewDropDown>        
+              {timePeriod}
               <TablePicker 
                 label="Time Period"
                 options={timePeriodOptions}

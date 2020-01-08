@@ -23,7 +23,7 @@ const TopBanner = ({
   title,
   selectedDate,
   timePeriods,
-}) => {
+}) => {  
   return (
     <Container>
       <TitleDiv>
@@ -31,6 +31,7 @@ const TopBanner = ({
         <P2 style={{color: `${colors.grey}`, marginTop: '0', marginBottom: '0'}}>{selectedDate}</P2>
       </TitleDiv>
       <PanelDateSelector 
+        panelKind={title}
         timePeriodOptions={timePeriods} 
         selectedDate={selectedDate}
       />
