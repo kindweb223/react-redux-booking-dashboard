@@ -31,25 +31,26 @@ const ValueColmun = styled(P2)`
   margin-top: 0.6em;
 `
 
-const TopVenueTable = () => {
+const TopVenueTable = ({
+  data
+}) => {
   return (
     <PanelDiv>
-      <H3>Top Venue</H3>
+      <H3>Top Venue : {data.title}</H3>
       <Row>
         <NameColumn style={{color: `${colors.grey}`}}>Space</NameColumn>
         <ValueColmun style={{color: `${colors.grey}`}}>This momth</ValueColmun>
         <ValueColmun style={{color: `${colors.grey}`}}>Last momth</ValueColmun>
       </Row>
-      <Row>
-        <NameColumn>Space1</NameColumn>
-        <ValueColmun>1</ValueColmun>
-        <ValueColmun>2</ValueColmun>
-      </Row>
-      <Row>
-        <NameColumn>Space2</NameColumn>
-        <ValueColmun>3</ValueColmun>
-        <ValueColmun>4</ValueColmun>
-      </Row>
+      {data.spaces.map(item => {
+        return (
+          <Row>
+            <NameColumn>{item.name}</NameColumn>
+            <ValueColmun>{item.lastMonth}</ValueColmun>
+            <ValueColmun>{item.thisMonth}</ValueColmun>
+          </Row>
+        )
+      })}      
     </PanelDiv>
   )
 }

@@ -22,12 +22,17 @@ import {
   GET_BOOKINGS_ERROR,
   SET_RECENT_SALES_PERIOD,
   SET_UPCOMING_BOOKING_PERIOD,
+  REQUEST_GET_COMPANYINFO,
+  GET_COMPANYINFO_SUCCESS,
+  GET_COMPANYINFO_ERROR,
 } from '../reducers/actionType'
 
 import {
   DASHBOARD_RECENT_SALES_PANEL,
   DASHBOARD_UPCOMING_BOOKING_PANEL,
 } from '../constants'
+
+import currencies from '../models/currencies'
 
 const TotalValue = styled(H1)`
   color: ${colors.dark};
@@ -94,6 +99,25 @@ const getSelectedDateRange = dateRange => {
   return arrDate;  
 }
 
+const checkBookingInDateRange = (booking, startDate, endDate) => {
+  let isInclude = false;
+  booking.slots.forEach(itemOne => {
+    if (isInclude) return
+    if (itemOne.kind === 'single-day') {
+      if (startDate <= moment(itemOne.date).valueOf() && moment(itemOne.date).valueOf() <= endDate) {                
+        isInclude = true            
+        return
+      }
+    } else if(itemOne.kind === 'multi-day') {
+      if (startDate <= moment(itemOne.dateRange[0]).valueOf() && moment(itemOne.dateRange[0]).valueOf() <= endDate) {                
+        isInclude = true            
+        return
+      }
+    }
+  })
+  return isInclude;
+}
+
 const DashboardPage = () => {
 
   const { state, dispatch } = useContext(AppReducerContext);
@@ -124,6 +148,7 @@ const DashboardPage = () => {
     ],
   })
   const [upcomingBooking, setUpcomingBooking] = useState({})
+  const [topVenueData, setTopVenueData] = useState({title: "", spaces: []});
 
   useEffect(() => {
     const getBookings = async () => {
@@ -140,6 +165,23 @@ const DashboardPage = () => {
       }
     }
     getBookings();
+
+    const getCompany = async () => {
+      try {
+        dispatch({ type: REQUEST_GET_COMPANYINFO});
+
+        const res = await axios.get('/company');
+
+        dispatch({
+          type: GET_COMPANYINFO_SUCCESS,
+          payload: res.data.company,
+        })
+      } catch (err) {
+        dispatch({ type: GET_COMPANYINFO_ERROR });
+      }
+    }
+    getCompany();
+
   },[])
 
   const setRecentSalesFunc = (bookings, period) => {
@@ -150,9 +192,106 @@ const DashboardPage = () => {
 
   }
 
+  const setTopVenuFunc = bookings => {    
+    const endDay = moment().endOf('day').valueOf()
+    const startDay = moment().subtract(1, 'months').startOf('month').startOf('day').valueOf()
+
+    const filteredOne = [];
+    bookings.forEach(item => {      
+      let isInclude = false;
+      item.slots.forEach(itemOne => {
+        if (isInclude) return
+        if (itemOne.kind === 'single-day') {
+          if (startDay <= moment(itemOne.date).valueOf() && moment(itemOne.date).valueOf() <= endDay) {
+            filteredOne.push(item)
+            isInclude = true            
+            return
+          }
+        } else if(itemOne.kind === 'multi-day') {
+          if (startDay <= moment(itemOne.dateRange[0]).valueOf() && moment(itemOne.dateRange[0]).valueOf() <= endDay) {
+            filteredOne.push(item)
+            isInclude = true            
+            return
+          }
+        }
+      })
+    })
+    
+    let sameVenues = [];    
+    filteredOne.forEach((item, nIndex) => {
+      if (item.venue && item.venue.id) {
+        const filterOne = sameVenues.filter(itemOne => itemOne.id === item.venue.id)
+        if (filterOne.length > 0)        
+          sameVenues = [
+            ...sameVenues.map(itemTwo => {
+              if (itemTwo.id === item.venue.id)
+                return {...itemTwo, count: itemTwo.count + 1, venue: item.venue}
+              else return itemTwo
+            })
+          ]
+        else 
+          sameVenues.push({id: item.venue.id, count: 1, venue: item.venue})
+      }
+    })
+
+    let topValue = 0;
+    sameVenues.forEach(item => {
+      if (item.count > topValue)
+      topValue = item.count;
+    })
+    
+    let topVenue = sameVenues.filter(item => item.count === topValue)[0]
+    
+    let spaceNames = []
+    filteredOne.forEach(item => {
+      if (item.venue && item.venue.id && topVenue && item.venue.id === topVenue.id) {
+        if (item.space && item.space.id)
+          spaceNames.push(item.space.id)
+      }
+    })
+
+    spaceNames = spaceNames.filter(function(item, pos) {
+      return spaceNames.indexOf(item) == pos;
+    })
+
+    let spaces = [];
+    spaceNames.forEach(item => {
+      const startOfLastMonth  = startDay
+      const endOfLastMonth    = moment(startDay).endOf('month').valueOf()
+      const startOfThisMonth  = moment(endDay).startOf('month').valueOf()
+      const endOfThisMonth    = endDay      
+            
+      const lastMonths = filteredOne.filter(itemBooking => {
+        if (itemBooking.space.id === item) {
+          return checkBookingInDateRange(itemBooking, startOfLastMonth, endOfLastMonth)
+        } return false
+      })
+      
+      const thisMonths = filteredOne.filter(itemBooking => {
+        if (itemBooking.space.id === item) {
+          return checkBookingInDateRange(itemBooking, startOfThisMonth, endOfThisMonth)
+        } else return false
+      })
+
+      const selectedSpace = filteredOne.filter(itemTwo => itemTwo.spaceId === item)[0]
+      spaces.push({ 
+        name: selectedSpace.space.name, 
+        lastMonth: lastMonths.length,
+        thisMonth: thisMonths.length,
+      })
+
+    })
+
+    setTopVenueData({
+      title: (topVenue && topVenue.venue && topVenue.venue.name) ? topVenue.venue.name : "",
+      spaces,
+    })
+  }
+
   useEffect(() => {
     setRecentSalesFunc(state.bookings.bookings, state.dashboard.recentSalesPeriod)
     setUpcomingBookingFunc(state.bookings.bookings, state.dashboard.upcomingBookingPeriod)
+    setTopVenuFunc(state.bookings.bookings)
   }, [
     state.bookings.bookings
   ])
@@ -196,6 +335,19 @@ const DashboardPage = () => {
             legend: {
               position: "bottom",
             },
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    callback: function(label, index, labels) {                      
+                      if (currencies[state.settings.companyInfo.currency])
+                        return currencies[state.settings.companyInfo.currency].symbol + label
+                      else return label
+                    }
+                  }
+                }
+              ]
+            }
           }}
         />
       </DashboardPanel>
@@ -216,7 +368,7 @@ const DashboardPage = () => {
         </ValueDiv>
       </DashboardPanel>
       
-      <TopVenueTable />   
+      <TopVenueTable data={topVenueData}/>   
       <TopStaffTable />           
 
     </Grid>
