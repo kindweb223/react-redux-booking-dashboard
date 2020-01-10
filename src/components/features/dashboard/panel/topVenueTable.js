@@ -13,6 +13,7 @@ const PanelDiv = styled.div`
   background-color: white;
   box-shadow: 0 5px 15px 5px rgba(164, 173, 186, 0.25);
   border-radius: 3px;
+  margin-bottom: 2em;
 `
 
 const Row = styled.div`
