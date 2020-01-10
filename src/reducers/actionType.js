@@ -157,3 +157,7 @@ export const CREATE_CALENDAR_SETTING_ERROR        = 'Create calendar setting err
 export const UPDATE_CALENDAR_SETTING_SUCCESS      = 'Update calendar setting success'
 export const UPDATE_CALENDAR_SETTING_ERROR        = 'Update calendar setting error'
 export const SET_CALENDAR_SETTING_DATA            = 'Set calendar Setting';
+
+// Dashboard Types
+export const SET_RECENT_SALES_PERIOD              = 'Set Recent Sales Period';
+export const SET_UPCOMING_BOOKING_PERIOD          = 'Set Upcoming booking period';
