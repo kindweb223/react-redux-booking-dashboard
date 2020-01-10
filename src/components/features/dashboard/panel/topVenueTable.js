@@ -40,8 +40,8 @@ const TopVenueTable = ({
       <H3>Top Venue : {data.title}</H3>
       <Row>
         <NameColumn style={{color: `${colors.grey}`}}>Space</NameColumn>
-        <ValueColmun style={{color: `${colors.grey}`}}>This momth</ValueColmun>
-        <ValueColmun style={{color: `${colors.grey}`}}>Last momth</ValueColmun>
+        <ValueColmun style={{color: `${colors.grey}`}}>This month</ValueColmun>
+        <ValueColmun style={{color: `${colors.grey}`}}>Last month</ValueColmun>
       </Row>
       {data.spaces.map(item => {
         return (

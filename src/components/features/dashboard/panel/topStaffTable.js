@@ -38,8 +38,8 @@ const TopStaffTable = () => {
       <H3>Top Staff</H3>
       <Row>
         <NameColumn style={{color: `${colors.grey}`}}>Staff</NameColumn>
-        <ValueColmun style={{color: `${colors.grey}`}}>This momth</ValueColmun>
-        <ValueColmun style={{color: `${colors.grey}`}}>Last momth</ValueColmun>
+        <ValueColmun style={{color: `${colors.grey}`}}>This month</ValueColmun>
+        <ValueColmun style={{color: `${colors.grey}`}}>Last month</ValueColmun>
       </Row>
       <Row>
         <NameColumn>Steven Stward</NameColumn>
