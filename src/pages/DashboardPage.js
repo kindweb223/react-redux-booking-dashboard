@@ -271,6 +271,9 @@ const DashboardPage = () => {
 
     setRecentBookings({
       ...recentBookings,
+      labels: [
+        ...getSelectedDateRange(period)
+      ],
       datasets: [
         {
           ...recentBookings.datasets[0],
