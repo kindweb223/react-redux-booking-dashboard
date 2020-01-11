@@ -159,5 +159,5 @@ export const UPDATE_CALENDAR_SETTING_ERROR        = 'Update calendar setting err
 export const SET_CALENDAR_SETTING_DATA            = 'Set calendar Setting';
 
 // Dashboard Types
-export const SET_RECENT_SALES_PERIOD              = 'Set Recent Sales Period';
-export const SET_UPCOMING_BOOKING_PERIOD          = 'Set Upcoming booking period';
+export const SET_RECENT_BOOKINGS_PERIOD              = 'Set Dashboard Recent Bookings Period';
+export const SET_UPCOMING_BOOKINGS_PERIOD          = 'Set Upcoming booking period';

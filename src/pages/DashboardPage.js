@@ -7,6 +7,8 @@ import { Line } from 'react-chartjs-2';
 
 import { AppReducerContext } from '../contexts/AppReducerContext'
 
+import { updatedDate } from "../utils/dates";
+
 import colors from "../components/style/colors"
 import Grid from '../components/layout/Grid'
 import H1 from '../components/typography/H1'
@@ -20,16 +22,20 @@ import {
   REQUEST_GET_BOOKINGS, 
   GET_BOOKINGS_SUCCESS, 
   GET_BOOKINGS_ERROR,
-  SET_RECENT_SALES_PERIOD,
-  SET_UPCOMING_BOOKING_PERIOD,
+  SET_RECENT_BOOKINGS_PERIOD,
+  SET_UPCOMING_BOOKINGS_PERIOD,
   REQUEST_GET_COMPANYINFO,
   GET_COMPANYINFO_SUCCESS,
   GET_COMPANYINFO_ERROR,
 } from '../reducers/actionType'
 
 import {
-  DASHBOARD_RECENT_SALES_PANEL,
+  DASHBOARD_RECENT_BOOKINGS_PANEL,
   DASHBOARD_UPCOMING_BOOKING_PANEL,
+  LAST_7_DAYS,
+  LAST_30_DAYS,
+  NEXT_7_DAYS,
+  NEXT_30_DAYS,
 } from '../constants'
 
 import currencies from '../models/currencies'
@@ -65,7 +71,7 @@ const Row = styled.div`
 const getSelectedDateRange = dateRange => {
   const current = moment()
   const arrDate = []  
-  if (dateRange === 'Last 7 days') {
+  if (dateRange === LAST_7_DAYS) {
     let n = 8
     while (n>0) {
       arrDate.push(current.format('ddd D'))
@@ -73,7 +79,7 @@ const getSelectedDateRange = dateRange => {
       n--
     }
     arrDate.reverse();
-  } else if (dateRange === 'Last 30 days') {
+  } else if (dateRange === LAST_30_DAYS) {
     let n = 31
     while (n>0) {
       arrDate.push(current.format('ddd D'))
@@ -81,14 +87,14 @@ const getSelectedDateRange = dateRange => {
       n--
     }
     arrDate.reverse();
-  } else if (dateRange === 'Next 7 days') {    
+  } else if (dateRange === NEXT_7_DAYS) {    
     let n = 0;
     while (n<8) {
       arrDate.push(current.format('ddd D'))
       current.add(1, 'day')
       n++
     }
-  } else if (dateRange === 'Next 30 days') {
+  } else if (dateRange === NEXT_30_DAYS) {
     let n=0;
     while (n<31) {
       arrDate.push(current.format('ddd D'))
@@ -109,7 +115,10 @@ const checkBookingInDateRange = (booking, startDate, endDate) => {
         return
       }
     } else if(itemOne.kind === 'multi-day') {
-      if (startDate <= moment(itemOne.dateRange[0]).valueOf() && moment(itemOne.dateRange[0]).valueOf() <= endDate) {                
+      if (
+        startDate <= updatedDate(itemOne.dateRange[0], itemOne.startHour, itemOne.startMinute).valueOf() && 
+        updatedDate(itemOne.dateRange[1], itemOne.endHour, itemOne.endMinute).valueOf() <= endDate
+      ) {                
         isInclude = true            
         return
       }
@@ -121,18 +130,19 @@ const checkBookingInDateRange = (booking, startDate, endDate) => {
 const DashboardPage = () => {
 
   const { state, dispatch } = useContext(AppReducerContext);
-  const [recentSales, setRecentSales] = useState({
-    labels: [...getSelectedDateRange(state.dashboard.recentSalesPeriod)],
+  const [topRecentBooking, setTopRecentBooking] = useState({ id: -1, name: "", count: 0})
+  const [recentBookings, setRecentBookings] = useState({
+    labels: [...getSelectedDateRange(state.dashboard.recentBookingsPeriod)],
     datasets: [
       {
-        label: 'Sales',
+        label: 'Bookings',
         fill: false,
         lineTension: 0.1,
         backgroundColor: 'rgba(75,192,192,0.4)',
         borderColor: 'rgba(75,192,192,1)',
         borderCapStyle: 'butt',
         borderDash: [],
-        borderDashOffset: 0.0,
+        borderDashOffset: 0,
         borderJoinStyle: 'miter',
         pointBorderColor: 'rgba(75,192,192,1)',
         pointBackgroundColor: 'rgba(75,192,192,1)',
@@ -143,7 +153,7 @@ const DashboardPage = () => {
         pointHoverBorderWidth: 2,
         pointRadius: 4,
         pointHitRadius: 10,
-        data: [65, 59, 80, 81, 56, 55, 40, 40]  
+        data: [0, 0, 0, 0, 0, 0, 0, 0]  
       },
     ],
   })
@@ -184,8 +194,92 @@ const DashboardPage = () => {
 
   },[])
 
-  const setRecentSalesFunc = (bookings, period) => {
-    // const filteredOne = bookings.filter(item => )
+  const setRecentBookingsFunc = (bookings, period) => {    
+    let filteredOne = []
+    let maxBooking = {id: -1, name: "", count: 0}
+    const current = new moment();
+
+    let startDate, endDate;
+    if (period === LAST_7_DAYS) {
+      endDate = current.endOf('day').valueOf()
+      startDate = current.subtract(8, 'day').startOf('day').valueOf()            
+    } else if (period === LAST_30_DAYS) {
+      endDate = current.endOf('day').valueOf()
+      startDate = current.subtract(31, 'day').startOf('day').valueOf()            
+    } else if (period === NEXT_7_DAYS ) {
+      startDate = current.startOf('day')
+      endDate = current.add(8, 'day').endOfOf('day')
+    } else if (period === NEXT_30_DAYS) {
+      startDate = current.startOf('day')
+      endDate = current.add(31, 'day').endOf('day')
+    }    
+
+    state.bookings.bookings.map(item => {
+      let maxCountOne = 0;
+      if (item.slots && item.slots.length > 0) {
+        item.slots.map(slot => {
+          if (slot.kind === 'single-day') {
+            if (
+              startDate <= updatedDate(slot.date, slot.startHour, slot.startMinute).valueOf() &&
+              updatedDate(slot.date, slot.endHour, slot.endMinute).valueOf() <= endDate
+            ) {
+              maxCountOne ++
+              filteredOne.push({
+                startDate: updatedDate(slot.date, slot.startHour, slot.startMinute).valueOf(),
+                endDate: updatedDate(slot.date, slot.endHour, slot.endMinute).valueOf()
+              })
+            }
+          } else if (slot.kind === 'multi-day') {
+            if (
+              startDate <= updatedDate(slot.dateRange[0], slot.startHour, slot.startMinute).valueOf() && 
+              updatedDate(slot.dateRange[1], slot.endHour, slot.endMinute).valueOf() <= endDate
+            ) 
+            {              
+              maxCountOne ++
+              filteredOne.push({
+                startDate: updatedDate(slot.dateRange[0], slot.startHour, slot.startMinute).valueOf(),
+                endDate: updatedDate(slot.dateRange[1], slot.endHour, slot.endMinute).valueOf()
+              })
+            }            
+          }
+        })
+      }
+
+      if (maxBooking.count < maxCountOne) {
+        maxBooking.count  = maxCountOne
+        maxBooking.id     = item.id
+        maxBooking.name   = item.eventName
+      }
+    })
+
+    let startTempDate = startDate
+    let bookingArray = {};
+    while(startTempDate <=  endDate) { 
+      bookingArray[startTempDate] = 0
+      startTempDate = moment(startTempDate).add(1, 'day').startOf().valueOf()      
+    }
+
+    filteredOne.forEach(item => {
+      let bookingStartDate  = moment(item.startDate).startOf('day')
+      let bookingEndDate    = moment(item.endDate).startOf('day')
+
+      while(bookingStartDate.valueOf() <= bookingEndDate.valueOf()) {
+        bookingArray[bookingStartDate.valueOf()] += 1;
+        bookingStartDate.add(1, 'day');
+      }
+    })
+
+    setRecentBookings({
+      ...recentBookings,
+      datasets: [
+        {
+          ...recentBookings.datasets[0],
+          data: [...Object.keys(bookingArray).map(item => {
+            return bookingArray[item]
+          })]
+        }
+      ]
+    })
   }
 
   const setUpcomingBookingFunc = (bookings, period) => {
@@ -202,13 +296,19 @@ const DashboardPage = () => {
       item.slots.forEach(itemOne => {
         if (isInclude) return
         if (itemOne.kind === 'single-day') {
-          if (startDay <= moment(itemOne.date).valueOf() && moment(itemOne.date).valueOf() <= endDay) {
+          if (
+            startDay <= updatedDate(itemOne.date, itemOne.startHour, itemOne.startMinute).valueOf() && 
+            updatedDate(itemOne.date, itemOne.endHour, itemOne.endMinute).valueOf() <= endDay
+          ) {
             filteredOne.push(item)
             isInclude = true            
             return
           }
         } else if(itemOne.kind === 'multi-day') {
-          if (startDay <= moment(itemOne.dateRange[0]).valueOf() && moment(itemOne.dateRange[0]).valueOf() <= endDay) {
+          if (
+            startDay <= updatedDate(itemOne.dateRange[0], itemOne.startHour, itemOne.startMinute).valueOf() &&
+            updatedDate(itemOne.dateRange[1], itemOne.endHour, itemOne.endMinute).valueOf() <= endDay
+          ) {
             filteredOne.push(item)
             isInclude = true            
             return
@@ -289,7 +389,7 @@ const DashboardPage = () => {
   }
 
   useEffect(() => {
-    setRecentSalesFunc(state.bookings.bookings, state.dashboard.recentSalesPeriod)
+    setRecentBookingsFunc(state.bookings.bookings, state.dashboard.recentBookingsPeriod)
     setUpcomingBookingFunc(state.bookings.bookings, state.dashboard.upcomingBookingPeriod)
     setTopVenuFunc(state.bookings.bookings)
   }, [
@@ -297,18 +397,18 @@ const DashboardPage = () => {
   ])
 
   useEffect(() => {
-    setRecentSalesFunc(state.bookings.bookings, state.dashboard.recentSalesPeriod)
-  }, [state.dashboard.recentSalesPeriod])
+    setRecentBookingsFunc(state.bookings.bookings, state.dashboard.recentBookingsPeriod)
+  }, [state.dashboard.recentBookingsPeriod])
 
   useEffect(() => {
     setUpcomingBookingFunc(state.bookings.bookings, state.dashboard.upcomingBookingPeriod)
   }, [state.dashboard.upcomingBookingPeriod])
 
   const changePeriod = (nValue, nKind) => {
-    if (nKind === DASHBOARD_RECENT_SALES_PANEL) {
-      dispatch({ type: SET_RECENT_SALES_PERIOD, payload: nValue })
+    if (nKind === DASHBOARD_RECENT_BOOKINGS_PANEL) {
+      dispatch({ type: SET_RECENT_BOOKINGS_PERIOD, payload: nValue })
     } else if (nKind === DASHBOARD_UPCOMING_BOOKING_PANEL) {
-      dispatch({ type: SET_RECENT_SALES_PERIOD, payload: nValue })
+      dispatch({ type: SET_RECENT_BOOKINGS_PERIOD, payload: nValue })
     }
   }
 
@@ -316,38 +416,20 @@ const DashboardPage = () => {
     <Grid columns="1fr 1fr" style={{ width: '100%'}}>
       
       <DashboardPanel 
-        title={DASHBOARD_RECENT_SALES_PANEL}
-        selectedDate={state.dashboard.recentSalesPeriod}
-        timePeriods={['Last 7 days', 'Last 30 days']}        
+        title={DASHBOARD_RECENT_BOOKINGS_PANEL}
+        selectedDate={state.dashboard.recentBookingsPeriod}
+        timePeriods={[LAST_7_DAYS, LAST_30_DAYS]}        
       >        
-        <TotalValue>$25</TotalValue>
-        <ValueDiv>
-          <TitleP>Bookings</TitleP>
-          <ValueP>1</ValueP>
-        </ValueDiv>
-        <ValueDiv style={{marginBottom: '2em'}}>
-          <TitleP>Booking Value</TitleP>
-          <ValueP>$25</ValueP>
-        </ValueDiv>
+        <TotalValue>
+          {recentBookings.datasets[0].data.reduce((partial_sum, a) => partial_sum + a, 0)} booked
+        </TotalValue>
+        
         <Line
-          data={recentSales} 
+          data={recentBookings} 
           options={{
             legend: {
               position: "bottom",
             },
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    callback: function(label, index, labels) {                      
-                      if (currencies[state.settings.companyInfo.currency])
-                        return currencies[state.settings.companyInfo.currency].symbol + label
-                      else return label
-                    }
-                  }
-                }
-              ]
-            }
           }}
         />
       </DashboardPanel>
@@ -355,7 +437,7 @@ const DashboardPage = () => {
       <DashboardPanel 
         title={DASHBOARD_UPCOMING_BOOKING_PANEL}
         selectedDate={state.dashboard.upcomingBookingPeriod}
-        timePeriods={['Next 7 days', 'Next 30 days']}        
+        timePeriods={[NEXT_7_DAYS, NEXT_30_DAYS]}        
       >
         <TotalValue>1 booked</TotalValue>
         <ValueDiv>

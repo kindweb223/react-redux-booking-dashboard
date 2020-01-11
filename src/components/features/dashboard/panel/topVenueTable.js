@@ -43,9 +43,9 @@ const TopVenueTable = ({
         <ValueColmun style={{color: `${colors.grey}`}}>This month</ValueColmun>
         <ValueColmun style={{color: `${colors.grey}`}}>Last month</ValueColmun>
       </Row>
-      {data.spaces.map(item => {
+      {data.spaces.map((item, nIndex) => {
         return (
-          <Row>
+          <Row key={nIndex}>
             <NameColumn>{item.name}</NameColumn>
             <ValueColmun>{item.lastMonth}</ValueColmun>
             <ValueColmun>{item.thisMonth}</ValueColmun>

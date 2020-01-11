@@ -1,16 +1,16 @@
 import {
-  SET_RECENT_SALES_PERIOD,
-  SET_UPCOMING_BOOKING_PERIOD,
+  SET_RECENT_BOOKINGS_PERIOD,
+  SET_UPCOMING_BOOKINGS_PERIOD,
 } from './actionType'
 
 function dashboardReducer(state = {}, action) {
   switch (action.type) {
-    case SET_RECENT_SALES_PERIOD:
+    case SET_RECENT_BOOKINGS_PERIOD:
       return {
         ...state,
-        recentSalesPeriod: action.payload,
+        recentBookingsPeriod: action.payload,
       }
-    case SET_UPCOMING_BOOKING_PERIOD:
+    case SET_UPCOMING_BOOKINGS_PERIOD:
       return {
         ...state,
         upcomingBookingPeriod: action.payload,
