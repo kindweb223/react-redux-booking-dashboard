@@ -13,6 +13,7 @@ const PanelDiv = styled.div`
   background-color: white;
   box-shadow: 0 5px 15px 5px rgba(164, 173, 186, 0.25);
   border-radius: 3px;
+  margin-bottom: 2em;
 `
 
 const Row = styled.div`
@@ -37,8 +38,8 @@ const TopStaffTable = () => {
       <H3>Top Staff</H3>
       <Row>
         <NameColumn style={{color: `${colors.grey}`}}>Staff</NameColumn>
-        <ValueColmun style={{color: `${colors.grey}`}}>This momth</ValueColmun>
-        <ValueColmun style={{color: `${colors.grey}`}}>Last momth</ValueColmun>
+        <ValueColmun style={{color: `${colors.grey}`}}>This month</ValueColmun>
+        <ValueColmun style={{color: `${colors.grey}`}}>Last month</ValueColmun>
       </Row>
       <Row>
         <NameColumn>Steven Stward</NameColumn>

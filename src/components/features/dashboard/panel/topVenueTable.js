@@ -13,6 +13,7 @@ const PanelDiv = styled.div`
   background-color: white;
   box-shadow: 0 5px 15px 5px rgba(164, 173, 186, 0.25);
   border-radius: 3px;
+  margin-bottom: 2em;
 `
 
 const Row = styled.div`
@@ -39,12 +40,12 @@ const TopVenueTable = ({
       <H3>Top Venue : {data.title}</H3>
       <Row>
         <NameColumn style={{color: `${colors.grey}`}}>Space</NameColumn>
-        <ValueColmun style={{color: `${colors.grey}`}}>This momth</ValueColmun>
-        <ValueColmun style={{color: `${colors.grey}`}}>Last momth</ValueColmun>
+        <ValueColmun style={{color: `${colors.grey}`}}>This month</ValueColmun>
+        <ValueColmun style={{color: `${colors.grey}`}}>Last month</ValueColmun>
       </Row>
-      {data.spaces.map(item => {
+      {data.spaces.map((item, nIndex) => {
         return (
-          <Row>
+          <Row key={nIndex}>
             <NameColumn>{item.name}</NameColumn>
             <ValueColmun>{item.lastMonth}</ValueColmun>
             <ValueColmun>{item.thisMonth}</ValueColmun>

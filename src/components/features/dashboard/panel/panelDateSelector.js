@@ -11,13 +11,13 @@ import Button from '../../../buttons/Button'
 import { AppReducerContext } from '../../../../contexts/AppReducerContext'
 
 import { 
-  DASHBOARD_RECENT_SALES_PANEL,
+  DASHBOARD_RECENT_BOOKINGS_PANEL,
   DASHBOARD_UPCOMING_BOOKING_PANEL,
 } from '../../../../constants'
 
 import {
-  SET_RECENT_SALES_PERIOD,
-  SET_UPCOMING_BOOKING_PERIOD,
+  SET_RECENT_BOOKINGS_PERIOD,
+  SET_UPCOMING_BOOKINGS_PERIOD,
 } from '../../../../reducers/actionType'
 
 const Container = styled.div`
@@ -118,10 +118,10 @@ const PanelDateSelector = ({
   const applyChanges = () => {
     setOpenDropDown(false)
     setTimeout(() => {
-      if (panelKind === DASHBOARD_RECENT_SALES_PANEL) {
-        dispatch({ type: SET_RECENT_SALES_PERIOD, payload: timePeriod })
+      if (panelKind === DASHBOARD_RECENT_BOOKINGS_PANEL) {
+        dispatch({ type: SET_RECENT_BOOKINGS_PERIOD, payload: timePeriod })
       } else if (panelKind === DASHBOARD_UPCOMING_BOOKING_PANEL) {
-        dispatch({ type: SET_UPCOMING_BOOKING_PERIOD, payload: timePeriod })
+        dispatch({ type: SET_UPCOMING_BOOKINGS_PERIOD, payload: timePeriod })
       }
     }, 1)    
   }

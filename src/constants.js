@@ -71,5 +71,10 @@ export const getReturnUrlSlots = () => {
   return ({start: new Date(parseInt(startDateStr)), end: new Date(parseInt(endDateStr))})
 }
 
-export const DASHBOARD_RECENT_SALES_PANEL     = 'Recent Sales'
-export const DASHBOARD_UPCOMING_BOOKING_PANEL = 'Upcoming Bookings'
+export const DASHBOARD_RECENT_BOOKINGS_PANEL    = 'Dashboard Recent Bookings'
+export const DASHBOARD_UPCOMING_BOOKING_PANEL   = 'Upcoming Bookings'
+
+export const LAST_7_DAYS      = 'Last 7 days'
+export const LAST_30_DAYS     = 'Last 30 days'
+export const NEXT_7_DAYS      = 'Next 7 days'
+export const NEXT_30_DAYS     = 'NEXT 30 days'
