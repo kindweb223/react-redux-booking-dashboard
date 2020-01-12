@@ -151,7 +151,7 @@ const Sidebar = props => {
                   <FontAwesomeIcon 
                     className="fa-icons" 
                     icon={faChartArea} 
-                    style={{width: '22px', height: '22px', marginLeft:'5px', color: '#E92579'}}
+                    style={{width: '21px', height: '21px', marginLeft:'4px', color: '#E92579'}}
                   />
                   { !sidebarCollapsed && <P1>Dashboard</P1>}
                 </SidebarButton>

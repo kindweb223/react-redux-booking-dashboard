@@ -83,4 +83,5 @@ export {
   startOfUpcomingWeek,
   endOfUpcomingWeek,
   isBookingWithDates, 
-  addDays };
+  addDays 
+};
