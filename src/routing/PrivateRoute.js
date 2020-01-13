@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import React, { useContext } from "react";
+import { Route, Redirect } from "react-router-dom";
 
 import { AppReducerContext } from "../contexts/AppReducerContext";
-
 
 const PrivateRoute = ({
   component: Component,
@@ -11,18 +10,19 @@ const PrivateRoute = ({
 
   const { state } = useContext(AppReducerContext);
   const { isAuthenticated, loading } = state.auth;
+
   return (
     <Route
-    {...rest}
-    render={props =>
-      !isAuthenticated && !loading && rest.computedMatch.path !== 'calendar' ? (
-        <Redirect to='/login' />
-      ) : (
-        <Component {...props} />
-      )
-    }
-  />
-  )
-}  
+      {...rest}
+      render={props =>
+        !isAuthenticated && !loading && rest.computedMatch.path !== "calendar" ? (
+          <Redirect to="/login" />
+        ) : (
+          <Component {...props} />
+        )
+      }
+    />
+  );
+};
 
 export default PrivateRoute;

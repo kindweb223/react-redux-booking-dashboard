@@ -28,45 +28,44 @@ function customersReducer(state = {}, action) {
       newState.push(action.customer);
       return newState;
     }
-    
     case REQUEST_GET_CUSTOMERS: 
       return {
         ...state,
         loadingCustomers: true,
-      }
+      };
     case GET_CUSTOMERS_SUCCESS:
       return {
         ...state,
         loadingCustomers: false,
         customers: [ ...action.payload ]
-      }
+      };
     case GET_CUSTOMERS_ERROR:
       return {
         ...state,
         loadingCustomers: false,
         customers: []
-      }
+      };
     case REQUEST_ADD_CUSTOMER:
       return {
         ...state,
         loadingCustomers: true,        
-      }
+      };
     case GET_ADD_CUSTOMER_SUCCESS:
       return {
         ...state,
         loadingCustomers: false,   
         customers: [...state.customers, action.payload]     
-      }
+      };
     case GET_ADD_CUSTOMER_ERROR:
       return {
         ...state,
         loadingCustomers: false,
-      }
+      };
     case REQUEST_UPDATE_CUSTOMER:
       return {
         ...state,
         loadingCustomers: false,        
-      }
+      };
     case GET_UPDATE_CUSTOMER_SUCCESS:    
       const newCustomers = state.customers.map(item => {
         if (item.id === action.payload.id)
@@ -77,31 +76,31 @@ function customersReducer(state = {}, action) {
         ...state,
         loadingCustomers: false,
         customers: [ ...newCustomers ],
-      }
+      };
     case GET_UPDATE_CUSTOMER_ERROR:
       return {
         ...state,
         loadingCustomers: false,        
-      }
+      };
     case REQUEST_DELETE_CUSTOMER:
       return {
         ...state,
         loadingCustomers: true,
-      }
+      };
     case GET_DELETE_CUSTOMER_SUCCESS:
       return {
         ...state,
         loadingCustomers: false,
         customers: state.customers.filter(item => item.id !== action.payload)
-      }
+      };
     case GET_DELETE_CUSTOMER_ERROR: 
       return {
         ...state,
         loadingCustomers: false,
-      }
+      };
     default:
       return state;
   }
-}
+};
 
 export default customersReducer;

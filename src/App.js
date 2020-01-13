@@ -1,30 +1,17 @@
-import React, { useState, useReducer, useEffect } from "react";
-import * as Sentry from '@sentry/browser';
-
+import React, { useReducer, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 
 import RoutesTree from "./routing/RoutesTree";
 import Sidebar from "./components/layout/Sidebar";
 import LayoutWrapper from "./components/layout/LayoutWrapper";
 import LayoutSection from "./components/layout/LayoutSection";
-import {
-  AppReducerContext,
-  reducer,
-  initialState
-} from "./contexts/AppReducerContext";
-import setAuthToken from './utils/setAuthToken';
-import LoginPage from "./pages/LoginPage";
+import { AppReducerContext, reducer, initialState } from "./contexts/AppReducerContext";
+import setAuthToken from "./utils/setAuthToken";
 import CalendarPage from "./pages/CalendarPage";
+import CONFIG from "./config";
+import { GET_USER_SUCCESS, AUTH_ERROR } from "./reducers/actionType";
 
-import CONFIG from './config';
-
-import { 
-  GET_USER_SUCCESS,
-  AUTH_ERROR
-} from "./reducers/actionType";
-
-// Sentry.init({dsn: CONFIG.SENTRY_DSN});
 axios.defaults.baseURL = CONFIG.API_URL;
 
 if (localStorage.token) {
@@ -42,21 +29,20 @@ const App = props => {
 
     const getUser = async () => {      
       try {
-        const res = await axios.get('/auth/me');
+        const res = await axios.get("/auth/me");
         dispatch({
           type: GET_USER_SUCCESS,
           payload: res.data
-        })
+        });
       } catch (err) {
         dispatch({
           type: AUTH_ERROR
-        })
+        });
       }
     }
     
     if (localStorage.token)
       getUser();
-
   }, [])
 
   return (

@@ -1,6 +1,4 @@
-import {
-  convertQuoteToInvoice
-} from "../models/bookings";
+import { convertQuoteToInvoice } from "../models/bookings";
 
 import {
   REQUSET_ADD_BOOKING,
@@ -56,34 +54,34 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadBooking: true,
-      }
+      };
     case CLEAR_BOOKING_DATA:
       return {
         ...state,
         quotes: "",
         invoices: "",
-      }
+      };
     case GET_BOOKINGS_SUCCESS:
       const newBookings = action.payload.map(item => {
         if(item.slots)
           item.slots = JSON.parse(item.slots);
         return item;
-      })
+      });
       return {
         ...state,
         loadBooking: false,
         bookings: [ ...newBookings ]
-      }
+      };
     case GET_BOOKINGS_ERROR:
       return {
         ...state,
         loadBooking: false,
-      }
+      };
     case REQUSET_ADD_BOOKING:
       return {
         ...state,
         loadBookingAction: true,
-      }
+      };
     case GET_ADD_BOOKING_SUCCESS:
       const newBookingss = action.payload;
       if(newBookingss.slots)
@@ -92,18 +90,18 @@ function bookingsReducer(state, action) {
         ...state,
         loadBookingAction: false,
         bookings: [ ...state.bookings, newBookingss ]
-      }
+      };
     case GET_ADD_BOOKING_ERROR:
       return {
         ...state,
         loadBookingAction: false,
         bookings: [],
-      }
+      };
     case REQUEST_UPDATE_BOOKING:
       return {
         ...state,
         loadBookingAction: true,
-      }
+      };
     case GET_UPDATE_BOOKING_SUCCESS:
       return {
         ...state,
@@ -114,50 +112,50 @@ function bookingsReducer(state, action) {
           }
           else return item;
         })
-      }
+      };
     case GET_UPDATE_BOOKIG_ERROR:
       return {
         ...state,
         loadBookingAction: false,
-      }
+      };
     case REQUEST_DELETE_BOOKING:
       return {
         ...state,
         loadBookingAction: true,
-      }
+      };
     case GET_DELETE_BOOKING_SUCCESS:
       return {
         ...state,
         loadBookingAction: false,
         bookings: state.bookings.filter(item => item.id !== action.payload)
-      }
+      };
     case GET_DELETE_BOOKING_ERROR:
       return {
         ...state,
         loadBookingAction: false,
-      }
+      };
     case REQUEST_GET_BOOKING_BOOKINGSTATUS:
       return {
         ...state,
         loadBooking: true,
-      }
+      };
     case GET_BOOKING_BOOKINGSTATUS_SUCCESS:
       return {
         ...state,
         // loadBooking: false,
         bookingStatus: [ ...action.payload ]
-      }
+      };
     case GET_BOOKING_BOOKINGSATTUS_ERROR:
       return {
         ...state,
         loadBooking: false,
-      }    
+      };
     // QUOTES
     case REQUEST_GET_BOOKING_QUOTE:
       return {
         ...state,
         loadingQuotes: true,
-      }
+      };
     case GET_BOOKING_QUOTE_SUCCESS:
       return {
         ...state,
@@ -167,17 +165,17 @@ function bookingsReducer(state, action) {
           item.costItems = JSON.parse(item.costItems);
           return item;
         })
-      }
+      };
     case GET_BOOKING_QUOTE_ERROR:
       return {
         ...state,
         loadingQuotes: false,
-      }
+      };
     case REQUEST_CREATE_BOOKING_QUOTE:
       return {
         ...state,
         loadingQuotes: true,
-      }
+      };
     case GET_CREATE_BOOKING_QUOTE_SUCCESS:
       return {
         ...state,
@@ -190,17 +188,17 @@ function bookingsReducer(state, action) {
             costItems: JSON.parse(action.payload.costItems),
           }
         ]        
-      }
+      };
     case GET_CREATE_BOOKING_QUOTE_ERROR:
       return {
         ...state,
         loadingQuotes: false,
-      }
+      };
     case REQUEST_UPDATE_BOOKING_QUOTE:
       return {
         ...state,
         loadingQuotes: true,
-      }
+      };
     case UPDATE_BOOKING_QUOTE_SUCCESS:
       return {
         ...state,
@@ -212,33 +210,33 @@ function bookingsReducer(state, action) {
                 ...action.payload,
                 slots: JSON.parse(action.payload.slots),
                 costItems: JSON.parse(action.payload.costItems),
-              }
+              };
             }
             return item;
           })
         ]
-      }
+      };
     case UPDATE_BOOKING_QUOTE_ERROR:
       return {
         ...state,
         loadingQuotes: false,
-      }
+      };
     case REQUEST_DELETE_BOOKING_QUOTE:
       return {
         ...state,
         loadingQuotes: true,
-      }
+      };
     case DELETE_BOOKING_QUOTE_SUCCESS:
       return {
         ...state,
         quotes: state.quotes.filter(item => item.id !== action.payload),
         loadingQuotes: false,
-      }
+      };
     case DELETE_BOOKING_QUOTE_ERROR:
       return {
         ...state,
         loadingQuotes: false,
-      }
+      };
     case REQUEST_CONVERT_QUOTE_INVOICE: {
       const newState = Array.from(state);
       const booking = newState.find(booking => booking.id === action.booking);
@@ -260,13 +258,13 @@ function bookingsReducer(state, action) {
           }
           return item;
         })
-      }
+      };
     }
     case REQUEST_DELETE_INVOICE: {
       return {
         ...state,
         invoices: state.invoices.filter((item, nIndex) => nIndex !== action.index)
-      }
+      };
     }
     // INVOICES
     case REQUEST_UPDATE_INVOICE: {
@@ -287,7 +285,7 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadingInvoice: true,
-      }
+      };
     case GET_BOOKING_INVOICE_SUCCESS:
       return {
         ...state,
@@ -297,17 +295,17 @@ function bookingsReducer(state, action) {
           item.costItems = item.cost_items && JSON.parse(item.cost_items);
           return item;
         })
-      }
+      };
     case GET_BOOKING_INVOICE_ERROR:
       return {
         ...state,
         loadingInvoice: false,
-      }
+      };
     case REQUEST_CREATE_BOOKING_INVOICE:
       return {
         ...state,
         loadingInvoice: true,
-      }
+      };
     case GET_CREATE_BOOKING_INVOICE_SUCCESS:
       const invoices = state.invoices;
       const newInvoice = action.payload;
@@ -315,7 +313,7 @@ function bookingsReducer(state, action) {
       newInvoice.BookingId = parseInt(newInvoice.BookingId);
       newInvoice.slots = newInvoice.slots && JSON.parse(newInvoice.slots);
       newInvoice.costItems = newInvoice.cost_items && JSON.parse(newInvoice.cost_items);
-      invoices.push(newInvoice)
+      invoices.push(newInvoice);
 
       return {
         ...state,
@@ -326,12 +324,12 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadingInvoice: false,
-      }
+      };
     case REQUEST_UPDATE_BOOKING_INVOICE:
       return {
         ...state,
         loadingInvoice: true,
-      }
+      };
     case UPDATE_BOOKING_INVOICE_SUCCESS:  
       return {
         ...state,
@@ -344,34 +342,32 @@ function bookingsReducer(state, action) {
           }
           return item;
         })
-      }
-
+      };
     case UPDATE_BOOKING_INVOICE_ERROR:
       return {
         ...state,
         loadingInvoice: false,
-      }
+      };
     case REQUEST_DELETE_BOOKING_INVOICE:
       return {
         ...state,
         loadingInvoice: true,
-      }
+      };
     case DELETE_BOOKING_INVOICE_SUCCESS:
       return {
         ...state,
         invoices: state.invoices.filter(item => item.id !== action.payload),
         loadingInvoice: false,
-      }
+      };
     case DELETE_BOOKING_INVOICE_ERROR:
       return {
         ...state,
         loadingInvoice: false,
-      }
-
+      };
     default: {
       return state;
     }
   }
-}
+};
 
 export default bookingsReducer;

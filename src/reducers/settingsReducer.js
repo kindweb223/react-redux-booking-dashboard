@@ -79,14 +79,14 @@ function settingsReducer(state = {}, action) {
         ...state,
         bookingStatusActionLoading: false,
         bookingStatuses: [ ...action.payload ],
-      }
+      };
     }
     // VENUES AND SPACES
     case REQUEST_GET_VENUE: {
       return {
         ...state,
         loading: true,
-      }
+      };
     }
     case GET_VENUE_SUCCESS: {
       return {
@@ -95,20 +95,20 @@ function settingsReducer(state = {}, action) {
         venues: [
           ...action.payload
         ]
-      }
+      };
     }
     case GET_VENUE_ERROR: {
       return {
         ...state,
         loading: false,
         venues: [],
-      }
+      };
     }
     case REQUEST_ADD_VENUE: {
       return {
         ...state,
         venueActionLoading: true,
-      }
+      };
     }
     case GET_ADD_VENUE_SUCCESS: {
       return {
@@ -118,38 +118,38 @@ function settingsReducer(state = {}, action) {
           ...state.venues,
           action.payload
         ]
-      }
+      };
     }
     case GET_ADD_VENUE_ERROR: {
       return {
         ...state,
         venueActionLoading: false,
-      }
+      };
     }
     case REQUEST_DELETE_VENUE: {
       return {
         ...state,
         venueActionLoading: true,
-      }
+      };
     }
     case GET_DELETE_VENUE_SUCCESS: {
       return {
         ...state,
         venueActionLoading: false,
         venues: [...state.venues.filter(item => item.id !== action.payload)]
-      }
+      };
     }
     case GET_DELETE_VENUE_ERROR: {
       return {
         ...state,
         venueActionLoading: false,
-      }
+      };
     }
     case REQUEST_EDIT_VENUE: {
       return {
         ...state,
         venueActionLoading: true,
-      }
+      };
     }
     case GET_EDIT_VENUE_SUCCESS: {
       return {
@@ -162,58 +162,58 @@ function settingsReducer(state = {}, action) {
             return item;
           })
         ]
-      }
+      };
     }
     case GET_EDIT_VENUE_ERROR: {
       return {
         ...state,
         venueActionLoading: false,
-      }
+      };
     }
     case REQUEST_GET_VENUE_SPACES: {
       return {
         ...state,
         spacesLoading: true,
-      }
+      };
     }
     case GET_VENUE_SPACES_SUCCESS: {
       return {
         ...state,
         spacesLoading: false,
         selectedVenueSpaces: [...action.payload]
-      }
+      };
     }
     case GET_VENUE_SPACES_ERROR: {
       return {
         ...state,
         spacesLoading: false,
         selectedVenueSpaces: [],
-      }
+      };
     }
     case REQUEST_ADD_VENUE_SPACE: {
       return {
         ...state,
         spaceActionLoading: true,
-      }
+      };
     }
     case GET_ADD_VENUE_SPACE_SUCCESS: {
       return {
         ...state,
         spaceActionLoading: false,
         selectedVenueSpaces: [...state.selectedVenueSpaces, action.payload]
-      }
+      };
     }
     case GET_ADD_VENUE_SPACE_ERROR: {
       return {
         ...state,
         spaceActionLoading: false,
-      }
+      };
     }
     case REQUEST_EDIT_VENUE_SPACE: {
       return {
         ...state,
         spaceActionLoading: true,
-      }
+      };
     }
     case GET_EDIT_VENUE_SPACE_SUCCESS: {
       return {
@@ -226,65 +226,65 @@ function settingsReducer(state = {}, action) {
             return item;
           })
         ]
-      }
+      };
     }
     case GET_EDIT_VENUE_SPACE_ERROR: {
       return {
         ...state,
         spaceActionLoading: false,
-      }
+      };
     }
     case REQUEST_DELETE_VENUE_SPACE: {
       return {
         ...state,
         spaceActionLoading: true,
-      }
+      };
     }
     case GET_DELETE_VENUE_SPACE_SUCCESS: {
       return {
         ...state,
         spaceActionLoading: false,
         selectedVenueSpaces: state.selectedVenueSpaces.filter(item => item.id !== action.payload)
-      }
+      };
     }
     case GET_DELETE_VENUE_SPACE_ERROR: {
       return {
         ...state,
         spaceActionLoading: false,
-      }
+      };
     }
     // BOOKING STATUS SECTION
     case REQUEST_GET_BOOKINGSTATUS: {
       return {
         ...state,
         bookingStatusesLoading: true,
-      }
+      };
     }
     case GET_BOOKING_STATUS_SUCCESS: {
       return {
         ...state,
         bookingStatusesLoading: false,
         bookingStatuses: [ ...action.payload ],
-      }
+      };
     }
     case GET_BOOKING_STATUS_ERROR: {
       return {
         ...state,
         bookingStatusesLoading: false,
         bookingStatuses: [],
-      }
+      };
     }
     case SET_BOOKING_STATUS_PAGE_STATUS: {
       return {
         ...state,
         enableBookingSection: action.payload,
-      }
+      };
     }
     case REQUEST_ADD_BOOKING_STATUS: {
       return {
         ...state,
         bookingStatusActionLoading: true,
-      }
+      };
     }
     case GET_ADD_BOOKING_STATUS_SUCCESS: {
       return {
@@ -297,19 +297,19 @@ function settingsReducer(state = {}, action) {
             else return item;
           })
         ]
-      }
+      };
     }
     case GET_ADD_BOOKING_STATUS_ERROR: {
       return {
         ...state,
         bookingStatusActionLoading: false,
-      }
+      };
     }
     case REQUEST_UPDATE_BOOKING_STATUS: {
       return {
         ...state,
         bookingStatusActionLoading: true,
-      }
+      };
     }
     case GET_UPDATE_BOOKING_STATUS_SUCCESS: {
       return {
@@ -322,58 +322,58 @@ function settingsReducer(state = {}, action) {
             else return item;
           })
         ]
-      }
+      };
     }
     case GET_UPDATE_BOOKING_STATUS_ERROR: {
       return {
         ...state,
         bookingStatusActionLoading: false,
-      }
+      };
     }
     case REQUEST_DELETE_BOOKING_STATUS: {
       return {
         ...state,
         bookingStatusActionLoading: true,
-      }
+      };
     }
     case GET_DELETE_BOOKING_STATUS_SUCCESS: {
       return {
         ...state,
         bookingStatusActionLoading: false,
         bookingStatuses: [...state.bookingStatuses.filter(item => item.id !== action.payload)]
-      }
+      };
     }
     case GET_DELETE_BOOKING_STATUS_ERROR: {
       return {
         ...state,
         bookingStatusActionLoading: false,
-      }    
+      };   
     }
     case REMOVE_NEW_BOOKING_STATUS: {
       return {
         ...state,
         bookingStatuses: [ ...state.bookingStatuses.filter(item => item.id !== -1)],
         enableBookingSection: true,
-      }
+      };
     }
     case REQUEST_GET_COMPANYINFO: {
       return {
         ...state,
         companyLoading: true,
-      }
+      };
     }
     case GET_COMPANYINFO_SUCCESS: {
       return {
         ...state,
         companyLoading: false,
         companyInfo: { ...action.payload },
-      }
+      };
     }
     case GET_COMPANYINFO_ERROR: {
       return {
         ...state,
         companyLoading: false,
-      }
+      };
     }
     default:
       return state;

@@ -8,21 +8,21 @@ function customBookingColorReducer(state = {}, action) {
       return {
         ...state,
         loading: true,
-      }
+      };
     case GET_CUSTOM_BOOKING_COLOR_SUCCESS:
       return {
         ...state,
         loading: false,
         bookingColors: [ ...action.payload ],
-      }
+      };
     case GET_CUSTOM_BOOKING_COLOR_ERROR:
       return {
         ...state,
         loading: false,
-      }
+      };
     default:
       return state;
   }
-}
+};
 
 export default customBookingColorReducer;

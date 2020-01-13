@@ -3,22 +3,15 @@ import styled from "styled-components";
 import colors from "../style/colors";
 import moment from "moment";
 import P2 from "../typography/P2";
-// import { AppReducerContext } from "../../contexts/AppReducerContext";
 
 const BookingRow = props => {
   const { booking, onClick } = props;
-
-  // const { state } = useContext(AppReducerContext);
-
-  // const venue = state.settings.venues.find(v => v.id === booking.venue);
-  // const space = venue.spaces.find(space => space.id === booking.space);
 
   const Container = styled.div`
     background: white;
     border: 1px solid #ddd;
     border-radius: 8px;
     margin-bottom: 1em;
-    overflow: hidden;
     :first-child {
       margin-top: 1em;
     }
@@ -110,25 +103,5 @@ function formatSlotsDatesForFooter(slots) {
 
   return res.join(", ");
 }
-
-/**
- * Formats the time in some slots for display in a short string.
- * @param {*} slots the slots of a booking
- */
-// function formatSlotsTimes(slots) {
-//   const timesSet = new Set();
-//   slots.forEach(slot => {
-//     // we use this day just to format the hour with moment
-//     const startDate = new Date(1992, 11, 29, slot.startHour, slot.startMinute);
-//     const endDate = new Date(1992, 11, 29, slot.endHour, slot.endMinute);
-//     timesSet.add(formatEventStartEndTime(startDate, endDate));
-//   });
-
-//   if (timesSet.size === 1) {
-//     return timesSet.values().next().value;
-//   } else {
-//     return "multiple";
-//   }
-// }
 
 export default BookingRow;

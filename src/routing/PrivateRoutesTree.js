@@ -1,6 +1,7 @@
-import React from 'react';
-import { Switch } from 'react-router-dom';
-import PrivateRoute from './PrivateRoute';
+import React from "react";
+import { Switch } from "react-router-dom";
+
+import PrivateRoute from "./PrivateRoute";
 
 import BookingsPage         from "../pages/BookingsPage";
 import CustomersPage        from "../pages/CustomersPage";
@@ -8,7 +9,7 @@ import SettingsPage         from "../pages/SettingsPage";
 import InvoicesPage         from "../pages/InvoicesPage";
 import CalendarPage         from "../pages/CalendarPage";
 import CreateStripeAccount  from "../pages/CreateStripeAccount";
-import DashboardPage        from "../pages/DashboardPage"
+import DashboardPage        from "../pages/DashboardPage";
 
 const Routes = () => {
 

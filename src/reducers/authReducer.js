@@ -31,7 +31,7 @@ function authReducer(state, action) {
         loading: false,
         isAuthenticated: false,
         user: {...action.payload},
-      }
+      };
     case GET_USER_SUCCESS:
       return {
         ...state,
@@ -41,14 +41,14 @@ function authReducer(state, action) {
           ...action.payload.user
         },
         token: localStorage.token,
-      }
+      };
     case AUTH_ERROR:
       return {
         ...state,
         loading: false,
         isAuthenticated: false,
         user: { email: "", password: ""}
-      }
+      };
     case SET_LOGOUT:
       localStorage.removeItem('token');
       setAuthToken(localStorage.token);
@@ -57,12 +57,12 @@ function authReducer(state, action) {
         loading: false,
         isAuthenticated: false,
         user: { email: "", password: ""}
-      }    
+      };
     case REQUEST_SAVE_PAYMENT_INFORMATION:
       return {
         ...state,
         loadingPayment: true,
-      }
+      };
     case SAVE_PAYMENT_INFORMATION_SUCCESS:
       return {
         ...state,
@@ -71,24 +71,23 @@ function authReducer(state, action) {
           ...state.user,
           stripe_public_key: action.public_key,
         }
-      }
+      };
     case SAVE_PAYMENT_INFORMATION_ERROR:
       return {
         ...state,
         loadingPayment: false,
-      }
-    case STRIPE_CONNECTION_SUCCESS: {
-      return  {
+      };
+    case STRIPE_CONNECTION_SUCCESS:
+      return {
         ...state,
         user: {
           ...state.user,
           stripe_status: action.payload,
         }
-      }
-    }
+      };
     default:
       return state;
   }
-}
+};
 
 export default authReducer;

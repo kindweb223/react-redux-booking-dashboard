@@ -1,22 +1,13 @@
-import React ,{ useEffect, useState, useContext } from 'react'
-import styled from "styled-components"
-import { Line } from 'react-chartjs-2'
+import React, { useEffect, useState, useContext } from "react";
+import styled from "styled-components";
+import { Line } from "react-chartjs-2";
 
-import {
-  getPanelDateRange,
-  getBookingWithDateRange,
-} from '../../../../utils/dashboard'
-
-import H1 from '../../../typography/H1'
-import colors from "../../../style/colors"
-
-import { AppReducerContext } from '../../../../contexts/AppReducerContext'
-
-import TopBanner from './topBanner'
-
-import {
-  DASHBOARD_RECENT_BOOKINGS_PANEL, LAST_7_DAYS, LAST_30_DAYS
-} from '../../../../constants'
+import { getPanelDateRange, getBookingWithDateRange } from "../../../../utils/dashboard";
+import H1 from "../../../typography/H1";
+import colors from "../../../style/colors";
+import { AppReducerContext } from "../../../../contexts/AppReducerContext";
+import TopBanner from "./TopBanner";
+import { DASHBOARD_RECENT_BOOKINGS_PANEL, LAST_7_DAYS, LAST_30_DAYS } from "../../../../constants";
 
 const PanelDiv = styled.div`
   display: flex;
@@ -26,16 +17,17 @@ const PanelDiv = styled.div`
   background-color: white;
   box-shadow: 0 5px 15px 5px rgba(164, 173, 186, 0.25);
   border-radius: 3px;
-`
+`;
+
 const TotalValue = styled(H1)`
   color: ${colors.dark};
   font-size: 3em;
   font-weight: 500;
-`
+`;
 
 const RecentBookingPanel = () => {
 
-  const { state, dispatch } = useContext(AppReducerContext);  
+  const { state } = useContext(AppReducerContext);  
 
   const [recentBookings, setRecentBookings] = useState({
     labels: [
@@ -43,34 +35,34 @@ const RecentBookingPanel = () => {
     ],
     datasets: [
       {
-        label: 'Bookings',
+        label: "Bookings",
         fill: false,
         lineTension: 0.1,
-        backgroundColor: 'rgba(75,192,192,0.4)',
-        borderColor: 'rgba(75,192,192,1)',
-        borderCapStyle: 'butt',
+        backgroundColor: "rgba(75,192,192,0.4)",
+        borderColor: "rgba(75,192,192,1)",
+        borderCapStyle: "butt",
         borderDash: [],
         borderDashOffset: 0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgba(75,192,192,1)',
-        pointBackgroundColor: 'rgba(75,192,192,1)',
+        borderJoinStyle: "miter",
+        pointBorderColor: "rgba(75,192,192,1)",
+        pointBackgroundColor: "rgba(75,192,192,1)",
         pointBorderWidth: 1,
         pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgba(255,255,255,255)',
-        pointHoverBorderColor: 'rgba(75,192,192,1)',
+        pointHoverBackgroundColor: "rgba(255,255,255,255)",
+        pointHoverBorderColor: "rgba(75,192,192,1)",
         pointHoverBorderWidth: 2,
         pointRadius: 4,
         pointHitRadius: 10,
         data: [0, 0, 0, 0, 0, 0, 0, 0]  
       },
     ],
-  })
+  });
 
   useEffect(() => {
     const bookingArray = getBookingWithDateRange(
       state.bookings.bookings, 
       state.dashboard.recentBookingsPeriod, 
-    )
+    );
 
     setRecentBookings({
       ...recentBookings,
@@ -81,16 +73,12 @@ const RecentBookingPanel = () => {
         {
           ...recentBookings.datasets[0],
           data: [...Object.keys(bookingArray).map(item => {
-            return bookingArray[item]
+            return bookingArray[item];
           })]
         }
       ]
-    })
-
-  }, [
-    state.dashboard.recentBookingsPeriod, 
-    state.bookings.bookings
-  ])
+    });
+  }, [state.dashboard.recentBookingsPeriod, state.bookings.bookings]);
 
   return (
     <PanelDiv>
@@ -114,7 +102,7 @@ const RecentBookingPanel = () => {
               {
                 ticks: {
                   min: 0,
-                  callback: function(value, index, values) {
+                  callback: function(value, _index) {
                       if (Math.floor(value) === value) {
                           return value;
                       }
@@ -126,7 +114,7 @@ const RecentBookingPanel = () => {
         }}
       />
     </PanelDiv>
-  )
-}
+  );
+};
 
-export default RecentBookingPanel
+export default RecentBookingPanel;

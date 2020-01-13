@@ -1,29 +1,18 @@
-import React ,{ useEffect, useState, useRef, useContext } from 'react'
+import React, { useEffect, useState, useRef, useContext } from "react";
 import ReactDOM from "react-dom";
-import styled from "styled-components"
+import styled from "styled-components";
 
-import colors from "../../../style/colors"
-
-import P2 from '../../../typography/P2'
-import { TablePicker } from '../../../tables/tables'
-import Button from '../../../buttons/Button'
-
-import { AppReducerContext } from '../../../../contexts/AppReducerContext'
-
-import { 
-  DASHBOARD_RECENT_BOOKINGS_PANEL,
-  DASHBOARD_UPCOMING_BOOKING_PANEL,
-} from '../../../../constants'
-
-import {
-  SET_RECENT_BOOKINGS_PERIOD,
-  SET_UPCOMING_BOOKINGS_PERIOD,
-} from '../../../../reducers/actionType'
+import colors from "../../../style/colors";
+import { TablePicker } from "../../../tables/tables";
+import Button from "../../../buttons/Button";
+import { AppReducerContext } from "../../../../contexts/AppReducerContext";
+import { DASHBOARD_RECENT_BOOKINGS_PANEL, DASHBOARD_UPCOMING_BOOKING_PANEL } from "../../../../constants";
+import { SET_RECENT_BOOKINGS_PERIOD, SET_UPCOMING_BOOKINGS_PERIOD } from "../../../../reducers/actionType";
 
 const Container = styled.div`
   position: relative;
   height: 28px;
-`
+`;
 
 const WrapperButton = styled.div`
   width: 38px;
@@ -42,7 +31,7 @@ const WrapperButton = styled.div`
   svg {
     width: 19px;
   }
-`
+`;
 
 const ViewDropDown = styled.div`
   position: absolute;
@@ -56,12 +45,12 @@ const ViewDropDown = styled.div`
   box-shadow: 0 5px 15px 5px rgba(164, 173, 186, 0.2);
   border-radius: 3px;
   border-color: #f7f7f8;
-`
+`;
 
 const ViewDropDownArrow = styled.span`
   &:before {
     display: block;
-    content: '';
+    content: "";
     border: 1px solid #eef0f2 ;
     position: absolute;
     height: 8px;
@@ -72,7 +61,7 @@ const ViewDropDownArrow = styled.span`
     right: 13.5px;
     top: calc(100% + 8px);
   }
-`
+`;
 
 const PanelDateSelector = ({
   panelKind,
@@ -80,24 +69,22 @@ const PanelDateSelector = ({
   selectedDate,
 }) => {
 
-  const { state, dispatch } = useContext(AppReducerContext)
+  const { dispatch } = useContext(AppReducerContext);
 
-  const [openDropDown, setOpenDropDown] = useState(false)
-  const [timePeriod, setTimePeriod] = useState(selectedDate)
-
-  useEffect(() => {
-    setTimePeriod(selectedDate)
-  }, [selectedDate])
+  const [openDropDown, setOpenDropDown] = useState(false);
+  const [timePeriod, setTimePeriod] = useState(selectedDate);
 
   const refOne = useRef(null);
 
   useEffect(() => {
+    setTimePeriod(selectedDate);
+
     const handleDocumentClick = event => {
       if (refOne.current) {
         if (!ReactDOM.findDOMNode(refOne.current).contains(event.target)) {
           if (openDropDown) {
-            setOpenDropDown(false)
-            setTimePeriod(selectedDate)
+            setOpenDropDown(false);
+            setTimePeriod(selectedDate);
           }
         }
       }
@@ -109,22 +96,22 @@ const PanelDateSelector = ({
       document.removeEventListener("click", handleDocumentClick, false);
     };
 
-  }, [refOne, openDropDown]);
+  }, [refOne, openDropDown, selectedDate]);
 
   const handleChangeTime = selectedOne => {
-    setTimePeriod(selectedOne)
-  }
+    setTimePeriod(selectedOne);
+  };
 
   const applyChanges = () => {
-    setOpenDropDown(false)
+    setOpenDropDown(false);
     setTimeout(() => {
       if (panelKind === DASHBOARD_RECENT_BOOKINGS_PANEL) {
-        dispatch({ type: SET_RECENT_BOOKINGS_PERIOD, payload: timePeriod })
+        dispatch({ type: SET_RECENT_BOOKINGS_PERIOD, payload: timePeriod });
       } else if (panelKind === DASHBOARD_UPCOMING_BOOKING_PANEL) {
-        dispatch({ type: SET_UPCOMING_BOOKINGS_PERIOD, payload: timePeriod })
+        dispatch({ type: SET_UPCOMING_BOOKINGS_PERIOD, payload: timePeriod });
       }
-    }, 1)    
-  }
+    }, 1);
+  };
   
   return (
     <Container ref={refOne}>
@@ -146,16 +133,16 @@ const PanelDateSelector = ({
                 options={timePeriodOptions}
                 selectedOption={timePeriod}
                 onOptionSelected={selectedOne => handleChangeTime(selectedOne)}
-                style={{width: '100%'}}
+                style={{width: "100%"}}
               />
-              <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '1em'}}>
+              <div style={{display: "flex", justifyContent: "space-between", marginTop: "1em"}}>
                 <Button 
-                  outline style={{width: '124px'}}
+                  outline style={{width: "124px"}}
                   onClick={() => setOpenDropDown(false)}
                 >
                   Cancel
                 </Button>
-                <Button primary style={{width: '124px'}} onClick={applyChanges}>
+                <Button primary style={{width: "124px"}} onClick={applyChanges}>
                   Apply Changes
                 </Button>
               </div>
@@ -164,7 +151,7 @@ const PanelDateSelector = ({
         )
       }      
     </Container>
-  )
-}
+  );
+};
 
-export default PanelDateSelector
+export default PanelDateSelector;

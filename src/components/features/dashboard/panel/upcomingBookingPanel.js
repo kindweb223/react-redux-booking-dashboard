@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { AppReducerContext } from "../../../../contexts/AppReducerContext";
 import H1 from "../../../typography/H1";
 import colors from "../../../style/colors";
-import TopBanner from "./topBanner";
+import TopBanner from "./TopBanner";
 import P2 from "../../../typography/P2";
 import BookingRow from "../../bookingRow";
 import { DASHBOARD_UPCOMING_BOOKING_PANEL, NEXT_7_DAYS, NEXT_30_DAYS } from "../../../../constants";
@@ -18,6 +18,8 @@ const PanelDiv = styled.div`
   background-color: white;
   box-shadow: 0 5px 15px 5px rgba(164, 173, 186, 0.25);
   border-radius: 3px;
+  max-height: 70vh;
+  overflow: hidden;
 `;
 
 const TotalValue = styled(H1)`
@@ -26,7 +28,11 @@ const TotalValue = styled(H1)`
   font-weight: 500;
 `;
 
-const BookingsList = styled.div``;
+const BookingsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+`;
 
 const UpcomingBookingPanel = () => {
 
@@ -34,12 +40,10 @@ const UpcomingBookingPanel = () => {
   const [ selectedBookings, setSelectedBookings ] = useState([]);
 
   useEffect(() => {
-    debugger;
     const newFiltered = state.bookings.bookings.filter(
       booking => isBookingWithDates(booking, startOfUpcomingWeek(), endOfUpcomingWeek())
     )
     setSelectedBookings([...newFiltered]);
-
   }, [
     state.dashboard.upcomingBookingPeriod, 
     state.bookings.bookings
@@ -53,7 +57,7 @@ const UpcomingBookingPanel = () => {
         timePeriods={[NEXT_7_DAYS, NEXT_30_DAYS]}
       />
       <TotalValue>
-        {/* {upcomingBookings.datasets[0].data.reduce((partial_sum, a) => partial_sum + a, 0)} booked */}
+        {selectedBookings && selectedBookings.length} booked
       </TotalValue>
       <BookingsList>
         {selectedBookings && selectedBookings.map(booking => (
@@ -69,7 +73,7 @@ const UpcomingBookingPanel = () => {
         )}
       </BookingsList>
     </PanelDiv>
-  )
+  );
 };
 
 export default UpcomingBookingPanel;
