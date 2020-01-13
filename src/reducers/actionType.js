@@ -48,6 +48,7 @@ export const APPEND_CUSTOM_STATUS = "Append new booking status";
 export const REMOVE_NEW_BOOKING_STATUS = "Remove appended new booking status";
 export const SET_BOOKING_STATUS_PAGE_STATUS = "Set booking status page status";
 export const UPDATE_ALL_BOOKINGSTATUS_SUCCESS = "Update all booking status";
+
 // Customer Actions
 export const REQUEST_GET_CUSTOMERS = "Request get customers";
 export const GET_CUSTOMERS_SUCCESS = "Get customers success";
@@ -103,7 +104,6 @@ export const REQUEST_DELETE_BOOKING_QUOTE = "Request delete bookig quote";
 export const DELETE_BOOKING_QUOTE_SUCCESS = "Delete booking quote success";
 export const DELETE_BOOKING_QUOTE_ERROR = "Delete booking quote error";
 
-
 // Booking Invoice
 export const REQUEST_GET_BOOKING_INVOICE = "Request get booking invoice";
 export const GET_BOOKING_INVOICE_SUCCESS = "Get booking invoice success";
@@ -117,47 +117,61 @@ export const UPDATE_BOOKING_INVOICE_ERROR = "Update booking invoice error";
 export const REQUEST_DELETE_BOOKING_INVOICE = "Request delete bookig invoice";
 export const DELETE_BOOKING_INVOICE_SUCCESS = "Delete booking invoice success";
 export const DELETE_BOOKING_INVOICE_ERROR = "Delete booking invoice error";
+export const REQUEST_CONVERT_QUOTE_INVOICE = "Request convert quote to invoice";
 
 export const CLEAR_BOOKING_DATA = "CLEAR BOOKING DATA";
 
 // Payment Action Type
-export const REQUEST_SAVE_PAYMENT_INFORMATION = 'Request save user payment information';
-export const SAVE_PAYMENT_INFORMATION_SUCCESS = 'Save user payment information success';
-export const SAVE_PAYMENT_INFORMATION_ERROR   = 'Save user payment information error';
-export const STRIPE_CONNECTION_SUCCESS        = 'Set User Stripe connection status';
+export const REQUEST_SAVE_PAYMENT_INFORMATION = "Request save user payment information";
+export const SAVE_PAYMENT_INFORMATION_SUCCESS = "Save user payment information success";
+export const SAVE_PAYMENT_INFORMATION_ERROR   = "Save user payment information error";
+export const STRIPE_CONNECTION_SUCCESS        = "Set User Stripe connection status";
 
 // Custom Booking Color Types
-export const REQUEST_GET_CUSTOM_BOOKING_COLOR   = 'Request get custom booking color settings'
-export const GET_CUSTOM_BOOKING_COLOR_SUCCESS   = 'Get custom booking color setting success'
-export const GET_CUSTOM_BOOKING_COLOR_ERROR     = 'Get custom booking color setting error'
+export const REQUEST_GET_CUSTOM_BOOKING_COLOR   = "Request get custom booking color settings";
+export const GET_CUSTOM_BOOKING_COLOR_SUCCESS   = "Get custom booking color setting success";
+export const GET_CUSTOM_BOOKING_COLOR_ERROR     = "Get custom booking color setting error";
 
 // Create Views for Calendar
-export const REQUEST_GET_CALENDAR_CUSTOM_VIEW     = 'Request get calendar custom views'
-export const GET_CALENDAR_CUSTOM_VIEW_SUCCESS     = 'Get calendar custom views success'
-export const GET_CALENDAR_CUSTOM_VIEW_ERROR       = 'Get calendar custom views error'
-export const REQUEST_CREATE_CALENDAR_CUSTOM_VIEW  = 'Request create calendar custom view'
-export const CREATE_CALENDAR_CUSTOM_VIEW_SUCCESS  = 'Create calendar custom view success'
-export const CREATE_CALENDAR_CUSTOM_VIEW_ERROR    = 'Create calendar custom view error'
-export const REQUSET_UPDATE_CALENDAR_CUSTOM_VIEW  = 'Request update calendar custom view success'
-export const UPDATE_CALENDAR_CUSTOM_VIEW_SUCCESS  = 'Update calendar custom view success'
-export const UPDATE_CALENDAR_CUSTOM_VIEW_ERROR    = 'Update calendar custom view error'
-export const REQUEST_GET_USERS_ALL_SPACES         = 'Request get all spaces of logged in user'
-export const GET_USERS_ALL_SPACES_SUCCESS         = 'Get all spaces of login user success'
-export const GET_USERS_ALL_SPACES_ERROR           = 'Get all spaces of login user error'
-export const SET_CURRENT_CALENDAR_VIEW            = 'Set current calendar view'
+export const REQUEST_GET_CALENDAR_CUSTOM_VIEW     = "Request get calendar custom views";
+export const GET_CALENDAR_CUSTOM_VIEW_SUCCESS     = "Get calendar custom views success";
+export const GET_CALENDAR_CUSTOM_VIEW_ERROR       = "Get calendar custom views error";
+export const REQUEST_CREATE_CALENDAR_CUSTOM_VIEW  = "Request create calendar custom view";
+export const CREATE_CALENDAR_CUSTOM_VIEW_SUCCESS  = "Create calendar custom view success";
+export const CREATE_CALENDAR_CUSTOM_VIEW_ERROR    = "Create calendar custom view error";
+export const REQUSET_UPDATE_CALENDAR_CUSTOM_VIEW  = "Request update calendar custom view success";
+export const UPDATE_CALENDAR_CUSTOM_VIEW_SUCCESS  = "Update calendar custom view success";
+export const UPDATE_CALENDAR_CUSTOM_VIEW_ERROR    = "Update calendar custom view error";
+export const REQUEST_GET_USERS_ALL_SPACES         = "Request get all spaces of logged in user";
+export const GET_USERS_ALL_SPACES_SUCCESS         = "Get all spaces of login user success";
+export const GET_USERS_ALL_SPACES_ERROR           = "Get all spaces of login user error";
+export const SET_CURRENT_CALENDAR_VIEW            = "Set current calendar view";
 
 // Calendar Setting Types
-export const GET_CALENDAR_SETTING_SUCCESS         = 'Get calendar setting success'
-export const GET_CALENDAR_SETTING_ERROR           = 'Get calendar setting error'
-export const REQUEST_SAVE_CALENDAR_SETTING        = 'Request save calendar setting'
-export const SAVE_CALENDAR_SETTING_SUCCESS        = 'Save calendar setting success'
-export const SAVE_CALENDAR_SETTING_ERROR          = 'Save calendar setting error'
-export const CREATE_CALENDAR_SETTING_SUCCESS      = 'Create calendar setting success'
-export const CREATE_CALENDAR_SETTING_ERROR        = 'Create calendar setting error'
-export const UPDATE_CALENDAR_SETTING_SUCCESS      = 'Update calendar setting success'
-export const UPDATE_CALENDAR_SETTING_ERROR        = 'Update calendar setting error'
-export const SET_CALENDAR_SETTING_DATA            = 'Set calendar Setting';
+export const GET_CALENDAR_SETTING_SUCCESS         = "Get calendar setting success";
+export const GET_CALENDAR_SETTING_ERROR           = "Get calendar setting error";
+export const REQUEST_SAVE_CALENDAR_SETTING        = "Request save calendar setting";
+export const SAVE_CALENDAR_SETTING_SUCCESS        = "Save calendar setting success";
+export const SAVE_CALENDAR_SETTING_ERROR          = "Save calendar setting error";
+export const CREATE_CALENDAR_SETTING_SUCCESS      = "Create calendar setting success";
+export const CREATE_CALENDAR_SETTING_ERROR        = "Create calendar setting error";
+export const UPDATE_CALENDAR_SETTING_SUCCESS      = "Update calendar setting success";
+export const UPDATE_CALENDAR_SETTING_ERROR        = "Update calendar setting error";
+export const SET_CALENDAR_SETTING_DATA            = "Set calendar Setting";
 
 // Dashboard Types
-export const SET_RECENT_BOOKINGS_PERIOD              = 'Set Dashboard Recent Bookings Period';
-export const SET_UPCOMING_BOOKINGS_PERIOD          = 'Set Upcoming booking period';
+export const SET_RECENT_BOOKINGS_PERIOD            = "Set Dashboard Recent Bookings Period";
+export const SET_UPCOMING_BOOKINGS_PERIOD          = "Set Upcoming booking period";
+
+// Auth Action Types
+export const GET_LOGIN_SUCCESS                     = "Get login success";
+export const GET_LOGIN_ERROR                       = "Get login error";
+export const GET_USER_SUCCESS                      = "Get user success";
+export const AUTH_ERROR                            = "Auth error";
+export const SET_LOGOUT                            = "Set logout";
+
+// Invoice Action Types
+export const UPDATE_INVOICE_STATUS = "Update invoice status";
+export const REQUEST_DELETE_INVOICE = "Request delete invoice";
+export const REQUEST_UPDATE_INVOICE = "Request update invoice";
+export const REQUEST_APPEND_INVOICE = "Request append invoice";

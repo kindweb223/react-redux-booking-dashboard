@@ -19,6 +19,11 @@ import CalendarPage from "./pages/CalendarPage";
 
 import CONFIG from './config';
 
+import { 
+  GET_USER_SUCCESS,
+  AUTH_ERROR
+} from "./reducers/actionType";
+
 // Sentry.init({dsn: CONFIG.SENTRY_DSN});
 axios.defaults.baseURL = CONFIG.API_URL;
 
@@ -39,12 +44,12 @@ const App = props => {
       try {
         const res = await axios.get('/auth/me');
         dispatch({
-          type: 'user_load_success',
+          type: GET_USER_SUCCESS,
           payload: res.data
         })
       } catch (err) {
         dispatch({
-          type: 'auth_error'
+          type: AUTH_ERROR
         })
       }
     }

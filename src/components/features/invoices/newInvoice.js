@@ -1,7 +1,10 @@
 import React, { useContext } from "react";
 import InvoiceDetailEdit from "./invoiceDetailEdit";
 import { createEmptyInvoice } from "../../../models/bookings";
-import { AppReducerContext } from "../../../contexts/AppReducerContext";
+// import { AppReducerContext } from "../../../contexts/AppReducerContext";
+// import {
+//   REQUEST_APPEND_INVOICE
+// } from "../../../reducers/actionType";
 
 const NewInvoice = props => {
   const { booking, onEndEditing, invoiceNumber } = props;
@@ -14,7 +17,7 @@ const NewInvoice = props => {
       onEndEditing={(invoice, save) => {
         if (save) {
           // dispatch({
-          //   type: "append_invoice",
+          //   type: REQUEST_APPEND_INVOICE,
           //   booking: booking.id,
           //   invoice: invoice
           // });

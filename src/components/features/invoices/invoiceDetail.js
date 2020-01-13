@@ -25,6 +25,10 @@ import { AppReducerContext } from "../../../contexts/AppReducerContext";
 import { formatPercentage, formatCurrency } from "../../../utils/numbers";
 import { computeCostItemsSummary } from "../../../utils/costItemsMath";
 import InvoiceDetailEdit from "./invoiceDetailEdit";
+import {
+  UPDATE_INVOICE_STATUS,
+  // REQUEST_UPDATE_INVOICE
+} from "../../../reducers/actionType";
 
 const InvoiceDetail = props => {
   const { invoice: invoiceCoordinates, handleUpdate } = props;
@@ -59,7 +63,7 @@ const InvoiceDetail = props => {
         onEndEditing={(editedInvoice, save) => {
           if (save) {
             // dispatch({
-            //   type: "update_invoice",
+            //   type: REQUEST_UPDATE_INVOICE,
             //   ...invoiceCoordinates,
             //   invoice: editedInvoice
             // });
@@ -89,7 +93,7 @@ const InvoiceDetail = props => {
               selectedOption={invoice.status}
               onOptionSelected={opt => {
                 dispatch({
-                  type: "update_invoice_status",
+                  type: UPDATE_INVOICE_STATUS,
                   ...invoice.coordinates,
                   status: opt
                 });

@@ -569,8 +569,7 @@ const CalendarPage = props => {
             booking={createEmptyBooking()}
             onEndEditing={booking => {
               if (booking) {
-                handleClickSave(booking)
-                // dispatch({ type: "upsert_booking", booking: booking });
+                handleClickSave(booking);
               }
               setShowCreateBookingModal(false);
             }}

@@ -38,7 +38,9 @@ import {
   GET_CUSTOMERS_SUCCESS, REQUEST_DELETE_BOOKING_INVOICE, 
   REQUEST_UPDATE_BOOKING_INVOICE,
   UPDATE_BOOKING_INVOICE_ERROR, UPDATE_BOOKING_INVOICE_SUCCESS,
-  REQUEST_CREATE_BOOKING_INVOICE, GET_CREATE_BOOKING_INVOICE_SUCCESS, GET_CREATE_BOOKING_INVOICE_ERROR
+  REQUEST_CREATE_BOOKING_INVOICE, GET_CREATE_BOOKING_INVOICE_SUCCESS, GET_CREATE_BOOKING_INVOICE_ERROR,
+  UPDATE_INVOICE_STATUS,
+  REQUEST_DELETE_INVOICE
 } from "../reducers/actionType";
 import axios from "axios/index";
 
@@ -431,7 +433,7 @@ const InvoicesPage = () => {
                   selectedOption={invoice.status}
                   onOptionSelected={status => {
                     dispatch({
-                      type: "update_invoice_status",
+                      type: UPDATE_INVOICE_STATUS,
                       ...invoice.coordinates,
                       index: index,
                       status: status
@@ -457,7 +459,7 @@ const InvoicesPage = () => {
                   onItemSelected={item => {
                     handleDelete(invoice)
                     dispatch({
-                      type: "delete_invoice",
+                      type: REQUEST_DELETE_INVOICE,
                       ...invoice.coordinates,
                       invoice: item.id,
                       index: index

@@ -5,12 +5,17 @@ import {
   SAVE_PAYMENT_INFORMATION_SUCCESS,
   SAVE_PAYMENT_INFORMATION_ERROR,
   STRIPE_CONNECTION_SUCCESS,
+  GET_LOGIN_SUCCESS,
+  GET_LOGIN_ERROR,
+  GET_USER_SUCCESS,
+  AUTH_ERROR,
+  SET_LOGOUT
 } from "./actionType";
 
 function authReducer(state, action) {
   switch(action.type) {
     
-    case "get_login_success":
+    case GET_LOGIN_SUCCESS:
       localStorage.setItem('token', action.payload.token);
       setAuthToken(localStorage.token);
       return {
@@ -20,14 +25,14 @@ function authReducer(state, action) {
         user: {...action.payload.user},
         token: action.payload.token,
       };
-    case "get_login_error":
+    case GET_LOGIN_ERROR:
       return {
         ...state,
         loading: false,
         isAuthenticated: false,
         user: {...action.payload},
       }
-    case "user_load_success":
+    case GET_USER_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -37,14 +42,14 @@ function authReducer(state, action) {
         },
         token: localStorage.token,
       }
-    case "auth_error":
+    case AUTH_ERROR:
       return {
         ...state,
         loading: false,
         isAuthenticated: false,
         user: { email: "", password: ""}
       }
-    case "set_logout":
+    case SET_LOGOUT:
       localStorage.removeItem('token');
       setAuthToken(localStorage.token);
       return {

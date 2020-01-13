@@ -6,12 +6,12 @@ import authReducer                from "../reducers/authReducer";
 import customBookingColorReducer  from "../reducers/customBookingColorReducer";
 import calendarViewReducer        from "../reducers/calendarCustomViewReducer";
 import calendarSettingReducer     from "../reducers/calendarSettingReducer";
-import dashboardReducer           from  "../reducers/dashboardReducer";
+import dashboardReducer           from "../reducers/dashboardReducer";
 
 import {
   LAST_7_DAYS,
   NEXT_7_DAYS,
-} from '../constants'
+} from "../constants";
 
 const AppReducerContext = React.createContext(null);
 

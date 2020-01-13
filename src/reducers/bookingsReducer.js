@@ -1,10 +1,6 @@
 import {
-  createEmptyQuote,
-  createEmptyCostItem,
   convertQuoteToInvoice
 } from "../models/bookings";
-import { addDays } from "date-fns/esm";
-import { computeCostItemsSummary } from "../utils/costItemsMath";
 
 import {
   REQUSET_ADD_BOOKING,
@@ -47,9 +43,12 @@ import {
   REQUEST_GET_BOOKING_INVOICE,
   GET_BOOKING_INVOICE_SUCCESS,
   CLEAR_BOOKING_DATA,
+  REQUEST_CONVERT_QUOTE_INVOICE,
+  UPDATE_INVOICE_STATUS,
+  REQUEST_DELETE_INVOICE,
+  REQUEST_UPDATE_INVOICE,
+  REQUEST_APPEND_INVOICE
 } from "../reducers/actionType";
-
-let quoteBackup = null;
 
 function bookingsReducer(state, action) {
   switch (action.type) {
@@ -152,38 +151,7 @@ function bookingsReducer(state, action) {
       return {
         ...state,
         loadBooking: false,
-      }
-    case "upsert_booking": {
-      const newState = Array.from(state);
-
-      const existingBookingIndex = state.findIndex(
-        booking => booking.id === action.booking.id
-      );
-
-      if (existingBookingIndex !== -1) {
-        // update
-        newState[existingBookingIndex] = action.booking;
-      } else {
-        // insert
-        newState.push(action.booking);
-      }
-
-      return newState;
-    }
-    case "update_booking_status": {
-      const newState = Array.from(state);
-
-      const bookingIndex = state.findIndex(booking => booking.id === action.id);
-      newState[bookingIndex].status = action.status;
-
-      return newState;
-    }
-    case "delete_booking": {
-      const newState = Array.from(state);
-      newState.splice(action.index, 1);
-      return newState;
-    }
-
+      }    
     // QUOTES
     case REQUEST_GET_BOOKING_QUOTE:
       return {
@@ -271,7 +239,7 @@ function bookingsReducer(state, action) {
         ...state,
         loadingQuotes: false,
       }
-    case "convert_quote_to_invoice": {
+    case REQUEST_CONVERT_QUOTE_INVOICE: {
       const newState = Array.from(state);
       const booking = newState.find(booking => booking.id === action.booking);
       const quote = booking.quotes[action.quote];
@@ -282,29 +250,8 @@ function bookingsReducer(state, action) {
 
       return newState;
     }
-
-    case "quote_update_total": {
-      const quote = state.quotes[action.quote];
-      if (!quote)
-        return {
-          ...state,
-        }
-      else {
-        return {
-          ...state,
-          quotes: state.quotes.map((item, nIndex) => {
-            if (nIndex === action.quote) {
-              item.value = computeCostItemsSummary( item.costItems, item.discount )[2];
-            }
-            return item;
-          })
-        }
-      }
-    }
-
     // INVOICES
-
-    case "update_invoice_status": {
+    case UPDATE_INVOICE_STATUS: {
       return {
         ...state,
         invoices: state.invoices.map((item, nIndex) => {
@@ -315,24 +262,20 @@ function bookingsReducer(state, action) {
         })
       }
     }
-
-    case "delete_invoice": {
+    case REQUEST_DELETE_INVOICE: {
       return {
         ...state,
         invoices: state.invoices.filter((item, nIndex) => nIndex !== action.index)
       }
     }
-
     // INVOICES
-
-    case "update_invoice": {
+    case REQUEST_UPDATE_INVOICE: {
       const newState = Array.from(state);
       // const booking = newState.find(booking => booking.id === action.booking);
       // booking.invoices[action.index] = action.invoice;
       return newState;
     }
-
-    case "append_invoice": {
+    case REQUEST_APPEND_INVOICE: {
       let newInvoice = state.invoices;
       newInvoice.push(action.invoice);
       return {
@@ -340,7 +283,6 @@ function bookingsReducer(state, action) {
         invoices: newInvoice
       };
     }
-
     case REQUEST_GET_BOOKING_INVOICE:
       return {
         ...state,

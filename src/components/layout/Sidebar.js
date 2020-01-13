@@ -25,6 +25,10 @@ import CONFIG from "../../config";
 import setAuthToken from "../../utils/setAuthToken";
 import { AppReducerContext } from "../../contexts/AppReducerContext";
 
+import {
+  SET_LOGOUT
+} from "../../reducers/actionType";
+
 const Container = styled.div`
   ${LayoutBlock};
   position: sticky;
@@ -107,10 +111,10 @@ const Sidebar = props => {
 
   const logout = () => {
     setAuthToken("");
-    dispatch({type: 'set_logout'});
+    dispatch({type: SET_LOGOUT});
     setTimeout(() => {
       window.location.replace(CONFIG.BASE_URL);
-    }, 100)    
+    }, 100)
   }
 
   const login = () => {

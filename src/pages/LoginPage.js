@@ -7,11 +7,15 @@ import SpinnerContainer from '../components/layout/Spinner';
 import styled from "styled-components";
 import "../css/validate.css";
 import CONFIG from "../config";
-import { CALENDAR_REDIRECT_VALUE } from "../constants"
 
 import {
   AppReducerContext,
 } from "../contexts/AppReducerContext";
+
+import {
+  GET_LOGIN_SUCCESS,
+  GET_LOGIN_ERROR
+} from "../reducers/actionType";
 
 const LoginPage = props => {
 
@@ -70,7 +74,7 @@ const LoginPage = props => {
             
             if (res.data.success) {
               dispatch({
-                type: 'get_login_success',
+                type: GET_LOGIN_SUCCESS,
                 payload: {...res.data},
               })
             }
@@ -92,7 +96,7 @@ const LoginPage = props => {
 
           } catch (err) {
             dispatch({
-              type: 'get_login_error',
+              type: GET_LOGIN_ERROR,
               payload: {...values},
             })
             window.location.replace(CONFIG.BASE_URL);

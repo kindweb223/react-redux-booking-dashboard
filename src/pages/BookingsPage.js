@@ -236,10 +236,6 @@ const BookingsPage = props => {
         dispatch({ type: GET_UPDATE_BOOKIG_ERROR});
       }
     }
-
-    // if (booking) {
-    //   dispatch({ type: "upsert_booking", booking: booking });
-    // }
   }
 
 
@@ -294,12 +290,7 @@ const BookingsPage = props => {
 
     } catch(err) {
       dispatch({ type: GET_UPDATE_BOOKIG_ERROR })
-    }
-    // dispatch({
-    //   type: "update_booking_status",
-    //   id: booking.id,
-    //   status: status
-    // })
+    }    
   }
 
   const getBookingStatusColor = (selectedBooking) => {

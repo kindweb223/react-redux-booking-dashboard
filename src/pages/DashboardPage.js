@@ -15,7 +15,7 @@ import H3 from '../components/typography/H3'
 import P2 from '../components/typography/P2'
 
 import RecentBookingPanel from '../components/features/dashboard/panel/recentBookingPanel'
-import UpcomingBookingPanel from '../components/features/dashboard/panel/upcomingBookingPanel'
+import UpcomingBookingPanel from '../components/features/dashboard/panel/UpcomingBookingPanel'
 import TopVenueTable from '../components/features/dashboard/panel/topVenueTable'
 import TopStaffTable from '../components/features/dashboard/panel/topStaffTable'
 

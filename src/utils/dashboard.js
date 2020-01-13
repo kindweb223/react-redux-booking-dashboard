@@ -43,7 +43,6 @@ const getPanelDateRange = dateRange => {
 }
 
 const getBookingWithDateRange = (bookings, period) => { 
-  debugger;   
   let filteredOne = []
   let maxBooking = {id: -1, name: "", count: 0}
   const current = new moment();
