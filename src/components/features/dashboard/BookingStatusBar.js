@@ -29,7 +29,6 @@ const StatusBarDiv = styled.div`
   background: #F2F5F7;
   cursor: pointer;
   border-radius: 0 4px 4px 0;
-  margin-left: -10px;  
   min-height: 60px;
 `
 
