@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { withRouter } from "react-router-dom";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
-import colors from "../style/colors.js";
+import colors from "../style/Colors.js";
 import Button from "../buttons/Button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';

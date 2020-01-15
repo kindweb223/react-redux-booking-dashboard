@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import axios from "axios";
+import styled from "styled-components";
 
 import { AppReducerContext } from "../contexts/AppReducerContext";
 import Grid from "../components/layout/Grid";
@@ -8,17 +9,32 @@ import RecentBookingPanel from "../components/features/dashboard/panel/RecentBoo
 import UpcomingBookingPanel from "../components/features/dashboard/panel/UpcomingBookingPanel";
 // import TopVenueTable from "../components/features/dashboard/panel/TopVenueTable"
 // import TopStaffTable from "../components/features/dashboard/panel/TopStaffTable"
+import BigTabbedFilter from "../components/features/BigTabbedFilter";
 
 import { 
   REQUEST_GET_BOOKINGS, 
   GET_BOOKINGS_SUCCESS, 
-  GET_BOOKINGS_ERROR
+  GET_BOOKINGS_ERROR,
+  REQUEST_GET_BOOKING_BOOKINGSTATUS,
+  GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+  GET_BOOKING_BOOKINGSATTUS_ERROR
 } from "../reducers/actionType";
+import { helpers } from "chart.js";
 
+const TabDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1em;
+  background-color: white;
+  box-shadow: 0 5px 15px 5px rgba(164, 173, 186, 0.25);
+  border-radius: 3px;
+  margin-top: 3em
+`;
 
 const DashboardPage = () => {
 
-  const { dispatch } = useContext(AppReducerContext);
+  const { state, dispatch } = useContext(AppReducerContext);
 
   useEffect(() => {
     const getBookings = async () => {
@@ -35,15 +51,38 @@ const DashboardPage = () => {
       }
     }
     getBookings();
+
+    const getBookingStatus = async () => {
+
+      try {
+        dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
+
+        const res = await axios.get('/statuses');
+
+        dispatch({
+          type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+          payload: res.data.statuses
+        });
+      } catch(err) {
+        dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
+      }
+
+    }
+    getBookingStatus();
   },[]);
 
   return (
-    <Grid columns="1fr 1fr" style={{ width: "100%"}}>
-      <RecentBookingPanel />
-      <UpcomingBookingPanel />      
-      {/* <TopVenueTable />
-      <TopStaffTable /> */}
-    </Grid>
+    <div>
+      <Grid columns="1fr 1fr" style={{ width: "100%"}}>
+        <RecentBookingPanel />
+        <UpcomingBookingPanel />
+        {/* <TopVenueTable />
+        <TopStaffTable /> */}
+      </Grid>
+      <TabDiv>
+        <BigTabbedFilter />
+      </TabDiv>
+    </div>
   );
 };
 

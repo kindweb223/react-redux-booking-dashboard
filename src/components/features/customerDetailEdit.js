@@ -4,7 +4,7 @@ import { css } from "emotion";
 import H3 from "../typography/H3";
 import Button from "../buttons/Button";
 import Grid from "../layout/Grid";
-import { TableEditableValue } from "../tables/tables";
+import { TableEditableValue } from "../tables/Tables";
 import { createEmptyCustomer } from "../../models/customers";
 import {
   ModalContainer,

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
-import colors from "../style/colors.js";
-import P2 from "../typography/P2.js";
+import colors from "../style/Colors";
+import P2 from "../typography/P2";
 import menuSvg from "../../images/Glyphs/menu.svg";
 import SvgButton from "./SvgButton";
 

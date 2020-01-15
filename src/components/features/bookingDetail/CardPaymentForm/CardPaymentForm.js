@@ -2,7 +2,7 @@ import React from "react"
 import { StripeProvider } from "react-stripe-elements"
 import Checkout from './Checkout'
 
-import { TableSectionHeader } from '../../../tables/tables'
+import { TableSectionHeader } from '../../../tables/Tables'
 import CONFIG from '../../../../config'
 
 const CardPaymentForm = ({

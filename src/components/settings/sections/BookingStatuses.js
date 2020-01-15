@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from 'axios';
+import axios from "axios";
 import { AppReducerContext } from "../../../contexts/AppReducerContext";
 import P2 from "../../typography/P2";
 import { css } from "emotion";
 import P1 from "../../typography/P1";
 import H5 from "../../typography/H5";
-import colors from "../../style/colors";
+import colors from "../../style/Colors";
 import ColoredDot from "../../buttons/ColoredDot";
 import InputField from "../../buttons/InputField";
 import Toggle from "../../buttons/Toggle";
@@ -98,7 +98,7 @@ const CustomStatusRow = props => {
   }
 
   const handleNameKeyPress = event => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       if (nameValue.length > 0) {
         onChangeName(nameValue, index);
         dispatch({ 
@@ -224,7 +224,7 @@ const BookingStatusesSettingsSection = props => {
 
       try {
         dispatch({ type: REQUEST_GET_BOOKINGSTATUS });
-        const res = await axios.get('/statuses');
+        const res = await axios.get("/statuses");
         
         dispatch({ 
           type: GET_BOOKING_STATUS_SUCCESS,
@@ -252,7 +252,7 @@ const BookingStatusesSettingsSection = props => {
       nIndex = result.destination.index-1;
 
     let newUpdateStatus = state.bookingStatuses[result.source.index];
-    if (state.bookingStatuses[nIndex].type === 'default')
+    if (state.bookingStatuses[nIndex].type === "default")
       newUpdateStatus.parentId = state.bookingStatuses[nIndex].name;
     else newUpdateStatus.parentId = state.bookingStatuses[nIndex].parentId;    
 
@@ -270,7 +270,7 @@ const BookingStatusesSettingsSection = props => {
 
     const config = {
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       }
     };
 
@@ -315,7 +315,7 @@ const BookingStatusesSettingsSection = props => {
 
     const config = {
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       }
     };
 
@@ -336,7 +336,7 @@ const BookingStatusesSettingsSection = props => {
         }
           
         const res = await axios.post(
-          './statuses', 
+          "./statuses", 
           JSON.stringify({
             name: nameValue,
             active, 
@@ -380,7 +380,7 @@ const BookingStatusesSettingsSection = props => {
     try {
       const config = {
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         }
       };
 

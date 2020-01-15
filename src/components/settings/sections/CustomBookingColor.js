@@ -1,25 +1,20 @@
-import React, {useState, useContext, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import useDebouncedCallback from "use-debounce/lib/useDebouncedCallback";
-import axios from 'axios';
+import axios from "axios";
 import styled from "styled-components";
 
-import colors from "../../style/colors";
+import colors from "../../style/Colors";
 import AddGlyph from "../../../images/Glyphs/AddGlyph";
 import CircleAddGlyph from "../../../images/Glyphs/CircleAddGlyph";
 import removeSvg from "../../../images/ui/remove.svg";
 import P2 from "../../typography/P2";
 import Button from "../../buttons/Button";
 import SpinnerContainer from "../../layout/Spinner";
-import { TablePicker, TableEditableValue } from "../../tables/tables";
+import { TablePicker, TableEditableValue } from "../../tables/Tables";
 import SvgButton from "../../buttons/SvgButton";
 
-import {
-  AppReducerContext,
-} from "../../../contexts/AppReducerContext";
-
-import { BOOKING_COLOR_CONDITION_KEYS, BOOKING_COLORS } from '../../../constants';
-
-import '../../../css/settings.css'
+import { BOOKING_COLOR_CONDITION_KEYS, BOOKING_COLORS } from "../../../constants";
+import "../../../css/settings.css";
 
 const ConditionContainer = styled.div`
   display: flex;
@@ -63,7 +58,7 @@ const StyledColorSpan = styled.span`
   background-color:${props => props.color};
   border-radius: 2px;
   margin: 0 auto;
-`
+`;
 
 const StyledP2 = styled(P2)`
   margin: 0;
@@ -76,9 +71,9 @@ const RemoveButton = styled(SvgButton)`
 
 const CustomBookingColorSection = () => {
 
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [conditionSettingId, setConditionSettingId] = useState(-1)
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [conditionSettingId, setConditionSettingId] = useState(-1);
   const [conditionSettings, setConditionSettings] = useState([
     {        
       color: BOOKING_COLORS[0],
@@ -92,39 +87,39 @@ const CustomBookingColorSection = () => {
         ]          
       ]
     }
-  ])
+  ]);
 
   useEffect(() => {
     const getCustomBookingColorInfo = async () => {
       try {        
-        const res = await axios.get('/bookingcolor')
+        const res = await axios.get("/bookingcolor");
         if (res.data.bookingColor) {
-          setConditionSettingId(res.data.bookingColor.id)
-          setConditionSettings(JSON.parse(res.data.bookingColor.color))
+          setConditionSettingId(res.data.bookingColor.id);
+          setConditionSettings(JSON.parse(res.data.bookingColor.color));
         }
-        setLoading(false)
+        setLoading(false);
       } catch {
-
-        setLoading(false)
+        setLoading(false);
       }
     }
+
     getCustomBookingColorInfo();
-  }, [])
+  }, []);
 
   const saveConditions = async (conditions) => {
     try {
       const config = {
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         }
       }
       setSaving(true);
       let res;
       if (conditionSettingId === -1) {
-        res = await axios.post('/bookingcolor', {color: JSON.stringify(conditions)}, config)
-        setConditionSettingId(res.data.bookingColor.id)
+        res = await axios.post("/bookingcolor", {color: JSON.stringify(conditions)}, config);
+        setConditionSettingId(res.data.bookingColor.id);
       } else {
-        res = await axios.put(`/bookingcolor/${conditionSettingId}`, {color: JSON.stringify(conditions)}, config)
+        res = await axios.put(`/bookingcolor/${conditionSettingId}`, {color: JSON.stringify(conditions)}, config);
       }
       setSaving(false);
     } catch (err) {
@@ -148,19 +143,19 @@ const CustomBookingColorSection = () => {
         ]
       }
     ]
-    setConditionSettings([ ...newOne ])
-    saveConditions(newOne)
+    setConditionSettings([ ...newOne ]);
+    saveConditions(newOne);
   }
 
   const getInitialConditionType = (condition_key) => {
-    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key)
+    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key);
     if (filterOne.length > 0)
       return filterOne[0].condition_types[0].value;
     else return "";
   }
 
   const getInitialConditionValue = (condition_key) => {
-    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key)
+    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key);
     if (filterOne.length > 0)
       return filterOne[0].condition_values[0].value;
     else return "";
@@ -168,15 +163,15 @@ const CustomBookingColorSection = () => {
 
   const getConditionKeyValues = () => {
     return BOOKING_COLOR_CONDITION_KEYS.map(item => {
-      return item.condition_key.value
+      return item.condition_key.value;
     })
   }
 
   const getConditionKeyLabel = (condition_key) => {
-    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value == condition_key)
+    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value == condition_key);
     if (filterOne.length > 0)
-      return filterOne[0].condition_key.label
-    return ""
+      return filterOne[0].condition_key.label;
+    return "";
   }
   
   const handleChangeContionKey = (condition_key, nKey, nKeyTwo, nIndex) => {    
@@ -184,57 +179,57 @@ const CustomBookingColorSection = () => {
     if( newOne[nKey].content[nKeyTwo][nIndex].condition_key === condition_key)
       return;
     newOne[nKey].content[nKeyTwo][nIndex].condition_key = condition_key;    
-    newOne[nKey].content[nKeyTwo][nIndex].condition_type = getInitialConditionType(condition_key)
-    if (condition_key === 'payment_status')
-      newOne[nKey].content[nKeyTwo][nIndex].condition_value = getInitialConditionValue(condition_key)
+    newOne[nKey].content[nKeyTwo][nIndex].condition_type = getInitialConditionType(condition_key);
+    if (condition_key === "payment_status")
+      newOne[nKey].content[nKeyTwo][nIndex].condition_value = getInitialConditionValue(condition_key);
     else 
-      newOne[nKey].content[nKeyTwo][nIndex].condition_value = ""
+      newOne[nKey].content[nKeyTwo][nIndex].condition_value = "";
       
-    setConditionSettings([ ...newOne ])
-    saveConditions(newOne)
+    setConditionSettings([ ...newOne ]);
+    saveConditions(newOne);
   }
 
   const getConditionTypeValues = (condition_key) => {
-    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key)
+    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key);
     if (filterOne.length > 0)
-      return filterOne[0].condition_types.map(itemOne => itemOne.value)
-    return []
+      return filterOne[0].condition_types.map(itemOne => itemOne.value);
+    return [];
   }
 
   const getConditionTypeLabel = (condition_key, condition_type) => {
-    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key)
+    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key);
     if (filterOne.length > 0) {
-      const filterTwo = filterOne[0].condition_types.filter(itemOne => itemOne.value === condition_type)
+      const filterTwo = filterOne[0].condition_types.filter(itemOne => itemOne.value === condition_type);
       if (filterTwo.length > 0)
-        return filterTwo[0].label
-      else return ""
+        return filterTwo[0].label;
+      else return "";
     } else
-      return ""
+      return "";
   }
 
   const handleChangeConditionTypes = (condition_type, nKey, nKeyTwo, nIndex) => {
     const newOne = [ ...conditionSettings];
     newOne[nKey].content[nKeyTwo][nIndex].condition_type = condition_type;
-    setConditionSettings([ ...newOne ])
-    saveConditions(newOne)
+    setConditionSettings([ ...newOne ]);
+    saveConditions(newOne);
   }
 
   const getConditionValuesValue = (condition_key) => {
-    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key)
+    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key);
     if (filterOne.length > 0)
-      return filterOne[0].condition_values.map(itemOne => itemOne.value)
-    return []
+      return filterOne[0].condition_values.map(itemOne => itemOne.value);
+    return [];
   }
 
   const getConditionValueLabel = (condition_key, condition_value) => {
-    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key)
+    const filterOne = BOOKING_COLOR_CONDITION_KEYS.filter(item => item.condition_key.value === condition_key);
     if (filterOne.length > 0) {
-      const filterTwo = filterOne[0].condition_values.filter(itemOne => itemOne.value === condition_value)
+      const filterTwo = filterOne[0].condition_values.filter(itemOne => itemOne.value === condition_value);
       if (filterTwo.length > 0)
-        return filterTwo[0].label
-      else return ""
+        return filterTwo[0].label;
+      else return "";
     } else 
-      return ""
+      return "";
   }
 
   const handleChnageConditionValue = (value, nKey, nKeyTwo, nIndex) => {
@@ -242,8 +237,8 @@ const CustomBookingColorSection = () => {
     if (newOne[nKey].content[nKeyTwo][nIndex].condition_value === value)
       return;
       newOne[nKey].content[nKeyTwo][nIndex].condition_value = value;
-    setConditionSettings([ ...newOne ])
-    saveConditions(newOne)
+    setConditionSettings([ ...newOne ]);
+    saveConditions(newOne);
   }
 
   const handleChangeConditionValueText = (value, nKey, nKeyTwo, nIndex) => {
@@ -251,26 +246,26 @@ const CustomBookingColorSection = () => {
     if (newOne[nKey].content[nKeyTwo][nIndex].condition_value === value)
       return;
     newOne[nKey].content[nKeyTwo][nIndex].condition_value = value;
-    setConditionSettings([ ...newOne ])
+    setConditionSettings([ ...newOne ]);
   }
 
   const [debouncedChangeConditionValue] = useDebouncedCallback((value, nKey, nKeyTwo, nIndex) => {
-    saveConditions(conditionSettings)
+    saveConditions(conditionSettings);
   }, 1000);
 
   const handleClickAdd = (nKey, nKeyTwo) => {
-    const newOne = [...conditionSettings]
+    const newOne = [...conditionSettings];
     newOne[nKey].content[nKeyTwo].push({
       condition_key: BOOKING_COLOR_CONDITION_KEYS[0].condition_key.value, 
       condition_type: BOOKING_COLOR_CONDITION_KEYS[0].condition_types[0].value,
       condition_value: BOOKING_COLOR_CONDITION_KEYS[0].condition_values[0].value,
-    })
-    setConditionSettings([ ...newOne ])
-    saveConditions(newOne)
+    });
+    setConditionSettings([ ...newOne ]);
+    saveConditions(newOne);
   }
 
   const handleClickOR = (nKey, nKeyTwo) => {
-    const newOne = [ ...conditionSettings ]
+    const newOne = [ ...conditionSettings ];
     newOne[nKey].content.push(
       [
         {
@@ -279,29 +274,29 @@ const CustomBookingColorSection = () => {
           condition_value: BOOKING_COLOR_CONDITION_KEYS[0].condition_values[0].value,
         }
       ]       
-    )
-    setConditionSettings([ ...newOne ])
-    saveConditions(newOne)
+    );
+    setConditionSettings([ ...newOne ]);
+    saveConditions(newOne);
   }
 
   const handleChangeBookingColor = (selColor, nKey) => {
-    const newOne = [ ...conditionSettings ]
+    const newOne = [ ...conditionSettings ];
     if (conditionSettings[nKey].color === selColor)
-      return
-      newOne[nKey].color = selColor
-    setConditionSettings([ ...newOne ])
-    saveConditions(newOne)
+      return;
+      newOne[nKey].color = selColor;
+    setConditionSettings([ ...newOne ]);
+    saveConditions(newOne);
   }
 
   const handleClickDeleteRow = (nKey, nKeyTwo, nIndex) => {
-    const newOne = [ ...conditionSettings ]
-    newOne[nKey].content[nKeyTwo].splice(nIndex, 1)
+    const newOne = [ ...conditionSettings ];
+    newOne[nKey].content[nKeyTwo].splice(nIndex, 1);
     if (newOne[nKey].content[nKeyTwo].length === 0)
-      newOne[nKey].content.splice(nKeyTwo, 1)
+      newOne[nKey].content.splice(nKeyTwo, 1);
     if (newOne[nKey].content.length === 0)
-      newOne.splice(nKey, 1)
-    setConditionSettings([ ...newOne ])
-    saveConditions(newOne)
+      newOne.splice(nKey, 1);
+    setConditionSettings([ ...newOne ]);
+    saveConditions(newOne);
   }
 
   return (
@@ -319,7 +314,7 @@ const CustomBookingColorSection = () => {
                   displayTransformer={
                     option => { return <StyledColorSpan key={option} color={option} /> }
                   }
-                  style={{marginLeft: '0.3em', marginRight: '0.3em'}}
+                  style={{marginLeft: "0.3em", marginRight: "0.3em"}}
                   selectedOption={itemOne.color}
                   onOptionSelected={selColor => handleChangeBookingColor(selColor, nKey)}
                 />
@@ -338,7 +333,7 @@ const CustomBookingColorSection = () => {
                             <TablePicker 
                               label=""
                               options={getConditionKeyValues()}
-                              style={{width: '100%'}}
+                              style={{width: "100%"}}
                               selectedOption={item.condition_key}                
                               displayTransformer={
                                 option => { return getConditionKeyLabel(option) }
@@ -350,7 +345,7 @@ const CustomBookingColorSection = () => {
                             <TablePicker 
                               label=""
                               options={getConditionTypeValues(item.condition_key)}
-                              style={{width: '100%'}}
+                              style={{width: "100%"}}
                               selectedOption={item.condition_type}                
                               displayTransformer={
                                 option => { return getConditionTypeLabel(item.condition_key, option) }
@@ -360,11 +355,11 @@ const CustomBookingColorSection = () => {
                           </ConditionItemDiv>
                           <ConditionItemDiv>
                             {
-                              item.condition_key === 'title' && (
+                              item.condition_key === "title" && (
                                 <TableEditableValue 
                                   label=""
                                   value={item.condition_value}
-                                  style={{width: '100%'}}
+                                  style={{width: "100%"}}
                                   onChange={value => {
                                     handleChangeConditionValueText(value, nKey, nKeyTwo, nIndex)
                                     debouncedChangeConditionValue(value, nKey, nKeyTwo, nIndex)
@@ -373,7 +368,7 @@ const CustomBookingColorSection = () => {
                               )
                             }
                             {
-                              (item.condition_key === 'payment_status' || item.condition_key === 'slot_type') && (
+                              (item.condition_key === "payment_status" || item.condition_key === "slot_type") && (
                                 <TablePicker
                                   label=""
                                   options={getConditionValuesValue(item.condition_key)}
@@ -381,7 +376,7 @@ const CustomBookingColorSection = () => {
                                     option => { return getConditionValueLabel(item.condition_key, option)}
                                   }
                                   selectedOption={item.condition_value}
-                                  style={{width: '100%'}}
+                                  style={{width: "100%"}}
                                   onOptionSelected={value => handleChnageConditionValue(value, nKey, nKeyTwo, nIndex)}
                                 />
                               )
@@ -437,7 +432,7 @@ const CustomBookingColorSection = () => {
         </Button>
       </Row>
     </div>
-  )
+  );
 }
 
 export default CustomBookingColorSection;

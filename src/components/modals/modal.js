@@ -2,7 +2,7 @@ import React from "react";
 import ReactModal from "react-modal";
 import SvgButton from "../buttons/SvgButton";
 import close from "../../images/ui/close.svg";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 
 const Modal = props => {
   const { width = null, onClose, children } = props;

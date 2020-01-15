@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import colors from "../style/colors.js";
-import P2 from "../typography/P2.js";
+import colors from "../style/Colors";
+import P2 from "../typography/P2";
 
 const loadingAni = keyframes`
   50% {

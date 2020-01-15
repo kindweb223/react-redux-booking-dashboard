@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChartArea } from '@fortawesome/free-solid-svg-icons'
 
-import colors from "../style/colors";
+import colors from "../style/Colors";
 import LayoutBlock from "../layout/LayoutBlock";
 import P1 from "../typography/P1";
 import SideCollapseRightSvg from "../../images/Glyphs/calendarExpand.svg";

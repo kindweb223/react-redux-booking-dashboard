@@ -12,7 +12,7 @@ import "../../css/calendar.css";
 import CalendarToolbar from "./calendarToolbar";
 import CalendarWeekHeader from "./calendarWeekHeader";
 import { formatEventStartEndTime } from "../../utils/dateFormatting";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 
 import { AppReducerContext } from "../../contexts/AppReducerContext";
 import axios from 'axios'

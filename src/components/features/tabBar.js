@@ -1,7 +1,7 @@
 import React from "react";
 import P1 from "../typography/P1";
 import styled from "styled-components";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 
 const TabBar = props => {
   const { items, selectedItem, onOptionSelected, itemsSideMargin = 0 } = props;

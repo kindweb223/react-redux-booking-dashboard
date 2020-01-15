@@ -4,11 +4,11 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy, faCode, faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { AppReducerContext } from "../contexts/AppReducerContext";
-import { Table, TableLabel } from "../components/tables/tables";
+import { Table, TableLabel } from "../components/tables/Tables";
 import InputField from "../components/buttons/InputField";
-import Modal from "../components/modals/modal";
+import Modal from "../components/modals/Modal";
 import { ModalContainer, ModalTopSection, ModalBottomSection, ModalTitleAndButtons } from '../components/modals/containers'
-import colors from "../components/style/colors"
+import colors from "../components/style/Colors"
 import Button from "../components/buttons/Button"
 import H3 from "../components/typography/H3"
 

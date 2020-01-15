@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 
 const P2 = styled.p`
   font-size: 0.9em;

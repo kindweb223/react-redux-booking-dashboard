@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 import LayoutBlock from "./LayoutBlock";
 
 const LayoutSectionWrapper = styled.div`

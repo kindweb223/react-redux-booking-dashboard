@@ -4,7 +4,7 @@ import { Line } from "react-chartjs-2";
 
 import { getPanelDateRange, getBookingWithDateRange } from "../../../../utils/dashboard";
 import H1 from "../../../typography/H1";
-import colors from "../../../style/colors";
+import colors from "../../../style/Colors";
 import { AppReducerContext } from "../../../../contexts/AppReducerContext";
 import TopBanner from "./TopBanner";
 import { DASHBOARD_RECENT_BOOKINGS_PANEL, LAST_7_DAYS, LAST_30_DAYS } from "../../../../constants";

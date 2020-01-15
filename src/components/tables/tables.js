@@ -3,7 +3,7 @@ import H5 from "../typography/H5";
 import P1 from "../typography/P1";
 import styled from "styled-components";
 import H4 from "../typography/H4";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 import Grid from "../layout/Grid";
 import InputField from "../buttons/InputField";
 import InputLabel from "../buttons/InputLabel";

@@ -3,7 +3,7 @@ import axios from 'axios';
 import styled from "styled-components";
 import H3 from "../../typography/H3";
 import TabBar from "../tabBar";
-import colors from "../../style/colors";
+import colors from "../../style/Colors";
 import Button from "../../buttons/Button";
 import PickerButton from "../../buttons/PickerButton";
 import BookingDetailEdit from "./bookingDetailEdit";

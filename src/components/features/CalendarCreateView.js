@@ -12,7 +12,7 @@ import {
 import H3 from '../typography/H3'
 import P2 from '../typography/P2'
 import Button from '../buttons/Button'
-import { TableEditableValue } from "../tables/tables";
+import { TableEditableValue } from "../tables/Tables";
 import SpinnerContainer from "../layout/Spinner";
 import SvgButton from "../buttons/SvgButton";
 import removeSvg from "../../images/ui/remove.svg";

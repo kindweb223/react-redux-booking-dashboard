@@ -1,21 +1,22 @@
-import React, { useEffect, useState, useCallback } from "react";
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { css } from "emotion";
-import Dropzone from 'react-dropzone'
+import Dropzone from "react-dropzone"
 import styled from "styled-components";
+
 import P2 from "../../typography/P2";
 import {
   TableEditableValue,
   TableDivider,
   TablePicker
-} from "../../tables/tables";
+} from "../../tables/Tables";
 import currencies from "../../../models/currencies";
 import Grid from "../../layout/Grid";
 import Button from "../../buttons/Button";
 import SpinnerContainer from "../../layout/Spinner";
-import InputLabel from '../../buttons/InputLabel';
+import InputLabel from "../../buttons/InputLabel";
 
-import CONFIG from '../../../config';
+import CONFIG from "../../../config";
 
 const DropzonContainer = styled.div`
   position: relative;
@@ -39,11 +40,12 @@ const DropzonContainer = styled.div`
       cursor: pointer;
     }
   }
+`;
 
-`
 const DropZoneDescription = styled.p`
   visibility: ${props => props.isVisible ? "visible" : "hidden"};
-`
+`;
+
 const SubdomainDiv = styled.div`
   display: flex;
   align-items: center;
@@ -52,7 +54,7 @@ const SubdomainDiv = styled.div`
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
-`
+`;
 
 const SubdomainUrl = styled.div`
   background-color: #93989F;
@@ -63,7 +65,7 @@ const SubdomainUrl = styled.div`
   height: 34px;
   display: flex;
   align-items: center;
-`
+`;
 
 const CompanyInfoSettingsSection = props => {
   const { state, dispatch } = props;
@@ -78,28 +80,28 @@ const CompanyInfoSettingsSection = props => {
     vatRate: "",
     logoImg: "",
     subdomain: "",
-  })
+  });
   const [ isNameValidate, setIsNameValidate ] = useState(true);
   const [ imageUploading, setImageUploading ] = useState(false);
   const [ companyLoading, setCompanyLoading ] = useState(false);
-  const [ validateSubdomain, setValidateSubdomain ] = useState({ validate: true, msg: ""})
-  const [ prevSubdomain, setPreSubdomain ] = useState("")
+  const [ validateSubdomain, setValidateSubdomain ] = useState({ validate: true, msg: ""});
+  const [ prevSubdomain, setPreSubdomain ] = useState("");
 
   useEffect(() => {    
 
     const getCompanyInfo = async () => {
       try {
-        setCompanyLoading(true)        
-        const res = await axios.get('/company');
+        setCompanyLoading(true);
+        const res = await axios.get("/company");
         if (res.data.company != null) {          
           setCompanyInfo({
             ...res.data.company,
           })
-          setPreSubdomain(res.data.company.subdomain)
+          setPreSubdomain(res.data.company.subdomain);
         }
-        setCompanyLoading(false)    
+        setCompanyLoading(false);
       } catch (err) {
-        setCompanyLoading(false)    
+        setCompanyLoading(false);
       }      
     }
     getCompanyInfo();
@@ -109,12 +111,12 @@ const CompanyInfoSettingsSection = props => {
     try {        
       const axios_config = {
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         }
       };
       
-      let saveOne = { ...companyInfo }
-      delete saveOne['subdomain']
+      let saveOne = { ...companyInfo };
+      delete saveOne["subdomain"];
 
       let res = {};
       if (companyInfo.id) {
@@ -139,22 +141,22 @@ const CompanyInfoSettingsSection = props => {
   }
 
   const changeCompanyInfo = (key, value) => {   
-    if (key === 'subdomain') {
+    if (key === "subdomain") {
       if (value.length === 0) {
         setValidateSubdomain({
           validate: false,
-          msg: 'Subdomain Required.'
+          msg: "Subdomain Required."
         })
       } else {
         setValidateSubdomain({
           validate: true,
-          msg: ''
+          msg: ""
         })
       }
     }
 
-    const companyOne = {...companyInfo}
-    companyOne[key] = value
+    const companyOne = {...companyInfo};
+    companyOne[key] = value;
     setCompanyInfo({
       ...companyOne
     })
@@ -174,23 +176,23 @@ const CompanyInfoSettingsSection = props => {
 
   const onDrop = async (acceptedFiles) => {
     let imageFormData = new FormData();
-    imageFormData.append('file', acceptedFiles[0])
+    imageFormData.append("file", acceptedFiles[0]);
 
     setImageUploading(true);
     const resUpload = await axios.post(
-      '/upload/image',
+      "/upload/image",
       imageFormData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          "Content-Type": "multipart/form-data"
         }
       }
     )
-    setImageUploading(false)
+    setImageUploading(false);
     setCompanyInfo({
       ...companyInfo,
       logoImg: resUpload.data.fileNames[0],
-    })
+    });
   }
 
   const onSaveSubdomain = async () => {
@@ -199,7 +201,7 @@ const CompanyInfoSettingsSection = props => {
       setValidateSubdomain({
         validate: false,
         msg: "Sorry, but your new subdomain is not allowed. You may have reached your limit of five changes."
-      })
+      });
       return;
     }
 
@@ -212,22 +214,22 @@ const CompanyInfoSettingsSection = props => {
         },
         {
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
           } 
         }
       )
       
       if (res.data.success){
-        setPreSubdomain(res.data.company.subdomain)
+        setPreSubdomain(res.data.company.subdomain);
         setCompanyInfo({
           ...companyInfo,
           subdomainCount: res.data.company.subdomainCount,
-        })
+        });
       } else {
         setValidateSubdomain({
           validate: false,
           msg: res.data.error,
-        })
+        });
       }
     } catch(err) {
 
@@ -319,7 +321,7 @@ const CompanyInfoSettingsSection = props => {
       </Grid>      
       <TableDivider />
       <Grid columns="1fr" style={{ width: "100%", marginTop: 14 }}> 
-        <div style={{display: 'flex', flexDirection: 'column'}}>
+        <div style={{display: "flex", flexDirection: "column"}}>
           <InputLabel>Company Logo</InputLabel> 
           <Dropzone onDrop={onDrop} accept="image/png, image/gif, image/jpg, image/jpeg" multiple={false}>
             {({getRootProps, getInputProps, isDragActive}) => (
@@ -329,10 +331,10 @@ const CompanyInfoSettingsSection = props => {
               >
                 <input {...getInputProps()} />
                 <DropZoneDescription isVisible={(companyInfo.logoImg && companyInfo.logoImg.length > 0) ? false : true}>
-                  {isDragActive ? "Drop it like it's hot!" : 'Click me or drag a file to upload!'}
+                  {isDragActive ? "Drop it like it's hot!" : "Click me or drag a file to upload!"}
                 </DropZoneDescription>            
                 {
-                  imageUploading && <SpinnerContainer loading={'true'} />
+                  imageUploading && <SpinnerContainer loading={"true"} />
                 }
               </DropzonContainer>
             )}
@@ -358,7 +360,7 @@ const CompanyInfoSettingsSection = props => {
         <TableEditableValue          
           value={companyInfo.subdomain}
           onChange={value => {changeCompanyInfo("subdomain", value)}}
-          style={{ width: '100%'}}
+          style={{ width: "100%"}}
           className={!validateSubdomain.validate? "error" : ""}
         />
         <SubdomainUrl>

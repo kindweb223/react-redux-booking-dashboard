@@ -1,15 +1,15 @@
 import React, { useState, useContext } from "react";
 import axios from 'axios';
-import { Table, TableValue } from "../../../tables/tables";
+import { Table, TableValue } from "../../../tables/Tables";
 import { formatEventDate } from "../../../../utils/dateFormatting";
 import { formatCurrency } from "../../../../utils/numbers";
 import OutlinedButton from "../../../buttons/OutlinedButton";
 import addGlyph from "../../../../images/Glyphs/add.svg";
 import { AppReducerContext } from "../../../../contexts/AppReducerContext";
 import DropdownMenu from "../../../buttons/DropdownMenu";
-import colors from "../../../style/colors";
+import colors from "../../../style/Colors";
 import { css } from "emotion";
-import Modal from "../../../modals/modal";
+import Modal from "../../../modals/Modal";
 import EditQuote from "./editQuote";
 // import SpinnerContainer from "../../../layout/Spinner";
 

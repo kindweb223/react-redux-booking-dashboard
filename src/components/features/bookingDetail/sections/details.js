@@ -5,7 +5,7 @@ import {
   TableSectionHeader,
   Table,
   TableValue
-} from "../../../tables/tables";
+} from "../../../tables/Tables";
 import {
   formatEventDate,
   formatSlotStartEndTime

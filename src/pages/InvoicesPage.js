@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
-import Modal from "../components/modals/modal";
+import Modal from "../components/modals/Modal";
 import { 
   ModalContainer, 
   ModalTopSection, 
@@ -7,10 +7,10 @@ import {
   ModalTitleAndButtons 
 } from "../components/modals/containers";
 
-import { Table, TableValue } from "../components/tables/tables";
+import { Table, TableValue } from "../components/tables/Tables";
 import AddGlyph from "../images/Glyphs/AddGlyph";
 import SvgButton from "../components/buttons/SvgButton";
-import colors from "../components/style/colors";
+import colors from "../components/style/Colors";
 import viewGlyph from "../images/Glyphs/view.svg";
 import Button from "../components/buttons/Button";
 import DropdownMenu from "../components/buttons/DropdownMenu";
@@ -28,7 +28,7 @@ import SelectBookingModal from "../components/features/invoices/selectBooking";
 import NewInvoice from "../components/features/invoices/newInvoice";
 import SpinnerContainer from "../components/layout/Spinner";
 import H3 from "../components/typography/H3";
-import StripeApp from "../components/stripe/stripeApp";
+import StripeApp from "../components/stripe/StripeApp";
 
 import {
   DELETE_BOOKING_INVOICE_ERROR, DELETE_BOOKING_INVOICE_SUCCESS,
@@ -368,16 +368,10 @@ const InvoicesPage = () => {
             onChange={e => setSearchQuery(e.target.value)}
           />
           <BigTabbedFilter
-            items={invoiceStates}
-            colors={invoiceStatesColors}
+            // items={invoiceStates}
+            // colors={invoiceStatesColors}
             selectedItem={selectedFilter}
             onSelect={setSelectedFilter}
-            style={{
-              marginBottom: 0,
-              marginTop: 0,
-              maxWidth: 350,
-              height: 40
-            }}
           />
         </div>
         <Button

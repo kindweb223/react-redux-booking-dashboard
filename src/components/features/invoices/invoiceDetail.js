@@ -8,7 +8,7 @@ import {
   TableValue,
   Table,
   TableLabel
-} from "../../tables/tables";
+} from "../../tables/Tables";
 import {
   ModalContainer,
   ModalTopSection,

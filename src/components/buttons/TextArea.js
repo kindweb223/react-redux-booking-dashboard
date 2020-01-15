@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 
 const StyledTextAreaWrapper = styled.textarea`
   font-size: 0.95em;

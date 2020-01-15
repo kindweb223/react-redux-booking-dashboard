@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "emotion";
 import Grid from "../../../layout/Grid";
-import { TableEditableValue } from "../../../tables/tables";
+import { TableEditableValue } from "../../../tables/Tables";
 
 const CustomerSection = props => {
 	

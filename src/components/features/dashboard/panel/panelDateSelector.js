@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
-import colors from "../../../style/colors";
-import { TablePicker } from "../../../tables/tables";
+import colors from "../../../style/Colors";
+import { TablePicker } from "../../../tables/Tables";
 import Button from "../../../buttons/Button";
 import { AppReducerContext } from "../../../../contexts/AppReducerContext";
 import { DASHBOARD_RECENT_BOOKINGS_PANEL, DASHBOARD_UPCOMING_BOOKING_PANEL } from "../../../../constants";

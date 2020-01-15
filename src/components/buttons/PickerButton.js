@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import styled, { keyframes } from "styled-components";
-import colors from "../style/colors.js";
+import colors from "../style/Colors";
 import P2 from "../typography/P2.js";
 import arrowDown from "../../images/ui/arrowDown.svg";
 import ColoredDot from "./ColoredDot.js";

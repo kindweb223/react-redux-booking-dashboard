@@ -5,7 +5,7 @@ import axios from 'axios';
 import styled from "styled-components";
 import { css } from "emotion";
 import H3 from "../../typography/H3";
-import colors from "../../style/colors";
+import colors from "../../style/Colors";
 import Button from "../../buttons/Button";
 import Grid from "../../layout/Grid";
 import {
@@ -13,7 +13,7 @@ import {
   Table,
   TableEditableValue,
   TablePicker
-} from "../../tables/tables";
+} from "../../tables/Tables";
 import AddGlyph from "../../../images/Glyphs/AddGlyph";
 import RemoveSvg from "../../../images/ui/remove.svg";
 import OutlinedButton from "../../buttons/OutlinedButton";

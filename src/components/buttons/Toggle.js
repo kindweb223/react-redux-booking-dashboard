@@ -1,6 +1,6 @@
 import React from "react";
 import { css } from "emotion";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 
 const tgWidth = 2.5;
 const tgHeight = 1.6;

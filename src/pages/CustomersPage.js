@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from 'axios';
-import Modal from "../components/modals/modal";
-import { Table, TableValue } from "../components/tables/tables";
+import Modal from "../components/modals/Modal";
+import { Table, TableValue } from "../components/tables/Tables";
 import AddGlyph from "../images/Glyphs/AddGlyph";
 import SvgButton from "../components/buttons/SvgButton";
-import colors from "../components/style/colors";
+import colors from "../components/style/Colors";
 import viewGlyph from "../images/Glyphs/view.svg";
 import CustomerDetail from "../components/features/customerDetail";
 import Button from "../components/buttons/Button";

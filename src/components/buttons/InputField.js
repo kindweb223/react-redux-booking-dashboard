@@ -1,6 +1,6 @@
 import React from "react";
 import "../../css/validate.css";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 import { css, cx } from "emotion";
 
 const InputField = props => {

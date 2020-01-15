@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 import moment from "moment";
 import P2 from "../typography/P2";
 

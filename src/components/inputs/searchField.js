@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { cx, css } from "emotion";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 import iconSearchSVG from "../../images/Glyphs/iconSearch.svg";
 
 const SearchField = props => {

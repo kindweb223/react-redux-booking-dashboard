@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from 'axios';
-import Modal from "../components/modals/modal";
+import Modal from "../components/modals/Modal";
 import BookingDetail from "../components/features/bookingDetail/bookingDetail";
 import { createEmptyBooking } from "../models/bookings";
-import { Table, TableValue } from "../components/tables/tables";
+import { Table, TableValue } from "../components/tables/Tables";
 // import { formatEventDate } from "../utils/dateFormatting";
 import PickerButton from "../components/buttons/PickerButton";
 import BigTabbedFilter from "../components/features/BigTabbedFilter";
@@ -11,7 +11,7 @@ import OutlinedButton from "../components/buttons/OutlinedButton";
 import Button from "../components/buttons/Button";
 import AddGlyph from "../images/Glyphs/AddGlyph";
 import SvgButton from "../components/buttons/SvgButton";
-import colors from "../components/style/colors";
+import colors from "../components/style/Colors";
 import viewGlyph from "../images/Glyphs/view.svg";
 import BookingDetailEdit from "../components/features/bookingDetail/bookingDetailEdit";
 import P2 from "../components/typography/P2";
@@ -51,7 +51,7 @@ import {
 
 const BookingsPage = props => {
   const { state, dispatch } = useContext(AppReducerContext);
-
+console.log(props);
   const [showCreateBookingModal, setShowCreateBookingModal] = useState(false);
   const [selectedBookingStateFilter, setSelectedBookingStateFilter] = useState(
     "All"
@@ -318,13 +318,10 @@ const BookingsPage = props => {
       >
         {state.bookings.bookingStatus && state.bookings.bookingStatus.length > 0 &&
           <BigTabbedFilter
-            items={state.bookings.bookingStatus.map(item => item.name)}
-            colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
             selectedItem={selectedBookingStateFilter}
             onSelect={item => {
               setSelectedBookingStateFilter(item);
             }}
-            style={{ marginBottom: 0, marginTop: 0, height: 60 }}
         />
         }
 

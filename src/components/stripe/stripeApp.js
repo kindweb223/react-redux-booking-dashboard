@@ -6,24 +6,28 @@ import {
   CardCVCElement,
   Elements,
   injectStripe,
-} from 'react-stripe-elements';
+} from "react-stripe-elements";
 import styled from "styled-components";
 import axios from "axios";
 
 const handleBlur = () => {
-  console.log('[blur]');
+  console.log("[blur]");
 };
+
 const handleChange = (change) => {
-  console.log('[change]', change);
+  console.log("[change]", change);
 };
+
 // const handleClick = () => {
-//   console.log('[click]');
+//   console.log("[click]");
 // };
+
 const handleFocus = () => {
-  console.log('[focus]');
+  console.log("[focus]");
 };
+
 const handleReady = () => {
-  console.log('[ready]');
+  console.log("[ready]");
 };
 
 const createOptions = (fontSize, padding) => {
@@ -31,16 +35,16 @@ const createOptions = (fontSize, padding) => {
     style: {
       base: {
         fontSize,
-        color: '#424770',
-        letterSpacing: '0.025em',
-        fontFamily: 'Source Code Pro, monospace',
-        '::placeholder': {
-          color: '#aab7c4',
+        color: "#424770",
+        letterSpacing: "0.025em",
+        fontFamily: "Source Code Pro, monospace",
+        "::placeholder": {
+          color: "#aab7c4",
         },
         padding,
       },
       invalid: {
-        color: '#9e2146',
+        color: "#9e2146",
       },
     },
   };
@@ -107,7 +111,7 @@ const StyledButton = styled.button`
     max-width: 500px;
     padding: 10px 14px;
     font-size: 1em;
-    font-family: 'Source Code Pro', monospace;
+    font-family: "Source Code Pro", monospace;
     box-shadow: rgba(50, 50, 93, 0.14902) 0px 1px 3px, rgba(0, 0, 0, 0.0196078) 0px 1px 0px;
     border: 0;
     outline: 0;
@@ -140,7 +144,7 @@ class _SplitForm extends React.Component {
             payload.amount = parseInt(vm.props.chargeData.amount);
             payload.currency = vm.props.chargeData.currency;
             payload.id = vm.props.chargeData.id;
-            axios.post('/stripe/transferCardFunds', payload).then(
+            axios.post("/stripe/transferCardFunds", payload).then(
               resCharge => {
                 this.props.closeModal();
               }
@@ -197,16 +201,16 @@ class Checkout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      elementFontSize: window.innerWidth < 450 ? '14px' : '18px',
+      elementFontSize: window.innerWidth < 450 ? "14px" : "18px",
     };
-    window.addEventListener('resize', () => {
-      if (window.innerWidth < 450 && this.state.elementFontSize !== '14px') {
-        this.setState({elementFontSize: '14px'});
+    window.addEventListener("resize", () => {
+      if (window.innerWidth < 450 && this.state.elementFontSize !== "14px") {
+        this.setState({elementFontSize: "14px"});
       } else if (
         window.innerWidth >= 450 &&
-        this.state.elementFontSize !== '18px'
+        this.state.elementFontSize !== "18px"
       ) {
-        this.setState({elementFontSize: '18px'});
+        this.setState({elementFontSize: "18px"});
       }
     });
   }
@@ -214,7 +218,7 @@ class Checkout extends React.Component {
   render() {
     const {elementFontSize} = this.state;
     return (
-      <div className="Checkout" style={{width: '100%'}}>
+      <div className="Checkout" style={{width: "100%"}}>
         <Elements>
           <SplitForm 
             fontSize={elementFontSize} 

@@ -16,12 +16,12 @@ import {
   Table,
   TableValue,
   TableLabel
-} from "../../../tables/tables";
+} from "../../../tables/Tables";
 import { formatEventDate } from "../../../../utils/dateFormatting";
 import { AppReducerContext } from "../../../../contexts/AppReducerContext";
 import OutlinedButton from "../../../buttons/OutlinedButton";
 import AddGlyph from "../../../../images/Glyphs/AddGlyph";
-import colors from "../../../style/colors";
+import colors from "../../../style/Colors";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import { updatedDate } from "../../../../utils/dates";

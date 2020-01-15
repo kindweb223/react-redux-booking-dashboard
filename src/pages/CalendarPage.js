@@ -8,7 +8,7 @@ import SpinnerContainer from "../components/layout/Spinner";
 import Calendar from "../components/features/calendar";
 import TabbedBookingsList from "../components/features/tabbedBookingsList";
 import BookingDetail from "../components/features/bookingDetail/bookingDetail";
-import Modal from "../components/modals/modal";
+import Modal from "../components/modals/Modal";
 import BookingDetailEdit from "../components/features/bookingDetail/bookingDetailEdit";
 import BookingEmailLogin from '../components/features/bookingDetail/bookingEmailLogin'
 import { AppReducerContext } from "../contexts/AppReducerContext";

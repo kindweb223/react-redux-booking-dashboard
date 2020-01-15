@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import colors from "../../../style/colors";
+import colors from "../../../style/Colors";
 import H3 from "../../../typography/H3";
 import P2 from "../../../typography/P2";
 import PanelDateSelector from "./PanelDateSelector";

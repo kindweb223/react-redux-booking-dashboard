@@ -4,7 +4,7 @@ import { css } from "emotion";
 import styled from "styled-components"
 import H3 from "../../typography/H3"
 import { ModalContainer, ModalTopSection, ModalTitleAndButtons, ModalBottomSection } from "../../modals/containers"
-import { TableLabel, TableDivider, TableEditableValue } from "../../tables/tables"
+import { TableLabel, TableDivider, TableEditableValue } from "../../tables/Tables"
 import Button from '../../buttons/Button'
 import SpinnerContainer from "../../layout/Spinner";
 import { AppReducerContext } from "../../../contexts/AppReducerContext";

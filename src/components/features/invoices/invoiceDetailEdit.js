@@ -10,7 +10,7 @@ import {
   TableLabel,
   TablePicker,
   TableEditableValue
-} from "../../tables/tables";
+} from "../../tables/Tables";
 import {
   ModalContainer,
   ModalTopSection,
@@ -28,7 +28,7 @@ import { updatedDate } from "../../../utils/dates";
 import SvgButton from "../../buttons/SvgButton";
 import styled from "styled-components";
 import OutlinedButton from "../../buttons/OutlinedButton";
-import colors from "../../style/colors";
+import colors from "../../style/Colors";
 import RemoveSvg from "../../../images/ui/remove.svg";
 import AddGlyph from "../../../images/Glyphs/AddGlyph";
 import SpinnerContainer from "../../../components/layout/Spinner"

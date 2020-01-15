@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 import styled from "styled-components";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 import isToday from "../../utils/isToday";
 
 const CalendarWeekHeader = props => {

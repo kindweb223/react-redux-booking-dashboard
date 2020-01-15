@@ -10,8 +10,8 @@ import ButtonsRow from "../layout/ButtonsRow";
 import expandGlyph from "../../images/Glyphs/calendarExpand.svg";
 import collapseGlyph from "../../images/Glyphs/calendarCollapse.svg";
 import PickerButton from "../buttons/PickerButton";
-import colors from "../style/colors.js";
-import Modal from "../modals/modal"
+import colors from "../style/Colors.js";
+import Modal from "../modals/Modal"
 import CalendarViewDropDown from './CalendarViewDropDown'
 import CalendarCreateView from "../features/CalendarCreateView"
 import { AppReducerContext } from "../../contexts/AppReducerContext";

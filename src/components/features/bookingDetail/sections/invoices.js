@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
-import { Table, TableValue, TableEditableValue } from "../../../tables/tables";
+import { Table, TableValue, TableEditableValue } from "../../../tables/Tables";
 import { formatEventDate } from "../../../../utils/dateFormatting";
 import { formatCurrency } from "../../../../utils/numbers";
 import OutlinedButton from "../../../buttons/OutlinedButton";
@@ -8,10 +8,10 @@ import addGlyph from "../../../../images/Glyphs/add.svg";
 import PickerButton from "../../../buttons/PickerButton";
 import { AppReducerContext, initialState, reducer } from "../../../../contexts/AppReducerContext";
 import DropdownMenu from "../../../buttons/DropdownMenu";
-import colors from "../../../style/colors";
+import colors from "../../../style/Colors";
 import SvgButton from "../../../buttons/SvgButton";
 import viewGlyph from "../../../../images/Glyphs/view.svg";
-import Modal from "../../../modals/modal";
+import Modal from "../../../modals/Modal";
 import InvoiceDetail from "../../invoices/invoiceDetail";
 import NewInvoice from "../../invoices/newInvoice";
 import {
@@ -30,7 +30,7 @@ import { ModalContainer, ModalTopSection, ModalBottomSection, ModalTitleAndButto
 import H3 from "../../../typography/H3";
 import Button from "../../../buttons/Button";
 import CONFIG from '../../../../config';
-import StripeApp from "../../../stripe/stripeApp";
+import StripeApp from "../../../stripe/StripeApp";
 
 const INVOICE_STATUSES = ["Unpaid", "Pending", "Paid"];
 

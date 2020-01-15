@@ -3,7 +3,7 @@ import styled from "styled-components";
 import H3 from "../typography/H3";
 import Button from "../buttons/Button";
 import Grid from "../layout/Grid";
-import { TableItem } from "../tables/tables";
+import { TableItem } from "../tables/Tables";
 import CustomerDetailEdit from "./customerDetailEdit";
 import {
   ModalContainer,

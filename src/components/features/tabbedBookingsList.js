@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
-import colors from "../style/colors";
+import colors from "../style/Colors";
 import P1 from "../typography/P1";
 import BookingRow from "./bookingRow";
 import { 

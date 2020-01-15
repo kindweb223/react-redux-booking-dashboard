@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { AppReducerContext } from "../../../../contexts/AppReducerContext";
 import H1 from "../../../typography/H1";
-import colors from "../../../style/colors";
+import colors from "../../../style/Colors";
 import TopBanner from "./TopBanner";
 import P2 from "../../../typography/P2";
 import BookingRow from "../../bookingRow";
@@ -36,7 +36,7 @@ const BookingsList = styled.div`
 
 const UpcomingBookingPanel = () => {
 
-  const { state } = useContext(AppReducerContext);  
+  const { state } = useContext(AppReducerContext);
   const [ selectedBookings, setSelectedBookings ] = useState([]);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const UpcomingBookingPanel = () => {
 
   return (
     <PanelDiv>
-      <TopBanner 
+      <TopBanner
         title={DASHBOARD_UPCOMING_BOOKING_PANEL} 
         selectedDate={state.dashboard.upcomingBookingPeriod} 
         timePeriods={[NEXT_7_DAYS, NEXT_30_DAYS]}
