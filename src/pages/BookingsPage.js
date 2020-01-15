@@ -51,10 +51,10 @@ import {
 
 const BookingsPage = props => {
   const { state, dispatch } = useContext(AppReducerContext);
-console.log(props);
+
   const [showCreateBookingModal, setShowCreateBookingModal] = useState(false);
-  const [selectedBookingStateFilter, setSelectedBookingStateFilter] = useState(
-    "All"
+  const [selectedBookingStateFilter, setSelectedBookingStateFilter] = useState(    
+    (props.history.location.state && props.history.location.state.status) ? props.history.location.state.status : "All"
   );
   const [selectedBookingID, setSelectedBookingID] = useState(
     null
@@ -236,6 +236,10 @@ console.log(props);
         dispatch({ type: GET_UPDATE_BOOKIG_ERROR});
       }
     }
+
+    // if (booking) {
+    //   dispatch({ type: "upsert_booking", booking: booking });
+    // }
   }
 
 
@@ -290,7 +294,12 @@ console.log(props);
 
     } catch(err) {
       dispatch({ type: GET_UPDATE_BOOKIG_ERROR })
-    }    
+    }
+    // dispatch({
+    //   type: "update_booking_status",
+    //   id: booking.id,
+    //   status: status
+    // })
   }
 
   const getBookingStatusColor = (selectedBooking) => {
@@ -318,10 +327,13 @@ console.log(props);
       >
         {state.bookings.bookingStatus && state.bookings.bookingStatus.length > 0 &&
           <BigTabbedFilter
+            items={state.bookings.bookingStatus.map(item => item.name)}
+            colors={state.bookings.bookingStatus.map(item => getStatuColor(item.name))}
             selectedItem={selectedBookingStateFilter}
             onSelect={item => {
               setSelectedBookingStateFilter(item);
             }}
+            style={{ marginBottom: 0, marginTop: 0, height: 60 }}
         />
         }
 
