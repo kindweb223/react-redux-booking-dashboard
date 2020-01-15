@@ -1,8 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import React from "react";
 import styled from "styled-components";
-
-import { AppReducerContext, getStatuColor } from "../../contexts/AppReducerContext";
 import colors from "../style/Colors";
 import P1 from "../typography/P1";
 import ColoredDot from "../buttons/ColoredDot";
@@ -11,15 +8,11 @@ import "react-dropdown/style.css";
 import useMedia from "../../hooks/useMedia";
 import PickerButton from "../buttons/PickerButton";
 
-
 const Wrapper = styled.div`
   flex: 1 0 auto;
   display: flex;
   flex-direction: row;
   align-items: center;
-  marginBottom: 0;
-  marginTop: 0;
-  height: 60px;
   /* justify-content: center; */
 `;
 
@@ -41,13 +34,7 @@ const FilterItem = styled.div`
 `;
 
 const BigTabbedFilter = props => {
-  const [items, setItems] = useState([]);
-  const [colors, setColors] = useState([]);
-  const [counts] = useState([]);
-  
-  // const { selectedItem, onSelect } = props;
-  
-  const { state, dispatch } = useContext(AppReducerContext);
+  const { items, colors, selectedItem, onSelect, style } = props;
 
   let selectedOption = selectedItem;
   let allSelected = selectedOption === "All";
@@ -61,18 +48,8 @@ const BigTabbedFilter = props => {
     false
   );
 
-  useEffect(() => {  
-    setItems(state.bookings.bookingStatus.map(item => item.name));
-    setColors(state.bookings.bookingStatus.map(item => getStatuColor(item.name)));
-    
-    state.bookings.bookingStatus.map(item => {
-      const filtered_bookings = state.bookings.bookings.filter(booking => booking.statusId === item.id);
-      counts.push(filtered_bookings.length);
-    });
-  },[state.bookings.bookings, state.bookings.bookingStatus]);
-
   return (
-    <Wrapper>
+    <Wrapper style={style}>
       {compressed ? (
         <>
           <Button
@@ -113,18 +90,11 @@ const BigTabbedFilter = props => {
             >
               {selected ? (
                 <P1 color="dark" strong style={{ margin: 0 }}>
-                  <Link to={{
-                      pathname: "/bookings", 
-                      state: {
-                        filterName: "item"
-                      }
-                    }}>
-                    {colorComp} {item} ({index === 0 ? state.bookings.bookings.length : counts[index-1]})
-                  </Link>
+                  {colorComp} {item}
                 </P1>
               ) : (
                 <P1 color="grey" style={{ margin: 0 }}>
-                  <Link to="/bookings">{colorComp} {item} ({index === 0 ? state.bookings.bookings.length : counts[index-1]})</Link>
+                  {colorComp} {item}
                 </P1>
               )}
             </FilterItem>

@@ -368,10 +368,16 @@ const InvoicesPage = () => {
             onChange={e => setSearchQuery(e.target.value)}
           />
           <BigTabbedFilter
-            // items={invoiceStates}
-            // colors={invoiceStatesColors}
+            items={invoiceStates}
+            colors={invoiceStatesColors}
             selectedItem={selectedFilter}
             onSelect={setSelectedFilter}
+            style={{
+              marginBottom: 0,
+              marginTop: 0,
+              maxWidth: 350,
+              height: 40
+            }}
           />
         </div>
         <Button
@@ -427,7 +433,7 @@ const InvoicesPage = () => {
                   selectedOption={invoice.status}
                   onOptionSelected={status => {
                     dispatch({
-                      type: UPDATE_INVOICE_STATUS,
+                      type: "update_invoice_status",
                       ...invoice.coordinates,
                       index: index,
                       status: status
@@ -453,7 +459,7 @@ const InvoicesPage = () => {
                   onItemSelected={item => {
                     handleDelete(invoice)
                     dispatch({
-                      type: REQUEST_DELETE_INVOICE,
+                      type: "delete_invoice",
                       ...invoice.coordinates,
                       invoice: item.id,
                       index: index

@@ -9,7 +9,7 @@ import RecentBookingPanel from "../components/features/dashboard/panel/RecentBoo
 import UpcomingBookingPanel from "../components/features/dashboard/panel/UpcomingBookingPanel";
 // import TopVenueTable from "../components/features/dashboard/panel/TopVenueTable"
 // import TopStaffTable from "../components/features/dashboard/panel/TopStaffTable"
-import BigTabbedFilter from "../components/features/BigTabbedFilter";
+import BookingStatusBar from "../components/features/dashboard/BookingStatusBar"
 
 import { 
   REQUEST_GET_BOOKINGS, 
@@ -20,17 +20,6 @@ import {
   GET_BOOKING_BOOKINGSATTUS_ERROR
 } from "../reducers/actionType";
 import { helpers } from "chart.js";
-
-const TabDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 1em;
-  background-color: white;
-  box-shadow: 0 5px 15px 5px rgba(164, 173, 186, 0.25);
-  border-radius: 3px;
-  margin-top: 3em
-`;
 
 const DashboardPage = () => {
 
@@ -78,10 +67,8 @@ const DashboardPage = () => {
         <UpcomingBookingPanel />
         {/* <TopVenueTable />
         <TopStaffTable /> */}
-      </Grid>
-      <TabDiv>
-        <BigTabbedFilter />
-      </TabDiv>
+      </Grid>      
+      <BookingStatusBar />      
     </div>
   );
 };
