@@ -26,10 +26,13 @@ const StatusBarDiv = styled.div`
   align-items: center;  
   justify-content: center;
   border: 1px solid #E6E8E9;
+  border-left: none;
   background: #F2F5F7;
   cursor: pointer;
-  border-radius: 0 4px 4px 0;
   min-height: 60px;
+  &:first-child {
+    border-left: 1px solid #E6E8E9;
+  }
 `
 
 const StyledP1 = styled(P1)`
