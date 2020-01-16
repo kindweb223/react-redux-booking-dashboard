@@ -43,6 +43,7 @@ const Container = styled.div`
   display: grid;
   > div {
     width: 100%;
+    padding: ${props => props.collapsed ? '1em 0' : '1em 1.4em'};
   }
   @media (max-width: 900px) {
     width: auto;
@@ -50,16 +51,24 @@ const Container = styled.div`
 `;
 
 const SidebarButton = styled.div`
-  display: grid;
+  display: ${props => props.collapsed ? 'flex' : 'grid'};
   grid-template-columns: 2.5em 1fr;
   align-items: center;
-  margin-bottom: 1em;
   cursor: pointer;
   min-height: 32px;
+  justify-content: center;
+  width: ${props => props.collapsed ? '40px' : 'auto'};
+  height: ${props => props.collapsed ? '40px' : 'auto'};
+  margin: ${props => props.collapsed ? '0 auto 1em' : '0 0 1em'};
+  border: ${props => props.selected && props.collapsed ? '2px solid white' : 'none'};
+  border-radius: ${props => props.selected && props.collapsed ? '5px' : '0'};
   p {
     margin: 0;
     color: ${props => (props.selected ? "white" : "")};
     line-height: 2;
+  }
+  svg {
+    margin-left: ${props => props.collapsed ? '0' : '4px'} !important;
   }
   @media (max-width: 900px) {
     p {
@@ -139,7 +148,7 @@ const Sidebar = props => {
           ( isLoggedIn) ? (
             <React.Fragment>
               <div>
-                <SidebarButton key={'sidebar-collapsed'}>
+                <SidebarButton key={'sidebar-collapsed'}  collapsed={sidebarCollapsed}>
                   <img 
                     style={{width: '32px',}}
                     alt={'collapse'} 
@@ -150,6 +159,7 @@ const Sidebar = props => {
                 <SidebarButton 
                   key={'dashboard'}
                   selected={window.location.pathname === '/dashboard'}
+                  collapsed={sidebarCollapsed}
                   onClick={() => history.push('/dashboard')}
                 >
                   <FontAwesomeIcon 
@@ -163,6 +173,7 @@ const Sidebar = props => {
                   <SidebarButton
                     key={link.title}
                     selected={window.location.pathname === link.href}
+                    collapsed={sidebarCollapsed}
                     onClick={() => history.push(link.href)}
                   >
                     <img alt={link.title} src={link.svg} />
@@ -175,6 +186,7 @@ const Sidebar = props => {
                   <SidebarButton
                     key={link.title}
                     selected={window.location.pathname === link.href}
+                    collapsed={sidebarCollapsed}
                     onClick={
                       () => link.href && history.push(link.href)
                     }
@@ -185,6 +197,7 @@ const Sidebar = props => {
                 ))}
                 <SidebarButton
                   key={"logout"}
+                  collapsed={sidebarCollapsed}
                   onClick={logout}
                 >
                   <img alt="Log Out" src={LogOutSvg} />
@@ -196,6 +209,7 @@ const Sidebar = props => {
             <div>              
               <SidebarButton
                 key={"register"}
+                collapsed={sidebarCollapsed}
                 onClick={register}
               >
                 <img alt="Log In" src={RegisterSvg} style={{width: '24px', height: '24px'}}/>
@@ -203,6 +217,7 @@ const Sidebar = props => {
               </SidebarButton>
               <SidebarButton
                 key={"login"}
+                collapsed={sidebarCollapsed}
                 onClick={login}
               >
                 <img alt="Log In" src={LogInSvg} style={{width: '24px', height: '24px'}}/>
