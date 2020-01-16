@@ -48,14 +48,9 @@ import CONFIG from '../config'
 import moment from "moment";
 
 const CalendarPage = props => {
-  // const [selectedBookingID, setSelectedBookingID] = useState(null);
-  // const [showCreateBookingModal, setShowCreateBookingModal] = useState(false);
-  const [selectedBookingID, setSelectedBookingID] = useState(
-    (props.history.location.state && props.history.location.state.booking) ? props.history.location.state.booking.id : null
-  );
-  const [showCreateBookingModal, setShowCreateBookingModal] = useState(
-    (props.history.location.state && props.history.location.state.booking) ? true : false
-  );
+
+  const [selectedBookingID, setSelectedBookingID] = useState(null);
+  const [showCreateBookingModal, setShowCreateBookingModal] = useState(false);
 
   const [createBookingModalInfo, setCreateBookingModalInfo] = useState(null);
   const [showEnterEmailModal, setShowEnterEmailModal] = useState(false);
@@ -118,8 +113,9 @@ const CalendarPage = props => {
   useEffect(() => {
     setLoading(true);
     if (state.auth.token && state.auth.token.length > 0) {
-      const getCalendarSetting = async () => {
-        try {
+      const loadDatas = async () => {
+        // get calendar settings
+        try{
           const res = await axios.get('/calendarsetting')   
           dispatch({ 
             type: SET_CALENDAR_SETTING_DATA,
@@ -132,10 +128,8 @@ const CalendarPage = props => {
         } catch (err) {
           dispatch({ type: GET_CALENDAR_SETTING_ERROR })
         }
-      }
-      getCalendarSetting();      
-
-      const getBookings = async () => {
+    
+      // get bookings
         try {
           dispatch({ type: REQUEST_GET_BOOKINGS });
   
@@ -148,93 +142,82 @@ const CalendarPage = props => {
         } catch (err) {
           dispatch({ type: GET_BOOKINGS_ERROR });
         }
-      }
-  
-      getBookings();
-  
-      const getCustomers = async () => {
-        try {
-          dispatch({ type: REQUEST_GET_CUSTOMERS });
-  
-          const res = await axios.get('/customers');
-          console.log('customers');
-          dispatch({
-            type: GET_CUSTOMERS_SUCCESS,
-            payload: res.data.customers
-          })
-        } catch (err) {
-          dispatch({ type: GET_CUSTOMERS_ERROR });
+        
+        // get customers        
+        if (!(state.customers.customers && state.customers.customers.length)) {
+          try {
+            dispatch({ type: REQUEST_GET_CUSTOMERS });
+    
+            const res = await axios.get('/customers');
+            console.log('customers');
+            dispatch({
+              type: GET_CUSTOMERS_SUCCESS,
+              payload: res.data.customers
+            })
+          } catch (err) {
+            dispatch({ type: GET_CUSTOMERS_ERROR });
+          }
+        }        
+        
+        // get venus        
+        if (!state.settings.venues && state.settings.venues.length > 0) {
+          try {
+            dispatch({ type: REQUEST_GET_VENUE });
+    
+            const res = await axios.get('/venues');
+            console.log('venues');
+            const venues = res.data.venues;
+            venues.map(item => {
+              if (!item.spaces) {
+                item.spaces = [];
+              }
+              return item;
+            })
+    
+            dispatch({
+              type: GET_VENUE_SUCCESS,
+              payload: venues
+            })
+    
+          } catch (err) {
+            console.log("Get Venus Setting failed.")
+            dispatch({ type: GET_VENUE_ERROR });
+          }        
         }
-      }
-      if (!(state.customers.customers && state.customers.customers.length))
-      getCustomers();
-  
-      const getVenue = async () => {
+    
+        // get company        
+        if (!state.settings.companyInfo.id) {
+          try {
+            const res = await axios.get('/company');
+            dispatch({
+              type: GET_COMPANYINFO_SUCCESS,
+              payload: {...res.data.company},
+            })
+          } catch (err) {
+            dispatch({ type: GET_COMPANYINFO_ERROR });
+          }    
+        }                            
+    
+        // get bookingstatus        
+        if(!(state.bookings.bookingStatus && state.bookings.bookingStatus.length > 0)) {
+          try {
+            dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
+    
+            const res = await axios.get('/statuses');
+            console.log('statues');
+    
+            dispatch({
+              type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+              payload: res.data.statuses
+            });
+          } catch(err) {
+            dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
+          }
+        }        
+    
+        // get booking colors                  
         try {
-          dispatch({ type: REQUEST_GET_VENUE });
-  
-          const res = await axios.get('/venues');
-          console.log('venues');
-          const venues = res.data.venues;
-          venues.map(item => {
-            if (!item.spaces) {
-              item.spaces = [];
-            }
-            return item;
-          })
-  
-          dispatch({
-            type: GET_VENUE_SUCCESS,
-            payload: venues
-          })
-  
-        } catch (err) {
-          console.log("Get Venus Setting failed.")
-          dispatch({ type: GET_VENUE_ERROR });
-        }
-      }
-  
-      if (!state.settings.venues && state.settings.venues.length > 0)
-        getVenue();
-  
-      const getCompany = async () => {
-        try {
-          const res = await axios.get('/company');
-          dispatch({
-            type: GET_COMPANYINFO_SUCCESS,
-            payload: {...res.data.company},
-          })
-        } catch (err) {
-          dispatch({ type: GET_COMPANYINFO_ERROR });
-        }
-      }
-      
-      if (!state.settings.companyInfo.id)
-        getCompany();
-  
-      const getBookingStatus = async () => {
-  
-        try {
-          dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
-  
-          const res = await axios.get('/statuses');
-          console.log('statues');
-  
-          dispatch({
-            type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
-            payload: res.data.statuses
-          });
-        } catch(err) {
-          dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
-        }
-  
-      }
-      if(!(state.bookings.bookingStatus && state.bookings.bookingStatus.length > 0))
-      getBookingStatus();
-  
-      const getBookingColors = async () => {
-        dispatch({ type: REQUEST_GET_CUSTOM_BOOKING_COLOR })
-        try {
+          dispatch({ type: REQUEST_GET_CUSTOM_BOOKING_COLOR })
           const res = await axios.get('/bookingcolor')
           console.log('bookingcolor');
           if (res.data.bookingColor) {
@@ -248,10 +231,8 @@ const CalendarPage = props => {
         } catch (err) {
           dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })
         }      
-      }
-      getBookingColors();
-  
-      const getCalendarViews = async () => {
+        
+        // get calendar views        
         try {        
           const res = await axios.get('/calendarview')
           
@@ -262,10 +243,8 @@ const CalendarPage = props => {
         } catch (err) {
           dispatch({ type: GET_CALENDAR_CUSTOM_VIEW_ERROR })
         }
-      }
-      getCalendarViews();
-  
-      const getAllSpaces = async() => {
+        
+        //get all spaces        
         try {
           const res = await axios.get('/userspaces')
           dispatch({ 
@@ -275,19 +254,23 @@ const CalendarPage = props => {
         } catch (err) {
           dispatch({ type: GET_USERS_ALL_SPACES_ERROR })
         }
-      }
-      getAllSpaces();
 
-      // check if returnUrl exist
-      if (window.location.href.indexOf('start=') > 0) {    
+        // check if returnUrl exist
+        if (window.location.href.indexOf('start=') > 0) {    
           const slots = getReturnUrlSlots()        
           setCreateBookingModalInfo({ startDate: slots.start, endDate: slots.end });
           setShowCreateBookingModal(true);
-      }      
+        } else if (props.history.location.state && props.history.location.state.booking) {
+          setSelectedBookingID(props.history.location.state.booking.id)
+        }
+        setLoading(false)
+      }
+      loadDatas();
     } else {
       //without token
       // check subdomain is exsit
       const checkSubdomain = async () => {
+        setLoading(true);
         try {
           const res = await axios.get(`/companies/subdomain/${subdomain}`)
           if (res.data.success) {
@@ -298,84 +281,73 @@ const CalendarPage = props => {
             })
             
             // Get bookinngs with subdomain
-            const getBookings = async () => {
-              try {
-                dispatch({ type: REQUEST_GET_BOOKINGS });
-         
-                const res = await axios.get(`/bookings/subdomain/${subdomain}`);
-                
-                dispatch({
-                  type: GET_BOOKINGS_SUCCESS,
-                  payload: res.data.bookings
-                })
-              } catch (err) {
-                dispatch({ type: GET_BOOKINGS_ERROR });
-              }
-            }        
-            getBookings();
+            try {
+              dispatch({ type: REQUEST_GET_BOOKINGS });
+        
+              const res = await axios.get(`/bookings/subdomain/${subdomain}`);
+              
+              dispatch({
+                type: GET_BOOKINGS_SUCCESS,
+                payload: res.data.bookings
+              })
+            } catch (err) {
+              dispatch({ type: GET_BOOKINGS_ERROR });
+            }
 
             // Get Spaces with subdomain
-            const getAllSpaces = async() => {
-              try {
-                const res = await axios.get(`spaces/subdomain/${subdomain}`)
-                dispatch({ 
-                  type: GET_USERS_ALL_SPACES_SUCCESS,
-                  payload: res.data.spaces,
-                })
-              } catch (err) {
-                dispatch({ type: GET_USERS_ALL_SPACES_ERROR })
-              }
+            try {
+              const res = await axios.get(`spaces/subdomain/${subdomain}`)
+              dispatch({ 
+                type: GET_USERS_ALL_SPACES_SUCCESS,
+                payload: res.data.spaces,
+              })
+            } catch (err) {
+              dispatch({ type: GET_USERS_ALL_SPACES_ERROR })
             }
-            getAllSpaces();
             
-            const getCalendarViews = async () => {
-              try {        
-                const res = await axios.get(`/calendarview/subdomain/${subdomain}`)
-                
-                dispatch({ 
-                  type: GET_CALENDAR_CUSTOM_VIEW_SUCCESS,
-                  payload: res.data.calendarView ? res.data.calendarView : {},
-                })
-              } catch (err) {
-                dispatch({ type: GET_CALENDAR_CUSTOM_VIEW_ERROR })
-              }
-            }
-            getCalendarViews();
-            
-            const getBookingStatus = async () => {
-              try {
-                dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
-        
-                const res = await axios.get(`/statuses/subdomain/${subdomain}`);
-        
-                dispatch({
-                  type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
-                  payload: res.data.statuses
-                });
-              } catch(err) {
-                dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
-              }        
+            // get calendar view
+            try {        
+              const res = await axios.get(`/calendarview/subdomain/${subdomain}`)
+              
+              dispatch({ 
+                type: GET_CALENDAR_CUSTOM_VIEW_SUCCESS,
+                payload: res.data.calendarView ? res.data.calendarView : {},
+              })
+            } catch (err) {
+              dispatch({ type: GET_CALENDAR_CUSTOM_VIEW_ERROR })
             }            
-            getBookingStatus();
+            
+            // get booking status
+            try {
+              dispatch({ type: REQUEST_GET_BOOKING_BOOKINGSTATUS });
+      
+              const res = await axios.get(`/statuses/subdomain/${subdomain}`);
+      
+              dispatch({
+                type: GET_BOOKING_BOOKINGSTATUS_SUCCESS,
+                payload: res.data.statuses
+              });
+            } catch(err) {
+              dispatch({ type: GET_BOOKING_BOOKINGSATTUS_ERROR });
+            }        
         
-            const getBookingColors = async () => {
+            // get booking color
+            try {
               dispatch({ type: REQUEST_GET_CUSTOM_BOOKING_COLOR })
-              try {
-                const res = await axios.get(`/bookingcolor/subdomain/${subdomain}`)
-                if (res.data.bookingColor) {
-                  dispatch({
-                    type: GET_CUSTOM_BOOKING_COLOR_SUCCESS,
-                    payload: JSON.parse(res.data.bookingColor.color)
-                  })
-                } else {
-                  dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })  
-                }
-              } catch (err) {
-                dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })
-              }      
+              const res = await axios.get(`/bookingcolor/subdomain/${subdomain}`)
+              if (res.data.bookingColor) {
+                dispatch({
+                  type: GET_CUSTOM_BOOKING_COLOR_SUCCESS,
+                  payload: JSON.parse(res.data.bookingColor.color)
+                })
+              } else {
+                dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })  
+              }
+            } catch (err) {
+              dispatch({ type: GET_CUSTOM_BOOKING_COLOR_ERROR })
             }
-            getBookingColors();
-        
+
+            setLoading(false)
           } else window.location.replace(CONFIG.BASE_URL);
         } catch (err) {
           window.location.replace(CONFIG.BASE_URL);
@@ -545,7 +517,7 @@ const CalendarPage = props => {
   return (
     <>
       <SpinnerContainer 
-        loading={ (events && events.length <= 0) && (state.bookings.loadBooking || state.bookings.loadBookingAction) ? "true" : "false"} 
+        loading={loading ? "true" : "false"} 
       />
       <Grid
         fullheight

@@ -69,7 +69,7 @@ const BookingStatusBar = props => {
       {
         state.bookings.bookingStatus.map(item => {
           return (
-            <StatusBarDiv onClick={() => handleClickStatus(item.name)}>
+            <StatusBarDiv onClick={() => handleClickStatus(item.name)} key={item.id}>
               <StyledP1>
                 <ColoredDot color={getStatuColor(item.name)} style={{marginRight: 5}} />
                 {item.name}
