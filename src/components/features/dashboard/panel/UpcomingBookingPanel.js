@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import { withRouter } from "react-router-dom";
 import styled from "styled-components";
 
 import { AppReducerContext } from "../../../../contexts/AppReducerContext";
@@ -9,6 +10,7 @@ import P2 from "../../../typography/P2";
 import BookingRow from "../../bookingRow";
 import { DASHBOARD_UPCOMING_BOOKING_PANEL, NEXT_7_DAYS, NEXT_30_DAYS } from "../../../../constants";
 import { isBookingWithDates, startOfUpcomingWeek, endOfUpcomingWeek } from "../../../../utils/dates";
+import { checkPropTypes } from "prop-types";
 
 const PanelDiv = styled.div`
   display: flex;
@@ -34,8 +36,7 @@ const BookingsList = styled.div`
   overflow: auto;
 `;
 
-const UpcomingBookingPanel = () => {
-
+const UpcomingBookingPanel = props => {
   const { state } = useContext(AppReducerContext);
   const [ selectedBookings, setSelectedBookings ] = useState([]);
 
@@ -49,6 +50,15 @@ const UpcomingBookingPanel = () => {
     state.bookings.bookings
   ])
 
+  const handleClickBooking = booking => {
+    props.history.push({
+      pathname: '/calendar',
+      state: {
+        booking: booking
+      }
+    })
+  }
+
   return (
     <PanelDiv>
       <TopBanner
@@ -57,13 +67,14 @@ const UpcomingBookingPanel = () => {
         timePeriods={[NEXT_7_DAYS, NEXT_30_DAYS]}
       />
       <TotalValue>
-        {selectedBookings && selectedBookings.length} booked
+        {selectedBookings && selectedBookings.length} Bookings
       </TotalValue>
       <BookingsList>
         {selectedBookings && selectedBookings.map(booking => (
           <BookingRow
             key={booking.id}
             booking={booking}
+            onClick={() => handleClickBooking(booking)}
           />
         ))}
         {selectedBookings && selectedBookings.length === 0 && (
@@ -76,4 +87,4 @@ const UpcomingBookingPanel = () => {
   );
 };
 
-export default UpcomingBookingPanel;
+export default withRouter(UpcomingBookingPanel);

@@ -48,8 +48,15 @@ import CONFIG from '../config'
 import moment from "moment";
 
 const CalendarPage = props => {
-  const [selectedBookingID, setSelectedBookingID] = useState(null);
-  const [showCreateBookingModal, setShowCreateBookingModal] = useState(false);
+  // const [selectedBookingID, setSelectedBookingID] = useState(null);
+  // const [showCreateBookingModal, setShowCreateBookingModal] = useState(false);
+  const [selectedBookingID, setSelectedBookingID] = useState(
+    (props.history.location.state && props.history.location.state.booking) ? props.history.location.state.booking.id : null
+  );
+  const [showCreateBookingModal, setShowCreateBookingModal] = useState(
+    (props.history.location.state && props.history.location.state.booking) ? true : false
+  );
+
   const [createBookingModalInfo, setCreateBookingModalInfo] = useState(null);
   const [showEnterEmailModal, setShowEnterEmailModal] = useState(false);
   const [subdomain, setSubdomain] = useState(getSubDomain())
@@ -400,7 +407,7 @@ const CalendarPage = props => {
 
   useEffect(() => {
     if (showCreateBookingModal || showEnterEmailModal || selectedBookingID !== null)
-      document.removeEventListener("keydown", handleKeyDown, false);      
+      document.removeEventListener("keydown", handleKeyDown, false);
     else
       document.addEventListener('keydown', handleKeyDown, false);     
   }, [showCreateBookingModal, showEnterEmailModal, selectedBookingID !== null])

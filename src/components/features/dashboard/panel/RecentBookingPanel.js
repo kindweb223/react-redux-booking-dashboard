@@ -88,7 +88,7 @@ const RecentBookingPanel = () => {
         timePeriods={[LAST_7_DAYS, LAST_30_DAYS]}
       />
       <TotalValue>
-        {recentBookings.datasets[0].data.reduce((partial_sum, a) => partial_sum + a, 0)} booked
+        {recentBookings.datasets[0].data.reduce((partial_sum, a) => partial_sum + a, 0)} Bookings
       </TotalValue>
       <Line
         data={recentBookings} 

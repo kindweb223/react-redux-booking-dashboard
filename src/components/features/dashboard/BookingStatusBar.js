@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext} from "react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
 
-import P1 from "../../typography/P1"
+import P1 from "../../typography/P1";
 
 import { AppReducerContext, getStatuColor } from "../../../contexts/AppReducerContext";
 import ColoredDot from "../../buttons/ColoredDot";
@@ -40,9 +40,8 @@ const StyledP1 = styled(P1)`
 `
 
 const BookingStatusBar = props => {
-
-  const { state } = useContext(AppReducerContext)
-  const [bookingStatusCount, setBookingStatusCount] = useState({})
+  const { state } = useContext(AppReducerContext);
+  const [bookingStatusCount, setBookingStatusCount] = useState({});
 
   useEffect(() => {
     const temp = {};
@@ -87,4 +86,4 @@ const BookingStatusBar = props => {
   )
 }
 
-export default withRouter(BookingStatusBar)
+export default withRouter(BookingStatusBar);
