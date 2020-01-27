@@ -131,7 +131,7 @@ const CustomersPage = () => {
           align-items: center;
           justify-content: space-between;
           margin-top: 0px;
-          margin-bottom: 10px;
+          margin-bottom: 1em;
         `}
       >
         <h1>Customers</h1>

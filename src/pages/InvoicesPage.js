@@ -352,7 +352,7 @@ const InvoicesPage = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: 'space-between',
-          marginBottom: 10
+          marginBottom: '1em',
         }}  
       >
         <h1>Invoices</h1>

@@ -322,25 +322,25 @@ const BookingsPage = props => {
     <>
       <SpinnerContainer loading={ ((filteredBookings && filteredBookings.length <= 0) &&
       (state.bookings.loadBooking || state.bookings.loadBookingAction)) ? "true" : "false"} />
-<div
-  style={{
-    display: "flex",
-    alignItems: "center",
-    justifyContent: 'space-between',
-    marginBottom: 10
-  }}
->
-  <h1>Bookings</h1>
-  <Button
-    primary
-    onClick={() => setShowCreateBookingModal(!showCreateBookingModal)}
-    iconComponent={() => <AddGlyph fill={colors.white} />}
-    style={{ marginLeft: "2em" }}
-    disabled={(state.bookings.loadBooking || state.bookings.loadBookingAction)}
-  >
-    Add Booking
-  </Button>
-</div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: 'space-between',
+          marginBottom: '1em'
+        }}
+      >
+        <h1>Bookings</h1>
+        <Button
+          primary
+          onClick={() => setShowCreateBookingModal(!showCreateBookingModal)}
+          iconComponent={() => <AddGlyph fill={colors.white} />}
+          style={{ marginLeft: "2em" }}
+          disabled={(state.bookings.loadBooking || state.bookings.loadBookingAction)}
+        >
+          Add Booking
+        </Button>
+      </div>
       <div
         style={{
           display: "flex",
