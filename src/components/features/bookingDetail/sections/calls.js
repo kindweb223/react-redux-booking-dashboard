@@ -17,7 +17,6 @@ const CallsSection = props => {
   }, [booking.calls])
   
   const handleUpdateBooking = async (updateBooking) => {
-    debugger;
     if (!updateBooking) return;
 
     const config = {
@@ -59,29 +58,26 @@ const CallsSection = props => {
           >Edit</Button>
         </>
       ) : (
-        <>
-          <div style={{width: "100%"}}>
-            <TableEditableValue
-              value={calls}
-              longText
-              longTextHeight="500px"
-              height="500px"
-              style={{
-                width: "100%",
-                marginTop: "0.8em"            
-              }}
-              onChange={value => setCalls(value)}                
-            />
-          </div>
+        <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
+          <TableEditableValue
+            value={calls}
+            longText
+            longTextHeight="100%"
+            height="100%"
+            style={{
+              flexBasis: '100%',
+            }}
+            onChange={value => setCalls(value)}                
+          />
           <Button 
             primary 
             onClick={() => handleUpdateBooking(booking)}
             style={{
-              float: "right",
+              marginLeft: 'auto',
               marginTop: "0.8em"
             }}
           >Save</Button>
-        </>
+        </div>
       )}      
     </>
   );

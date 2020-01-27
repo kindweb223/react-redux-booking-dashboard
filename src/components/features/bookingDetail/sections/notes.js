@@ -58,29 +58,26 @@ const NotesSection = props => {
           >Edit</Button>
         </>
       ) : (
-        <>
-          <div style={{width: "100%"}}>
-            <TableEditableValue
-              value={note}
-              longText
-              longTextHeight="500px"
-              height="500px"
-              style={{
-                width: "100%",
-                marginTop: "0.8em"            
-              }}
-              onChange={note => setNote(note)}                
-            />
-          </div>
+        <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
+          <TableEditableValue
+            value={note}
+            longText
+            onChange={note => setNote(note)}
+            height='100%'
+            longTextHeight= '100%'
+            style={{
+              flexBasis: '100%',
+            }}
+          />
           <Button 
             primary 
             onClick={() => handleUpdateBooking(booking)}
             style={{
-              float: "right",
+              marginLeft: 'auto',
               marginTop: "0.8em"
             }}
           >Save</Button>
-        </>
+        </div>
       )}      
     </>
   );
