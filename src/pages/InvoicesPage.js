@@ -371,32 +371,24 @@ const InvoicesPage = () => {
           justifyContent: "space-between",
           marginBottom: 40
         }}
-      >
-        {/* <div
-          className={css`
-            display: flex;
-            align-items: center;
-            width: 100%;
-          `}
-        > */}
-          <SearchField
-            query={searchQuery}
-            placeholder={"Search Invoices"}
-            onChange={e => setSearchQuery(e.target.value)}
-          />
-          <BigTabbedFilter
-            items={invoiceStates}
-            colors={invoiceStatesColors}
-            selectedItem={selectedFilter}
-            onSelect={setSelectedFilter}
-            style={{
-              marginBottom: 0,
-              marginTop: 0,
-              maxWidth: 350,
-              height: 40
-            }}
-          />
-        {/* </div> */}
+      >        
+        <SearchField
+          query={searchQuery}
+          placeholder={"Search Invoices"}
+          onChange={e => setSearchQuery(e.target.value)}
+        />
+        <BigTabbedFilter
+          items={invoiceStates}
+          colors={invoiceStatesColors}
+          selectedItem={selectedFilter}
+          onSelect={setSelectedFilter}
+          style={{
+            marginBottom: 0,
+            marginTop: 0,
+            maxWidth: 350,
+            height: 40
+          }}
+        />
       </div>
 
       {!loading && invoices && invoices.length > 0 && (

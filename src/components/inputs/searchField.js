@@ -55,6 +55,7 @@ const SearchField = props => {
           font-family: Circular;
           font-size: 1.05em;
           border: none;
+          width: 100%;
           :focus {
             outline: none;
           }
