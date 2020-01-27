@@ -15,6 +15,7 @@ import DetailsSection from "./sections/details";
 import QuotesSection from "./sections/quotes";
 import InvoicesSection from "./sections/invoices";
 import NotesSection from "./sections/notes";
+import CallsSection from "./sections/calls";
 
 import {
   REQUEST_UPDATE_BOOKING,
@@ -30,15 +31,17 @@ import {
   // CUSTOMER_OPTION_CASUAL_USER,
 } from '../../../constants';
 
-const TABBAR_ITEM_DETAILS = "Details";
-const TABBAR_ITEM_QUOTES = "Quotes";
-const TABBAR_ITEM_INVOICES = "Invoices";
-const TABBAR_ITEM_NOTES = "Notes";
+const TABBAR_ITEM_DETAILS   = "Details";
+const TABBAR_ITEM_QUOTES    = "Quotes";
+const TABBAR_ITEM_INVOICES  = "Invoices";
+const TABBAR_ITEM_NOTES     = "Notes";
+const TABBAR_ITEM_CALLS     = "Calls";
 const TABBAR_ITEMS = [
   TABBAR_ITEM_DETAILS,
   TABBAR_ITEM_QUOTES,
   TABBAR_ITEM_INVOICES,
-  TABBAR_ITEM_NOTES
+  TABBAR_ITEM_NOTES,
+  TABBAR_ITEM_CALLS,
 ];
 
 function renderSelectedSection(sectionName, props, setSelectedTab) {
@@ -56,6 +59,8 @@ function renderSelectedSection(sectionName, props, setSelectedTab) {
       return <InvoicesSection {...props} />;
     case TABBAR_ITEM_NOTES: 
       return <NotesSection {...props} />;
+    case TABBAR_ITEM_CALLS: 
+      return <CallsSection {...props} />;
     default:
       throw new Error(`${sectionName} is not a valid section name`);
   }
@@ -173,7 +178,7 @@ const BookingDetail = props => {
               address: updateBooking.customerData.address.value,
               email: updateBooking.customerData.email.value,
               note: updateBooking.customerData.note.value,
-              vatNumber: updateBooking.customerData.vatNumber.value,
+              vatNumber: updateBooking.customerData.vatNumber.value,              
             }), 
             config
           )
@@ -194,7 +199,8 @@ const BookingDetail = props => {
             ownerId: updateBooking.ownerId,
             statusId: updateBooking.statusId,
             slots: JSON.stringify(updateBooking.slots),
-            note: booking.note
+            note: booking.note,
+            calls: updateBooking.calls,
           },
           config
         );
