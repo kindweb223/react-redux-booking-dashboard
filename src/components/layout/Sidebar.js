@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChartArea } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartArea } from "@fortawesome/free-solid-svg-icons";
 
 import colors from "../style/Colors";
 import LayoutBlock from "../layout/LayoutBlock";
@@ -109,6 +109,7 @@ const TopLinks = [
   { title: "Customers", svg: CustomersSvg, href: "/customers" },
   { title: "Invoices", svg: InvoicesSvg, href: "/invoices" }
 ];
+
 const BottomLinks = [
   { title: "Settings", svg: SettingsSvg, href: "/settings" },
 ];
@@ -116,7 +117,7 @@ const BottomLinks = [
 const Sidebar = props => {
   const { history } = props;
   const { state, dispatch } = useContext(AppReducerContext);
-  const [ sidebarCollapsed, setSidebarCollapsed ] = useState(false)
+  const [ sidebarCollapsed, setSidebarCollapsed ] = useState();
 
   const logout = () => {
     setAuthToken("");
@@ -138,8 +139,15 @@ const Sidebar = props => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    setIsLoggedIn(state.auth.token && state.auth.token.length)
-  }, [state.auth.token])
+    setIsLoggedIn(state.auth.token && state.auth.token.length);    
+    setSidebarCollapsed(JSON.parse(localStorage.getItem('sidebarCollapsed')));
+  }, [state.auth.token]);
+    
+  const saveSidebarStatus = () => {
+    let collapsed = !sidebarCollapsed;    
+    setSidebarCollapsed(collapsed);
+    localStorage.setItem('sidebarCollapsed', collapsed);
+  }
 
   return (
     <Container collapsed={sidebarCollapsed}>
@@ -153,7 +161,7 @@ const Sidebar = props => {
                     style={{width: '32px',}}
                     alt={'collapse'} 
                     src={sidebarCollapsed ? SideCollapseRightSvg : SideCollapseLeftSvg} 
-                    onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                    onClick={() => saveSidebarStatus()}
                   />
                 </SidebarButton>
                 <SidebarButton 

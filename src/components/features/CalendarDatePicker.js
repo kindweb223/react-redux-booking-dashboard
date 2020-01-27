@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 
   .react-datepicker-wrapper {
     position: absolute;
-    left: 0;    
+    left: 0;
     top: 0;
     width: 100%;
     height: 100%;
@@ -26,7 +26,7 @@ const Wrapper = styled.div`
     .react-datepicker__input-container {
       input {
         cursor: pointer;
-      }      
+      }
     }
   }
 
@@ -43,7 +43,7 @@ const Title = styled.div`
   text-align: center;
   border: 1px solid #E6E8E9;
   border-radius: 0.25em;
-  height: 34px;
+  height: 46px;
   padding: 0 0.7em;
   width: auto;
   flex: 0 0 auto;
@@ -51,9 +51,9 @@ const Title = styled.div`
   color: #93989F;
   box-shadow: 0px 1.5px 1px rgba(0,0,0,0.05);
   cursor: pointer;
-  outline: none;  
-  user-select: none;  
-  animation: 1s 0.3s linear infinite;  
+  outline: none;
+  user-select: none;
+  animation: 1s 0.3s linear infinite;
   animation-timing-function: ease-in-out;
 `
 const CalendarDatePicker = props => {
@@ -76,7 +76,7 @@ const CalendarDatePicker = props => {
           style={{ transform: openViewDropDown ? "scaleY(-1)" : "", marginLeft: 5 }}
         />
       </Title>
-      <DatePicker 
+      <DatePicker
         selected={state.calendarSettings.selectedDate}
         onChange={date => setCalendarSettingAction(dispatch, { ...state.calendarSettings, selectedDate: date})}
         onClickOutside={() => setOpenViewDropDown(false)}
@@ -89,4 +89,3 @@ const CalendarDatePicker = props => {
 }
 
 export default CalendarDatePicker;
-

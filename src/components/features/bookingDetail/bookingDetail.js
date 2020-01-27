@@ -14,6 +14,7 @@ import {
 import DetailsSection from "./sections/details";
 import QuotesSection from "./sections/quotes";
 import InvoicesSection from "./sections/invoices";
+import NotesSection from "./sections/notes";
 
 import {
   REQUEST_UPDATE_BOOKING,
@@ -32,10 +33,12 @@ import {
 const TABBAR_ITEM_DETAILS = "Details";
 const TABBAR_ITEM_QUOTES = "Quotes";
 const TABBAR_ITEM_INVOICES = "Invoices";
+const TABBAR_ITEM_NOTES = "Notes";
 const TABBAR_ITEMS = [
   TABBAR_ITEM_DETAILS,
   TABBAR_ITEM_QUOTES,
-  TABBAR_ITEM_INVOICES
+  TABBAR_ITEM_INVOICES,
+  TABBAR_ITEM_NOTES
 ];
 
 function renderSelectedSection(sectionName, props, setSelectedTab) {
@@ -51,6 +54,8 @@ function renderSelectedSection(sectionName, props, setSelectedTab) {
       );
     case TABBAR_ITEM_INVOICES:
       return <InvoicesSection {...props} />;
+    case TABBAR_ITEM_NOTES: 
+      return <NotesSection {...props} />;
     default:
       throw new Error(`${sectionName} is not a valid section name`);
   }
@@ -60,7 +65,7 @@ const Container = styled.div`
   background-color: ${colors.lightest};
   width: 100%;
   height: 100%;
-  overflow: scroll;
+  // overflow: scroll;
   border-radius: 0.5em;
   box-shadow: 0px 13px 32px rgba(0, 0, 0, 0.22);
   display: flex;
@@ -87,12 +92,12 @@ const BottomSection = styled.div`
   width: 100%;
   flex: 1 1 auto;
   display: flex;
+  overflow: auto;
 `;
 
 const BottomSectionWrapper = styled.div`
   width: 100%;
   padding: 20px 20px 15px;
-  overflow: scroll;
 `;
 
 const BookingDetail = props => {
@@ -101,7 +106,8 @@ const BookingDetail = props => {
   const [selectedTab, setSelectedTab] = useState(
     TABBAR_ITEM_DETAILS,
     TABBAR_ITEM_QUOTES,
-    TABBAR_ITEM_INVOICES
+    TABBAR_ITEM_INVOICES,
+    TABBAR_ITEM_NOTES
   );
   const [editing, setEditing] = useState(false);
   const { state, dispatch } = useContext(AppReducerContext);
@@ -188,6 +194,7 @@ const BookingDetail = props => {
             ownerId: updateBooking.ownerId,
             statusId: updateBooking.statusId,
             slots: JSON.stringify(updateBooking.slots),
+            note: booking.note
           },
           config
         );

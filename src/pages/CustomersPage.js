@@ -129,20 +129,13 @@ const CustomersPage = () => {
           flex-direction: row;
           align-items: center;
           justify-content: space-between;
-          margin-top: 10px;
-          margin-bottom: 40px;
+          margin-top: 0px;
+          margin-bottom: 10px;
         `}
+
       >
         <SpinnerContainer loading={((searchResults && searchResults.length <= 0) && state.customers.loadingCustomers).toString()} />
-        <SearchField
-          query={searchQuery}
-          placeholder={"Search Customers"}
-          onChange={e => setSearchQuery(e.target.value)}
-          onEnterKeyPress={() =>
-            searchResults.length === 1 &&
-            setSelectedClientId(searchResults[0].id)
-          }
-        />
+        <h1>Customers</h1>
         <Button
           primary
           onClick={() => setShowCreateClientModal(!showCreateClientModal)}
@@ -152,7 +145,19 @@ const CustomersPage = () => {
           Add Customer
         </Button>
       </div>
-
+      <SearchField
+        query={searchQuery}
+        className={css`
+            margin-top: 8px;
+            margin-bottom: 25px;
+          `}
+        placeholder={"Quick Search"}
+        onChange={e => setSearchQuery(e.target.value)}
+        onEnterKeyPress={() =>
+          searchResults.length === 1 &&
+          setSelectedClientId(searchResults[0].id)
+        }
+      />
       {searchResults && searchResults.length > 0 && (
         <Table
           columns="1fr 1fr 1fr 50px 50px"

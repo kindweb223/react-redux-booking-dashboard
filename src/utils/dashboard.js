@@ -57,16 +57,16 @@ const getBookingWithDateRange = (bookings, period) => {
 
   if (period === LAST_7_DAYS) {
     endDate = current.endOf("day").valueOf();
-    startDate = current.subtract(8, "day").startOf("day").valueOf();
+    startDate = current.subtract(7, "day").startOf("day").valueOf();
   } else if (period === LAST_30_DAYS) {
     endDate = current.endOf("day").valueOf();
-    startDate = current.subtract(31, "day").startOf("day").valueOf();
+    startDate = current.subtract(30, "day").startOf("day").valueOf();
   } else if (period === NEXT_7_DAYS ) {
     startDate = current.startOf("day").valueOf();
-    endDate = current.add(8, "day").endOf("day").valueOf();
+    endDate = current.add(7, "day").endOf("day").valueOf();
   } else if (period === NEXT_30_DAYS) {
     startDate = current.startOf("day").valueOf();
-    endDate = current.add(31, "day").endOf("day").valueOf();
+    endDate = current.add(30, "day").endOf("day").valueOf();
   }
 
   bookings.map(item => {
@@ -117,7 +117,6 @@ const getBookingWithDateRange = (bookings, period) => {
   filteredOne.forEach(item => {
     let bookingStartDate  = moment(item.startDate).startOf("day");
     let bookingEndDate    = moment(item.endDate).startOf("day");
-
     while(bookingStartDate.valueOf() <= bookingEndDate.valueOf()) {
       bookingArray[bookingStartDate.valueOf()] += 1;
       bookingStartDate.add(1, "day");

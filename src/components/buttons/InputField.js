@@ -18,10 +18,10 @@ const InputField = props => {
         border: 1px solid #e6e8e9;
         border-radius: 0.25em;
         color: ${colors.dark};
-        height: 34px;
+        height: 46px;
         padding: 0 0.6em;
         flex: 0 0 auto;
-      `)}      
+      `)}
     />
   );
 };

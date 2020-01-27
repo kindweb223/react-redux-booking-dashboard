@@ -24,7 +24,7 @@ const SearchField = props => {
           background-color: white;
           padding: 5px 7px;
           border-radius: 4px;
-          height: 35px;
+          height: 46px;
           border: 1px solid ${focused ? colors.accent_pink : colors.light_grey};
           display: flex;
           flex-direction: row;

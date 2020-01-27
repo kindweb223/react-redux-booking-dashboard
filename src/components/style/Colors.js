@@ -8,7 +8,7 @@ export default {
   transparent: "rgba(255,255,255,.6)",
   ultra_dark: "#1B1D20",
   darker: "#24272C",
-  dark: "#3F4548",
+  dark: "#292D32",
   grey: "#93989F",
   light_grey: "#C2C4C7",
   light: "#E6E8E9",

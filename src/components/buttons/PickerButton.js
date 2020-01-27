@@ -16,15 +16,15 @@ const Wrapper = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  font-size: ${props => (props.big ? "1.2em" : "1em")};  
+  font-size: ${props => (props.big ? "1.2em" : "1em")};
   border: 1px solid ${props => (props.isValidate? colors.light : "#E92579")};
   border-radius: 0.25em;
-  height: 34px;
+  height: 46px;
   padding: 0 0.7em;
   width: ${props => (props.wide ? "100%" : "auto")};
   background: #ffffff;
   color: ${colors.grey};
-  box-shadow: 0px 1.5px 1px rgba(0, 0, 0, 0.05);  
+  box-shadow: 0px 1.5px 1px rgba(0, 0, 0, 0.05);
   p {
     margin: 0;
     line-height: 1.5;

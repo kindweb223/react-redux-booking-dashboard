@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import ReactModal from "react-modal";
 import SvgButton from "../buttons/SvgButton";
 import close from "../../images/ui/close.svg";
@@ -26,6 +26,15 @@ const Modal = props => {
       background: "transparent"
     }
   };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown, false);
+  }, []);
+
+  const handleKeyDown = useCallback((event)=> {
+    if(event.key === 'Escape')
+      onClose();
+  });
 
   return (
     <ReactModal style={style} {...props}>

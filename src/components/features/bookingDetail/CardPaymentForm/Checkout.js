@@ -23,7 +23,7 @@ const CardPaymentForm = styled.form`
     width: 100%;
     padding: 11px 15px;
     background-color: #7a98f5;
-    border-radius: 0.2em;  
+    border-radius: 0.2em;
   }
 
   .info-div {
@@ -32,7 +32,7 @@ const CardPaymentForm = styled.form`
     background-color: #7795f8;
     box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 #829fff;
     border-radius: 0.2em;
-    margin-bottom: 1.25em;    
+    margin-bottom: 1.25em;
   }
 
   .submit-button {
@@ -44,7 +44,7 @@ const CardPaymentForm = styled.form`
     text-align: center;
     border: 1px solid #E6E8E9;
     border-radius: 0.25em;
-    height: 34px;
+    height: 46px;
     padding: 0 0.7em;
     flex: 0 0 auto;
     background: #ffffff;
@@ -83,7 +83,7 @@ const InputRow = styled.div`
     font-size: 0.95em;
     color: #95adf7;
     min-width: 60px;
-    padding: 11px 0;    
+    padding: 11px 0;
   }
 
   input {
@@ -92,7 +92,7 @@ const InputRow = styled.div`
     border: none;
     outline: none;
     color: white;
-    padding: 11px 0;    
+    padding: 11px 0;
     width: 100%;
     border: none !important;
     &::placeholder {
@@ -104,16 +104,16 @@ const InputRow = styled.div`
     &:-webkit-autofill:focus,
     &:-webkit-autofill:active {
       border: inherit;
-      -webkit-text-fill-color: white;      
+      -webkit-text-fill-color: white;
       transition: background-color 5000s ease-in-out 0s;
       font-size: 0.95em;
     }
 
   }
-` 
+`
 
 const ErrMsgDiv = styled.div`
-  display: flex;    
+  display: flex;
   justify-content: center;
   width: 100%;
   top: 100%;
@@ -140,7 +140,7 @@ const ErrMsgDiv = styled.div`
     .glyph {
       fill: white;
     }
-  } 
+  }
 
   .message {
     color: #7a98f5;
@@ -152,10 +152,10 @@ const SuccessDiv = styled.div`
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);    
+  transform: translate(-50%, -50%);
   text-align: center;
   opacity: ${props => (props.isSuccess ? 1 : 0)};
-  
+
   .icon {
     .border {
       stroke: #87bbfd;
@@ -182,7 +182,7 @@ const SuccessDiv = styled.div`
       fill: #fff;
     }
   }
-  
+
   &.submitting {
     .icon {
       .border {
@@ -253,8 +253,8 @@ class _CardForm extends React.Component {
       .then(res => {
         this.props.stripe.
           handleCardPayment(res.data.client_secret)
-          .then(payload => {    
-            debugger;        
+          .then(payload => {
+            debugger;
             if (payload.error) {
               this.setState({
                 isValidate: false,
@@ -270,7 +270,7 @@ class _CardForm extends React.Component {
               })
             }
           }
-        )  
+        )
       }
     )
   };
@@ -278,11 +278,11 @@ class _CardForm extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <CardPaymentForm 
-          onSubmit={this.handleSubmit} 
+        <CardPaymentForm
+          onSubmit={this.handleSubmit}
           isSuccss={this.state.success}
           className={this.state.success ? "success" : ""}
-        >        
+        >
           <div className="info-div">
             <InputRow>
               <label>Name</label>
@@ -299,10 +299,10 @@ class _CardForm extends React.Component {
           </div>
 
           <CardElement
-            hidePostalCode={true} 
+            hidePostalCode={true}
             iconStyle={'solid'}
             onChange={this.changeCardElement}
-            style={{              
+            style={{
               base: {
                 iconColor: '#c4f0ff',
                 color: '#fff',
@@ -310,7 +310,7 @@ class _CardForm extends React.Component {
                 fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
                 fontSize: '16px',
                 fontSmoothing: 'antialiased',
-        
+
                 ':-webkit-autofill': {
                   color: '#fce883',
                 },
@@ -321,10 +321,10 @@ class _CardForm extends React.Component {
               invalid: {
                 iconColor: '#FFC7EE',
                 color: '#FFC7EE',
-              },              
+              },
             }}
           />
-          <button className="submit-button">        
+          <button className="submit-button">
             {"Pay " + formatCurrency(this.props.chargeData.amount, this.props.chargeData.currency)}
           </button>
 
@@ -340,24 +340,24 @@ class _CardForm extends React.Component {
 
         <SuccessDiv isSuccess={this.state.success}>
           <div className="icon">
-            <svg 
-              width="84px" height="84px" 
+            <svg
+              width="84px" height="84px"
               viewBox="0 0 84 84" version="1.1" xmlns="http://www.w3.org/2000/svg">
-              <circle 
-                className="border" cx="42" cy="42" r="40" 
+              <circle
+                className="border" cx="42" cy="42" r="40"
                 strokeLinecap="round" strokeWidth="4" stroke="#000" fill="none"></circle>
-              <path 
-                className="checkmark" 
-                strokeLinecap="round" strokeLinejoin="round" 
-                d="M23.375 42.5488281 36.8840688 56.0578969 64.891932 28.0500338" 
-                strokeWidth="4" stroke="#000" fill="none">                  
+              <path
+                className="checkmark"
+                strokeLinecap="round" strokeLinejoin="round"
+                d="M23.375 42.5488281 36.8840688 56.0578969 64.891932 28.0500338"
+                strokeWidth="4" stroke="#000" fill="none">
               </path>
             </svg>
           </div>
-          <h3 
+          <h3
             className="title">
             Payment successful
-          </h3>              
+          </h3>
         </SuccessDiv>
       </React.Fragment>
     );

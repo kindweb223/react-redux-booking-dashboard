@@ -56,7 +56,7 @@ const StyledLabel = styled.label`
   line-height: 1.55;
   color: #93989F;
   margin-top: 1.4rem;
-  display: block;  
+  display: block;
 `;
 
 const StyledButton = styled.button`
@@ -117,11 +117,11 @@ const StyledButton = styled.button`
     outline: 0;
     border-radius: 4px;
     background: white;
-    
+
     &:focus {
       box-shadow: rgba(50, 50, 93, 0.109804) 0px 4px 6px, rgba(0, 0, 0, 0.0784314) 0px 1px 3px;
       -webkit-transition: all 150ms ease;
-      transition: all 150ms ease;    
+      transition: all 150ms ease;
     }
   }
 `;
@@ -137,7 +137,7 @@ class _SplitForm extends React.Component {
     if (this.props.stripe) {
       this.props.stripe
         .createToken()
-        .then((res) => 
+        .then((res) =>
           {
             let payload = {};
             payload.stripeToken = res.token;
@@ -148,7 +148,7 @@ class _SplitForm extends React.Component {
               resCharge => {
                 this.props.closeModal();
               }
-            )            
+            )
           }
         );
     } else {
@@ -220,8 +220,8 @@ class Checkout extends React.Component {
     return (
       <div className="Checkout" style={{width: "100%"}}>
         <Elements>
-          <SplitForm 
-            fontSize={elementFontSize} 
+          <SplitForm
+            fontSize={elementFontSize}
             chargeData={this.props.chargeData}
             closeModal={this.props.closeModal}
           />

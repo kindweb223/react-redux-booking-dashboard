@@ -11,9 +11,9 @@ import UpcomingBookingPanel from "../components/features/dashboard/panel/Upcomin
 // import TopStaffTable from "../components/features/dashboard/panel/TopStaffTable"
 import BookingStatusBar from "../components/features/dashboard/BookingStatusBar"
 
-import { 
-  REQUEST_GET_BOOKINGS, 
-  GET_BOOKINGS_SUCCESS, 
+import {
+  REQUEST_GET_BOOKINGS,
+  GET_BOOKINGS_SUCCESS,
   GET_BOOKINGS_ERROR,
   REQUEST_GET_BOOKING_BOOKINGSTATUS,
   GET_BOOKING_BOOKINGSTATUS_SUCCESS,
@@ -62,13 +62,14 @@ const DashboardPage = () => {
 
   return (
     <div>
+    <h1>Dashboard</h1>
       <Grid columns="1fr 1fr" style={{ width: "100%"}}>
         <RecentBookingPanel />
         <UpcomingBookingPanel />
         {/* <TopVenueTable />
         <TopStaffTable /> */}
-      </Grid>      
-      <BookingStatusBar />      
+      </Grid>
+      <BookingStatusBar />
     </div>
   );
 };

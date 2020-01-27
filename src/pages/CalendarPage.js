@@ -433,6 +433,7 @@ const CalendarPage = props => {
             ownerId: booking.ownerId,
             slots: JSON.stringify(booking.slots),
             statusId: filteredStatus[0].id,
+            note: booking.note
           },
           config
         );
@@ -482,6 +483,7 @@ const CalendarPage = props => {
             ownerId: booking.ownerId,
             statusId: booking.statusId,
             slots: JSON.stringify(booking.slots),
+            note: booking.note
           },
           config
         );

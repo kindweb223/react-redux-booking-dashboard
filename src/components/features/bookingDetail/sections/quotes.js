@@ -60,7 +60,7 @@ const QuotesSection = props => {
       }      
       <div
         className={css`
-          height: 100%;
+          padding-bottom: 1rem;
         `}
       >
         {/*<SpinnerContainer loading={state.bookings.loadingQuotes.toString()} />*/}

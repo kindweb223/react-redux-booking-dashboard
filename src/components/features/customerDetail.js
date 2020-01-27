@@ -15,7 +15,7 @@ import {
 const BottomSectionWrapper = styled.div`
   width: 100%;
   padding: 20px 20px 15px;
-  overflow: scroll;
+  overflow: auto;
 `;
 
 const CustomerDetail = props => {

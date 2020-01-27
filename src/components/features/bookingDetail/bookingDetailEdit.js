@@ -482,6 +482,22 @@ const BookingForm = props => {
           Add Date Range
         </OutlinedButton>
       </div>
+      {booking.id === -1 && (
+        <div style={{width: "100%"}}>
+          <TableSectionHeader title={"Notes"} />
+          <TableEditableValue
+            value={booking.note}
+            longText
+            longTextHeight="200px"
+            style={{
+              width: "100%",
+              marginTop: "0.8em",
+              height: 80
+            }}
+            onChange={note => dispatch({ type: "set_note", value: note })}
+          />
+        </div>
+      )}
       {/* <CardPaymentForm 
         chargeData={{
           amount: 25,
@@ -915,7 +931,13 @@ function singleBookingReducer(state, action) {
         ...state,
         customerData: { ...newCustomerData }
       }
-    }    
+    }
+    case "set_note": {
+      return {
+        ...state,
+        note: action.value,
+      };
+    }
     default:
       throw new Error();
   }

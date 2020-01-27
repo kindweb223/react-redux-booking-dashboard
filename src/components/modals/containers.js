@@ -7,7 +7,7 @@ const ModalContainer = styled.div`
   background-color: ${colors.lightest};
   width: 100%;
   height: 100%;
-  overflow: scroll;
+  // overflow: scroll;
   border-radius: 0.5em;
   box-shadow: 0px 13px 32px rgba(0, 0, 0, 0.22);
 `;

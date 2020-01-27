@@ -1,10 +1,10 @@
 import React, {useState, useContext, useEffect} from "react";
 import Modal from "../components/modals/Modal";
-import { 
-  ModalContainer, 
-  ModalTopSection, 
-  ModalBottomSection, 
-  ModalTitleAndButtons 
+import {
+  ModalContainer,
+  ModalTopSection,
+  ModalBottomSection,
+  ModalTitleAndButtons
 } from "../components/modals/containers";
 
 import { Table, TableValue } from "../components/tables/Tables";
@@ -35,7 +35,7 @@ import {
   GET_BOOKING_BOOKINGSTATUS_SUCCESS,
   GET_BOOKING_INVOICE_SUCCESS,
   GET_BOOKINGS_SUCCESS,
-  GET_CUSTOMERS_SUCCESS, REQUEST_DELETE_BOOKING_INVOICE, 
+  GET_CUSTOMERS_SUCCESS, REQUEST_DELETE_BOOKING_INVOICE,
   REQUEST_UPDATE_BOOKING_INVOICE,
   UPDATE_BOOKING_INVOICE_ERROR, UPDATE_BOOKING_INVOICE_SUCCESS,
   REQUEST_CREATE_BOOKING_INVOICE, GET_CREATE_BOOKING_INVOICE_SUCCESS, GET_CREATE_BOOKING_INVOICE_ERROR,
@@ -91,7 +91,7 @@ const InvoicesPage = () => {
         type: GET_BOOKINGS_SUCCESS,
         payload: bookings.data.bookings
       })
-      
+
       dispatch({
         type: GET_BOOKING_INVOICE_SUCCESS,
         payload: invoices.data.invoices,
@@ -153,7 +153,7 @@ const InvoicesPage = () => {
           ).then(async (res) => {
             if (res.data.success) {
               dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
-  
+
               const resOne = await axios.put(
                 `/bookings/${invoice.BookingId}/invoices/${invoice.id}`,
                 {
@@ -173,7 +173,7 @@ const InvoicesPage = () => {
               dispatch({
                 type: UPDATE_BOOKING_INVOICE_SUCCESS,
                 payload: resOne.data.invoice
-              })  
+              })
             }
           });
         }
@@ -221,7 +221,7 @@ const InvoicesPage = () => {
         payload: res.data.invoice
       })
 
-      if (invoice.payment_method === 'Credit Card' && 
+      if (invoice.payment_method === 'Credit Card' &&
         state.auth.user.stripe_public_key &&
         state.auth.user.stripe_public_key.length > 0
       ) {
@@ -242,13 +242,13 @@ const InvoicesPage = () => {
             bookingId: saveOne.booking.id,
           }
         )
-         
-        if (resPay.data.success) {              
+
+        if (resPay.data.success) {
           dispatch({ type: REQUEST_UPDATE_BOOKING_INVOICE })
 
           const resOne = await axios.put(
             `/bookings/${saveOne.booking.id}/invoices/${res.data.invoice.id}`,
-            {                
+            {
               slots: JSON.stringify(saveOne.slots),
               cost_items: JSON.stringify(saveOne.costItems),
               value: saveOne.value,
@@ -294,7 +294,7 @@ const InvoicesPage = () => {
     }
   }
 
-  const getBookingNameWithId = (bookingId) => {    
+  const getBookingNameWithId = (bookingId) => {
     const filteredOne = state.bookings.bookings.filter(item => item.id === parseInt(bookingId));
     if (filteredOne.length > 0)
       return filteredOne[0].eventName;
@@ -333,8 +333,8 @@ const InvoicesPage = () => {
         `/bookings/${selectedChargeData.bookingId}/invoices/${selectedChargeData.id}`,
         {status: "Paid"}
       )
-        
-      dispatch({ 
+
+      dispatch({
         type: UPDATE_BOOKING_INVOICE_SUCCESS,
         payload: res.data.invoice,
       })
@@ -347,6 +347,17 @@ const InvoicesPage = () => {
   return (
     <>
       <SpinnerContainer loading={(loading || state.bookings.loadingInvoice).toString()} />
+  <div>
+  <h1>Invoices</h1>
+  <Button
+    primary
+    iconComponent={() => <AddGlyph fill={colors.white} />}
+    onClick={() => setshowSelectBookingModal(true)}
+  >
+    Add Invoice
+  </Button>
+  </div>
+
       <div
         style={{
           display: "flex",
@@ -380,14 +391,6 @@ const InvoicesPage = () => {
             }}
           />
         </div>
-        <Button
-          primary
-          iconComponent={() => <AddGlyph fill={colors.white} />}
-          style={{ marginLeft: "2em" }}
-          onClick={() => setshowSelectBookingModal(true)}
-        >
-          Add Invoice
-        </Button>
       </div>
 
       {!loading && invoices && invoices.length > 0 && (
@@ -432,12 +435,12 @@ const InvoicesPage = () => {
                   colors={invoiceStatesColors}
                   selectedOption={invoice.status}
                   onOptionSelected={status => {
-                    dispatch({
-                      type: "update_invoice_status",
-                      ...invoice.coordinates,
-                      index: index,
-                      status: status
-                    });
+                    // dispatch({
+                    //   type: UPDATE_INVOICE_STATUS,
+                    //   ...invoice.coordinates,
+                    //   index: index,
+                    //   status: status
+                    // });
                     handleUpdate(invoice, true, status)
                   }}
                 />
@@ -458,12 +461,12 @@ const InvoicesPage = () => {
                   colors={["#D13636"]}
                   onItemSelected={item => {
                     handleDelete(invoice)
-                    dispatch({
-                      type: "delete_invoice",
-                      ...invoice.coordinates,
-                      invoice: item.id,
-                      index: index
-                    });
+                    // dispatch({
+                    //   type: REQUEST_DELETE_INVOICE,
+                    //   ...invoice.coordinates,
+                    //   invoice: item.id,
+                    //   index: index
+                    // });
                   }}
                 />
               </React.Fragment>

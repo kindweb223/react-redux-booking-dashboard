@@ -13,7 +13,7 @@ import Button from "../components/buttons/Button"
 import H3 from "../components/typography/H3"
 
 const Row = styled.div`
-  position: relative;  
+  position: relative;
   display: flex;
   align-items: center;
 `;
@@ -27,7 +27,7 @@ const HtmlDiv = styled.div`
   text-align: center;
   border: 1px solid #E6E8E9;
   border-radius: 0.25em;
-  height: 34px;
+  height: 46px;
   padding: 0 0.7em;
   align-items: center;
   display: flex;
@@ -47,7 +47,7 @@ const CodeContent = styled.div`
 `
 const ClipBoardIcon = styled(FontAwesomeIcon)`
   margin-left: 0.3em;
-  color: white;  
+  color: white;
 `
 
 const BookingWidgetPage = () => {
@@ -63,7 +63,7 @@ const BookingWidgetPage = () => {
           <InstructionDiv>
             <TableLabel color={colors.dark} style={{fontSize:'1em', margin: '0'}}>Setup Instructions</TableLabel>
             <TableLabel>Find instructions on how to setup your website booking widget.</TableLabel>
-          </InstructionDiv>          
+          </InstructionDiv>
         </Row>
         <WidgetContent>
           <Row style={{marginBottom: '1em'}}>
@@ -92,7 +92,7 @@ const BookingWidgetPage = () => {
             <ModalTopSection>
               <ModalTitleAndButtons>
                 <H3>Booking Widget Setup Instruction</H3>
-              </ModalTitleAndButtons>              
+              </ModalTitleAndButtons>
             </ModalTopSection>
             <ModalBottomSection>
               <TableLabel style={{width: '100%', marginBottom: '1em'}}>
@@ -105,13 +105,13 @@ const BookingWidgetPage = () => {
                     You can add it in the HTML head section.
                   </TableLabel>
                 </Row>
-                <Row>                
-                  <InputField  
-                    value={`<script src="https://calendarwidget.herokuapp.com/calendarwidget.js"></script>`} 
+                <Row>
+                  <InputField
+                    value={`<script src="https://calendarwidget.herokuapp.com/calendarwidget.js"></script>`}
                     disabled
                     style={{flex: 1}}
                   />
-                  
+
                   <CopyToClipboard text={`<script src="https://calendarwidget.herokuapp.com/calendarwidget.js"></script>`}>
                     <Button primary style={{marginLeft: '1em'}}>
                       Copy
@@ -119,7 +119,7 @@ const BookingWidgetPage = () => {
                     </Button>
                   </CopyToClipboard>
                 </Row>
-              </CodeContent>                                            
+              </CodeContent>
 
               <TableLabel style={{width: '100%', marginTop: '2em', marginBottom: '1em'}}>
                 2. Add following Markup & Script code.
@@ -130,11 +130,11 @@ const BookingWidgetPage = () => {
                     Add following Markup code within the body of the page, where you want to display your calendar.
                   </TableLabel>
                 </Row>
-                <Row style={{marginBottom: '1em'}}>                  
-                  <InputField 
-                    value={`<div id="calendar-widget" style="width: 100%; height: 100vh"></div>`} 
-                    disabled         
-                    style={{flex: 1}}            
+                <Row style={{marginBottom: '1em'}}>
+                  <InputField
+                    value={`<div id="calendar-widget" style="width: 100%; height: 100vh"></div>`}
+                    disabled
+                    style={{flex: 1}}
                   />
                   <CopyToClipboard text={`<div id="calendar-widget" style="width: 100%; height: 100vh"></div>`}>
                     <Button primary style={{marginLeft: '1em'}}>
@@ -149,10 +149,10 @@ const BookingWidgetPage = () => {
                   </TableLabel>
                 </Row>
                 <Row style={{marginBottom: '1em'}}>
-                  <InputField 
-                    value={`<script>calendarWidget("${state.auth.user.uuid}")</script>`} 
-                    disabled         
-                    style={{flex: 1}}            
+                  <InputField
+                    value={`<script>calendarWidget("${state.auth.user.uuid}")</script>`}
+                    disabled
+                    style={{flex: 1}}
                   />
                   <CopyToClipboard text={`<script>calendarWidget("${state.auth.user.uuid}")</script>`}>
                     <Button primary style={{marginLeft: '1em'}}>

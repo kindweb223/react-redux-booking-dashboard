@@ -62,7 +62,7 @@ const SubdomainUrl = styled.div`
   border-radius: 0.25em;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  height: 34px;
+  height: 46px;
   display: flex;
   align-items: center;
 `;
@@ -87,13 +87,13 @@ const CompanyInfoSettingsSection = props => {
   const [ validateSubdomain, setValidateSubdomain ] = useState({ validate: true, msg: ""});
   const [ prevSubdomain, setPreSubdomain ] = useState("");
 
-  useEffect(() => {    
+  useEffect(() => {
 
     const getCompanyInfo = async () => {
       try {
         setCompanyLoading(true);
         const res = await axios.get("/company");
-        if (res.data.company != null) {          
+        if (res.data.company != null) {
           setCompanyInfo({
             ...res.data.company,
           })
@@ -102,45 +102,45 @@ const CompanyInfoSettingsSection = props => {
         setCompanyLoading(false);
       } catch (err) {
         setCompanyLoading(false);
-      }      
+      }
     }
     getCompanyInfo();
   }, []);
 
   const onSaveCompanyInfo = async () => {
-    try {        
+    try {
       const axios_config = {
         headers: {
           "Content-Type": "application/json"
         }
       };
-      
+
       let saveOne = { ...companyInfo };
       delete saveOne["subdomain"];
 
       let res = {};
       if (companyInfo.id) {
         res = await axios.put(
-          `/companies/${companyInfo.id}`, 
+          `/companies/${companyInfo.id}`,
           JSON.stringify(saveOne),
           axios_config
         );
       } else {
         res = await axios.post(
-          `/companies`, 
+          `/companies`,
           JSON.stringify(saveOne),
           axios_config
         );
         setCompanyInfo({
           ...companyInfo,
           id: res.data.company.id,
-        })  
+        })
       }
     } catch (err) {
-    }    
+    }
   }
 
-  const changeCompanyInfo = (key, value) => {   
+  const changeCompanyInfo = (key, value) => {
     if (key === "subdomain") {
       if (value.length === 0) {
         setValidateSubdomain({
@@ -215,10 +215,10 @@ const CompanyInfoSettingsSection = props => {
         {
           headers: {
             "Content-Type": "application/json"
-          } 
+          }
         }
       )
-      
+
       if (res.data.success){
         setPreSubdomain(res.data.company.subdomain);
         setCompanyInfo({
@@ -233,7 +233,7 @@ const CompanyInfoSettingsSection = props => {
       }
     } catch(err) {
 
-    }    
+    }
   }
 
   return (
@@ -244,16 +244,16 @@ const CompanyInfoSettingsSection = props => {
       <TableEditableValue
         label="Company Name"
         value={companyInfo.name}
-        onChange={value => {changeCompanyName(value)}}          
+        onChange={value => {changeCompanyName(value)}}
         style={{ width: "100%", marginTop: 24 }}
         className={!isNameValidate? "error" : ""}
       />
       {
-        !isNameValidate && 
-        <p 
+        !isNameValidate &&
+        <p
           className={
             css`
-              color: #E92579;            
+              color: #E92579;
               margin: 0.2em 0 0 0;
               padding: 0 0.6em;
               font-size: 0.8em;
@@ -262,11 +262,11 @@ const CompanyInfoSettingsSection = props => {
         >
           Company Name is required.
         </p>
-      }     
+      }
       <TableEditableValue
         label="VAT ID"
         value={companyInfo.vatId}
-        onChange={value => {changeCompanyInfo("vatId", value)}}          
+        onChange={value => {changeCompanyInfo("vatId", value)}}
         style={{ width: "100%", marginTop: 14 }}
       />
       <Grid columns="1fr 1fr" style={{ width: "100%", marginTop: 14 }}>
@@ -285,7 +285,7 @@ const CompanyInfoSettingsSection = props => {
         <TableEditableValue
           label="Post Code"
           value={companyInfo.postCode}
-          onChange={value => {changeCompanyInfo("postCode", value)}}            
+          onChange={value => {changeCompanyInfo("postCode", value)}}
           style={{ width: "100%" }}
         />
         <TableEditableValue
@@ -315,49 +315,49 @@ const CompanyInfoSettingsSection = props => {
         <TableEditableValue
           label="Default VAT Rate (%)"
           value={companyInfo.vatRate}
-          onChange={value => {changeCompanyInfo("vatRate", value)}}            
+          onChange={value => {changeCompanyInfo("vatRate", value)}}
           style={{ width: "100%" }}
         />
-      </Grid>      
+      </Grid>
       <TableDivider />
-      <Grid columns="1fr" style={{ width: "100%", marginTop: 14 }}> 
+      <Grid columns="1fr" style={{ width: "100%", marginTop: 14 }}>
         <div style={{display: "flex", flexDirection: "column"}}>
-          <InputLabel>Company Logo</InputLabel> 
+          <InputLabel>Company Logo</InputLabel>
           <Dropzone onDrop={onDrop} accept="image/png, image/gif, image/jpg, image/jpeg" multiple={false}>
             {({getRootProps, getInputProps, isDragActive}) => (
-              <DropzonContainer 
+              <DropzonContainer
                 {...getRootProps()}
                 backgroundImage={companyInfo.logoImg ? CONFIG.API_URL + companyInfo.logoImg : ""}
               >
                 <input {...getInputProps()} />
                 <DropZoneDescription isVisible={(companyInfo.logoImg && companyInfo.logoImg.length > 0) ? false : true}>
                   {isDragActive ? "Drop it like it's hot!" : "Click me or drag a file to upload!"}
-                </DropZoneDescription>            
+                </DropZoneDescription>
                 {
                   imageUploading && <SpinnerContainer loading={"true"} />
                 }
               </DropzonContainer>
             )}
           </Dropzone>
-        </div>             
-      </Grid>      
+        </div>
+      </Grid>
 
-      <Grid columns="1fr" style={{ width: "100%", marginTop: 14 }}>      
-        <Button 
-          primary 
-          onClick={onSaveCompanyInfo} 
+      <Grid columns="1fr" style={{ width: "100%", marginTop: 14 }}>
+        <Button
+          primary
+          onClick={onSaveCompanyInfo}
           style={{ maxWidth: "100px"}}
           disabled={!isNameValidate}
         >
           Save
-        </Button>       
+        </Button>
       </Grid>
 
       <TableDivider />
-      
+
       <InputLabel>Subdomain</InputLabel>
       <SubdomainDiv>
-        <TableEditableValue          
+        <TableEditableValue
           value={companyInfo.subdomain}
           onChange={value => {changeCompanyInfo("subdomain", value)}}
           style={{ width: "100%"}}
@@ -368,11 +368,11 @@ const CompanyInfoSettingsSection = props => {
         </SubdomainUrl>
       </SubdomainDiv>
       {
-        !validateSubdomain.validate && 
-        <p 
+        !validateSubdomain.validate &&
+        <p
           className={
             css`
-              color: #E92579;            
+              color: #E92579;
               margin: 0.2em 0 0 0;
               padding: 0 0.6em;
               font-size: 0.8em;
@@ -381,11 +381,11 @@ const CompanyInfoSettingsSection = props => {
         >
           {validateSubdomain.msg}
         </p>
-      }           
-      
-      <Button 
-        primary 
-        onClick={onSaveSubdomain} 
+      }
+
+      <Button
+        primary
+        onClick={onSaveSubdomain}
         disabled={!companyInfo.subdomain.length > 0 || prevSubdomain === companyInfo.subdomain}
         style={{marginTop: 14, marginBottom: 20}}
       >

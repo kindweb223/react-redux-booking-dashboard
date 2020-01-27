@@ -17,7 +17,7 @@ const OutlinedButtonWrapper = styled.div`
   text-align: center;
   border: 1px solid ${colors.light};
   border-radius: 0.25em;
-  height: 34px;
+  height: 46px;
   padding: 0 0.7em;
   width: ${props => (props.wide ? "100%" : "auto")};
   flex: 0 0 auto;

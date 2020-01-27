@@ -1,23 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { cx, css } from "emotion";
-
 import BigCalendar from "react-big-calendar";
 import moment from "moment";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "../../css/calendar.css";
 
+import "../../css/calendar.css";
 import CalendarToolbar from "./calendarToolbar";
 import CalendarWeekHeader from "./calendarWeekHeader";
 import { formatEventStartEndTime } from "../../utils/dateFormatting";
 import colors from "../style/Colors";
-
 import { AppReducerContext } from "../../contexts/AppReducerContext";
-import axios from 'axios'
-import { SET_CALENDAR_SETTING_DATA, CREATE_CALENDAR_SETTING_ERROR } from '../../reducers/actionType'
-import { setCalendarSettingAction } from "../../actions/calendar"
+import { setCalendarSettingAction } from "../../actions/calendar";
 
 const localizer = BigCalendar.momentLocalizer(moment);
 
@@ -148,7 +143,7 @@ const Calendar = props => {
   
   const [resources, setResources] = useState([])
   useEffect(() => {
-    if (state.calendarViews.curView === 'spaces')
+    if (state.calendarViews.curView === "spaces")
       setResources([
         ...state.calendarViews.allSpaces.map(item => {
           return {id: item.id, title: item.name}
@@ -179,7 +174,7 @@ const Calendar = props => {
       selectable={false} // prevent drag to create event in calendar
       localizer={localizer}
       date={state.calendarSettings.selectedDate}
-      defaultView='week'
+      defaultView="week"
       view={state.calendarSettings.viewMode}
       step={15}
       timeslots={4}
@@ -193,7 +188,7 @@ const Calendar = props => {
       }}
       events={props.events || []}
       resources={resources}
-      onNavigate={date => {        
+      onNavigate={date => {
         setCalendarSettingAction(
           dispatch,
           {

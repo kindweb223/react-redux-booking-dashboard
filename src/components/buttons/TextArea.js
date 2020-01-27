@@ -11,7 +11,7 @@ const StyledTextAreaWrapper = styled.textarea`
   border: 1px solid #e6e8e9;
   border-radius: 0.25em;
   color: ${colors.dark};
-  min-height: 34px;
+  min-height: 46px;
   padding: 0.5em 0.6em;
   flex: 0 0 auto;
   resize: none;
