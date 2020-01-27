@@ -29,7 +29,6 @@ import SpinnerContainer from "../../../layout/Spinner";
 import { ModalContainer, ModalTopSection, ModalBottomSection, ModalTitleAndButtons } from "../../../modals/containers";
 import H3 from "../../../typography/H3";
 import Button from "../../../buttons/Button";
-import CONFIG from '../../../../config';
 import StripeApp from "../../../stripe/StripeApp";
 
 const INVOICE_STATUSES = ["Unpaid", "Pending", "Paid"];

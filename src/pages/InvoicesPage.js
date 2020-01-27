@@ -347,17 +347,23 @@ const InvoicesPage = () => {
   return (
     <>
       <SpinnerContainer loading={(loading || state.bookings.loadingInvoice).toString()} />
-  <div>
-  <h1>Invoices</h1>
-  <Button
-    primary
-    iconComponent={() => <AddGlyph fill={colors.white} />}
-    onClick={() => setshowSelectBookingModal(true)}
-  >
-    Add Invoice
-  </Button>
-  </div>
-
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: 'space-between',
+          marginBottom: 10
+        }}  
+      >
+        <h1>Invoices</h1>
+        <Button
+          primary
+          iconComponent={() => <AddGlyph fill={colors.white} />}
+          onClick={() => setshowSelectBookingModal(true)}
+        >
+          Add Invoice
+        </Button>
+      </div>
       <div
         style={{
           display: "flex",
@@ -366,13 +372,13 @@ const InvoicesPage = () => {
           marginBottom: 40
         }}
       >
-        <div
+        {/* <div
           className={css`
             display: flex;
             align-items: center;
             width: 100%;
           `}
-        >
+        > */}
           <SearchField
             query={searchQuery}
             placeholder={"Search Invoices"}
@@ -390,7 +396,7 @@ const InvoicesPage = () => {
               height: 40
             }}
           />
-        </div>
+        {/* </div> */}
       </div>
 
       {!loading && invoices && invoices.length > 0 && (
