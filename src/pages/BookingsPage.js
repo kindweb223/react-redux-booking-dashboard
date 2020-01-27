@@ -326,10 +326,11 @@ const BookingsPage = props => {
   style={{
     display: "flex",
     alignItems: "center",
+    justifyContent: 'space-between',
     marginBottom: 10
   }}
 >
-<h1>Bookings</h1>
+  <h1>Bookings</h1>
   <Button
     primary
     onClick={() => setShowCreateBookingModal(!showCreateBookingModal)}
