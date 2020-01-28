@@ -344,6 +344,7 @@ const Column = ({
         display: flex;
         justify-content: space-between;
         margin-top: 0.8 em;
+        margin-bottom: 1em;
       `}
       >
         {title && <H3>{title}</H3>}

@@ -6,15 +6,15 @@ import Button from "../../../buttons/Button";
 import { REQUEST_UPDATE_BOOKING, GET_UPDATE_BOOKING_SUCCESS, GET_UPDATE_BOOKIG_ERROR } from "../../../../reducers/actionType";
 import { AppReducerContext } from "../../../../contexts/AppReducerContext";
 
-const NotesSection = props => {
+const CallsSection = props => {
   const { booking } = props;
   const [editing, setEditing] = useState(false);
-  const [note, setNote] = useState(booking.note);
+  const [calls, setCalls] = useState(booking.calls);
   const { dispatch } = useContext(AppReducerContext);
   
   useEffect(() => {
-    setNote(booking.note);
-  }, [booking.note])
+    setCalls(booking.calls);
+  }, [booking.calls])
   
   const handleUpdateBooking = async (updateBooking) => {
     if (!updateBooking) return;
@@ -31,7 +31,7 @@ const NotesSection = props => {
       const res = await axios.put(
         `/bookings/${booking.id}`,
         {          
-          note: note
+          calls
         },
         config
       );
@@ -51,7 +51,7 @@ const NotesSection = props => {
     <>      
       {!editing ? (
         <>
-          <div style={{whiteSpace: "pre-wrap"}}>{note}</div>
+          <div style={{whiteSpace: "pre-wrap"}}>{calls}</div>
           <Button 
             primary 
             onClick={() => setEditing(true)}
@@ -60,14 +60,14 @@ const NotesSection = props => {
       ) : (
         <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
           <TableEditableValue
-            value={note}
+            value={calls}
             longText
-            onChange={note => setNote(note)}
-            height='100%'
-            longTextHeight= '100%'
+            longTextHeight="100%"
+            height="100%"
             style={{
               flexBasis: '100%',
             }}
+            onChange={value => setCalls(value)}                
           />
           <Button 
             primary 
@@ -83,4 +83,4 @@ const NotesSection = props => {
   );
 };
 
-export default NotesSection;
+export default CallsSection;

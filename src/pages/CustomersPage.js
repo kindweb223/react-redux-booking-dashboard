@@ -123,6 +123,7 @@ const CustomersPage = () => {
 
   return (
     <>
+      <SpinnerContainer loading={((searchResults && searchResults.length <= 0) && state.customers.loadingCustomers).toString()} />
       <div
         className={css`
           display: flex;
@@ -130,11 +131,9 @@ const CustomersPage = () => {
           align-items: center;
           justify-content: space-between;
           margin-top: 0px;
-          margin-bottom: 10px;
+          margin-bottom: 1em;
         `}
-
       >
-        <SpinnerContainer loading={((searchResults && searchResults.length <= 0) && state.customers.loadingCustomers).toString()} />
         <h1>Customers</h1>
         <Button
           primary
